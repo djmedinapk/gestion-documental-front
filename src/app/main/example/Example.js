@@ -1,3 +1,4 @@
+import React from 'react';
 import DemoContent from '@fuse/core/DemoContent';
 import { styled } from '@mui/material/styles';
 import FusePageSimple from '@fuse/core/FusePageSimple';
@@ -11,7 +12,8 @@ const Root = styled(FusePageSimple)({
   '& .FusePageSimple-sidebarContent': {},
 });
 
-function ExamplePage(props) {
+
+const Example = (props) => {
   const { t } = useTranslation('examplePage');
 
   return (
@@ -35,6 +37,6 @@ function ExamplePage(props) {
       }
     />
   );
-}
+};
 
-export default ExamplePage;
+export default Example;

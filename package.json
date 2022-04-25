@@ -16,6 +16,7 @@
         "@mui/utils": "5.4.4",
         "@mui/x-data-grid": "5.5.1",
         "@reduxjs/toolkit": "1.8.0",
+        "@hookform/resolvers": "2.8.8",
         "auth0-lock": "11.32.2",
         "autosuggest-highlight": "3.2.1",
         "axios": "0.26.0",

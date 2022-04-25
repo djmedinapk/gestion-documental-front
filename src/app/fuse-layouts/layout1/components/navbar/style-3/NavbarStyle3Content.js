@@ -102,13 +102,14 @@ function NavbarStyle3Content(props) {
       dispatch(navbarCloseMobile());
     }
   }
+  
 
   return (
     <ClickAwayListener onClickAway={() => setPanelOpen(false)}>
       <Root className={clsx('flex flex-auto flex h-full', props.className)}>
         <ThemeProvider theme={contrastTheme}>
           <div id="fuse-navbar-side-panel" className="flex shrink-0 flex-col items-center">
-            <img className="w-44 my-32" src="assets/images/logos/fuse.svg" alt="logo" />
+            <img className="w-44 my-32" src="assets/images/logos/logo_tekmovil.png" alt="logo" />
 
             <FuseScrollbars
               className="flex flex-1 min-h-0 justify-center w-full overflow-y-auto overflow-x-hidden"
