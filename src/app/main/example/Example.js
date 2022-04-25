@@ -87,12 +87,16 @@ const ExamplePage = () => {
   };
 
   const clearAndtoggle = () => {
-    setProduct({
-      id: 0,
-      description: "",
-      itemId: "",
-    });
     setOpenModal(false);
+    setTimeout(
+      () =>
+        setProduct({
+          id: 0,
+          name: "",
+          description: "",
+        }),
+      200
+    );
   };
 
   const editProduct = (dc) => {
@@ -149,10 +153,14 @@ const ExamplePage = () => {
           className=" sm:border-1 sm:rounded-16 overflow-hidden"
         >
           <TableContainer>
-            <Table stickyHeader size="small">
+            <Table
+              stickyHeader
+              size="small"
+              style={{ backgroundColor: "white" }}
+            >
               <TableHead>
                 <TableRow>
-                  <TableCell>
+                  <TableCell style={{ backgroundColor: "deepskyblue" }}>
                     <Typography
                       style={{
                         whiteSpace: "nowrap",
@@ -163,7 +171,7 @@ const ExamplePage = () => {
                       ID
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell style={{ backgroundColor: "deepskyblue" }}>
                     <Typography
                       style={{
                         whiteSpace: "nowrap",
@@ -174,7 +182,7 @@ const ExamplePage = () => {
                       Name
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell style={{ backgroundColor: "deepskyblue" }}>
                     <Typography
                       style={{
                         whiteSpace: "nowrap",
@@ -186,7 +194,7 @@ const ExamplePage = () => {
                     </Typography>
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell style={{ backgroundColor: "deepskyblue" }}>
                     <Typography
                       style={{
                         whiteSpace: "nowrap",
