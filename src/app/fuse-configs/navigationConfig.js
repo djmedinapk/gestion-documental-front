@@ -17,7 +17,7 @@ const navigationConfig = [
     children: [
       {
         id: 'example-component',
-        title: 'Example',
+        title: 'Product Type',
         translate: 'EXAMPLE',
         type: 'item',
         icon: 'whatshot',
