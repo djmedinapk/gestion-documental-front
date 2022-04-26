@@ -4,8 +4,13 @@ import ExampleConfig from 'app/main/example/ExampleConfig';
 import LoginPageConfig from 'app/main/pages/auth/login/LoginPageConfig';
 import FuseLoading from '@fuse/core/FuseLoading';
 import Error404Page from 'app/main/404/Error404Page';
+import ProjectConfig from 'app/main/pages/project/ProjectConfig';
 
-const routeConfigs = [ExampleConfig, LoginPageConfig];
+const routeConfigs = [
+  ExampleConfig, 
+  LoginPageConfig,
+  ProjectConfig
+];
 
 const routes = [
   // if you want to make whole app auth protected by default change defaultAuth for example:
@@ -13,7 +18,7 @@ const routes = [
   // The individual route configs which has auth option won't be overridden.
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, null),
   {
-    path: '/',
+    path: '/login',
     element: <Navigate to="login" />,
   },
   {
