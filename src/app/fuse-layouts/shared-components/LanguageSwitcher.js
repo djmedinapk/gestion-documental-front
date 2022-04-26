@@ -11,8 +11,7 @@ import { changeLanguage } from 'app/store/i18nSlice';
 
 const languages = [
   { id: 'en', title: 'English', flag: 'us' },
-  { id: 'tr', title: 'Turkish', flag: 'tr' },
-  { id: 'ar', title: 'Arabic', flag: 'sa' },
+  { id: 'es', title: 'Español', flag: 'mx' },
 ];
 
 function LanguageSwitcher(props) {

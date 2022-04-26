@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "http://localhost:5000/gestionDocumental/";
 axios.defaults.headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
