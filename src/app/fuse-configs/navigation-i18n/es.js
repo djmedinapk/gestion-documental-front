@@ -1,7 +1,8 @@
 const locale = {
     APPLICATIONS: 'Aplicaciones',
     EXAMPLE: 'Ejemplo',
-    PROJECTPAGE: 'Proyectos'
+    PROJECTPAGE: 'Proyectos',
+    ADMIN:"Administrados"
   };
   
   export default locale;

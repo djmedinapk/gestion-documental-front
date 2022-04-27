@@ -29,6 +29,22 @@ const navigationConfig = [
         icon: 'whatshot',
         url: '/',
       },
+      {
+        id: 'admin',
+        title: 'Admin',
+        type: 'collapse',
+        translate: 'ADMIN',
+        icon: 'info',
+        children: [          
+          {
+            id: 'projectsAdmin',
+            title: 'projects',
+            translate: 'PROJECTPAGE',
+            type: 'item',
+            url: 'apps/admin/projects',
+          },
+        ],
+      },
     ],
   },
 ];

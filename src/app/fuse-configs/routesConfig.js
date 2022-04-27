@@ -5,11 +5,12 @@ import LoginPageConfig from 'app/main/pages/auth/login/LoginPageConfig';
 import FuseLoading from '@fuse/core/FuseLoading';
 import Error404Page from 'app/main/404/Error404Page';
 import ProjectConfig from 'app/main/pages/project/ProjectConfig';
+import ProjectsAdminAppConfig from 'app/main/pages/Admin/projects/ProjectsAdminAppConfig';
 
 const routeConfigs = [
   ExampleConfig, 
   LoginPageConfig,
-  ProjectConfig
+  ProjectsAdminAppConfig
 ];
 
 const routes = [
