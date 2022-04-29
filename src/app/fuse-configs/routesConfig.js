@@ -6,11 +6,13 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import Error404Page from 'app/main/404/Error404Page';
 import ProjectConfig from 'app/main/pages/project/ProjectConfig';
 import ProjectsAdminAppConfig from 'app/main/pages/Admin/projects/ProjectsAdminAppConfig';
+import ProductTypesAdminAppConfig from 'app/main/pages/Admin/productType/ProductTypesAdminAppConfig'
 
 const routeConfigs = [
   ExampleConfig, 
   LoginPageConfig,
-  ProjectsAdminAppConfig
+  ProjectsAdminAppConfig,
+  ProductTypesAdminAppConfig
 ];
 
 const routes = [

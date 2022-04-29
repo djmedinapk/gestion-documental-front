@@ -5,7 +5,7 @@ axios.defaults.headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
 }
-axios.interceptors.request.use((config) => {
+/*axios.interceptors.request.use((config) => {
     const tokenSec = window.localStorage.getItem('token');
     if (tokenSec) {
         config.headers.Authorization = 'Bearer '+ tokenSec;
@@ -13,7 +13,7 @@ axios.interceptors.request.use((config) => {
     }
 },error => {
     return Promise.reject(error);
-});
+});*/
 const genericRequest = {
     get : (url) => axios.get(url),
     post : (url, body) => axios.post(url, body),

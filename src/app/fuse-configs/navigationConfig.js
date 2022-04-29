@@ -43,6 +43,13 @@ const navigationConfig = [
             type: 'item',
             url: 'apps/admin/projects',
           },
+          {
+            id: 'productTypesAdmin',
+            title: 'productTypes',
+            translate: 'PRODUCTTYPEPAGE',
+            type: 'item',
+            url: 'apps/admin/productTypes',
+          },
         ],
       },
     ],
