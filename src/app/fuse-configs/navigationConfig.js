@@ -30,6 +30,14 @@ const navigationConfig = [
         url: '/',
       },
       {
+        id: 'pruebaBuscador-component',
+        title: 'Search',
+        translate: '',
+        type: 'item',
+        icon: 'search',
+        url: 'apps/file-manager',
+      },
+      {
         id: 'admin',
         title: 'Admin',
         type: 'collapse',
@@ -41,6 +49,7 @@ const navigationConfig = [
             title: 'projects',
             translate: 'PROJECTPAGE',
             type: 'item',
+            icon: 'account_tree',
             url: 'apps/admin/projects',
           },
           {
@@ -48,6 +57,7 @@ const navigationConfig = [
             title: 'productTypes',
             translate: 'PRODUCTTYPEPAGE',
             type: 'item',
+            icon: 'account_tree',
             url: 'apps/admin/productTypes',
           },
         ],

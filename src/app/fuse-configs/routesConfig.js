@@ -4,7 +4,7 @@ import ExampleConfig from 'app/main/example/ExampleConfig';
 import LoginPageConfig from 'app/main/pages/auth/login/LoginPageConfig';
 import FuseLoading from '@fuse/core/FuseLoading';
 import Error404Page from 'app/main/404/Error404Page';
-import ProjectConfig from 'app/main/pages/project/ProjectConfig';
+import FileManagerAppConfig from 'app/main/pages/search/FileManagerAppConfig';
 import ProjectsAdminAppConfig from 'app/main/pages/Admin/projects/ProjectsAdminAppConfig';
 import ProductTypesAdminAppConfig from 'app/main/pages/Admin/productType/ProductTypesAdminAppConfig'
 
@@ -12,7 +12,8 @@ const routeConfigs = [
   ExampleConfig, 
   LoginPageConfig,
   ProjectsAdminAppConfig,
-  ProductTypesAdminAppConfig
+  ProductTypesAdminAppConfig,
+  FileManagerAppConfig
 ];
 
 const routes = [
