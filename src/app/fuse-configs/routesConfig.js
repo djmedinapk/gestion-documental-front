@@ -10,6 +10,7 @@ import FilesAdminAppConfig from "app/main/pages/Admin/files/FilesAdminAppConfig"
 import FoldersAdminAppConfig from "app/main/pages/Admin/folders/FoldersAdminAppConfig";
 import ProductTypesAdminAppConfig from "app/main/pages/Admin/productTypes/ProductTypesAdminAppConfig";
 import ProjectsAdminAppConfig from "app/main/pages/Admin/projects/ProjectsAdminAppConfig";
+import VersionsAdminAppConfig from "app/main/pages/Admin/versions/VersionsAdminAppConfig";
 
 const routeConfigs = [
   ExampleConfig,
@@ -20,6 +21,7 @@ const routeConfigs = [
   FoldersAdminAppConfig,
   ProductTypesAdminAppConfig,
   ProjectsAdminAppConfig,
+  VersionsAdminAppConfig,
 ];
 
 const routes = [
