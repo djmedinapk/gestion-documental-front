@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable } from 'react-table';
 import clsx from 'clsx';
-import ProductTypesAdminTablePaginationActions from './ProductTypesAdminTablePaginationActions';
+import DocumentTypesAdminTablePaginationActions from './DocumentTypesAdminTablePaginationActions';
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = useRef();
@@ -138,7 +138,7 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
         }}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        ActionsComponent={ProductTypesAdminTablePaginationActions}
+        ActionsComponent={DocumentTypesAdminTablePaginationActions}
       />
     </div>
   );
