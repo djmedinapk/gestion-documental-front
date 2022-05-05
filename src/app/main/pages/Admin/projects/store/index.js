@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import projects from './projectsSlice';
+import projects from './projectsAdminSlice';
 
 const reducer = combineReducers({
-    projects,
+  projects,
 });
 
 export default reducer;

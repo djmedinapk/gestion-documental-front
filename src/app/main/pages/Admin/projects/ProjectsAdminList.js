@@ -5,8 +5,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import ProjectsAdminTable from "./ProjectsAdminTable";
-import { selectProjects } from "./store/projectsSlice";
-import  CRUDTable  from './../../../../Components/CrudTable/CRUDTable';
+import {
+  selectProjects,
+  openEditProjectsAdminDialog,
+} from "./store/projectsAdminSlice";
 
 const ProjectsAdminList = () => {
   const { t } = useTranslation("projectAdminPage");
@@ -22,32 +24,32 @@ const ProjectsAdminList = () => {
   }, [projects]);
 
   const columns = useMemo(
-    () => [      
+    () => [
       {
-        Header: 'Name',
-        accessor: 'name',
-        className: 'font-medium',
-        sortable: true,
-      },
-      {
-        Header: 'Description',
-        accessor: 'description',
-        className: 'font-medium',
+        Header: t('NAME'),
+        accessor: "name",
+        className: "font-medium",
         sortable: false,
       },
       {
-        id: 'action',
+        Header: t('DESCRIPTION'),
+        accessor: "description",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        id: "action",
         width: 128,
         sortable: false,
         Cell: ({ row }) => (
-          <div className="flex items-center">            
+          <div className="flex items-center">
             <IconButton
               onClick={(ev) => {
-                ev.stopPropagation();
+                dispatch(openEditProjectsAdminDialog(row.original));
               }}
               size="large"
             >
-              <Icon>delete</Icon>
+              <Icon>edit</Icon>
             </IconButton>
           </div>
         ),
@@ -72,15 +74,15 @@ const ProjectsAdminList = () => {
       animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
       className="flex flex-auto w-full max-h-full"
     >
-      <CRUDTable
-      columns={columns}
-      data={filteredData}
-      onRowClick={(ev, row) => {
-        if (row) {
-         
-        }
-      }}
-       />
+      <ProjectsAdminTable
+        columns={columns}
+        data={filteredData}
+        onRowClick={(ev, row) => {
+          if (row) {
+            dispatch(openEditProjectsAdminDialog(row.original));
+          }
+        }}
+      />
     </motion.div>
   );
 };
