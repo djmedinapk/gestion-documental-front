@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
 import FuseUtils from "@fuse/utils";
-import ExampleConfig from "app/main/example/ExampleConfig";
 import LoginPageConfig from "app/main/pages/auth/login/LoginPageConfig";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Error404Page from "app/main/404/Error404Page";
@@ -13,7 +12,6 @@ import ProjectsAdminAppConfig from "app/main/pages/Admin/projects/ProjectsAdminA
 import VersionsAdminAppConfig from "app/main/pages/Admin/versions/VersionsAdminAppConfig";
 
 const routeConfigs = [
-  ExampleConfig,
   LoginPageConfig,
   FileManagerAppConfig,
   DocumentTypesAdminAppConfig,
