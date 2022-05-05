@@ -26,13 +26,13 @@ const ProductTypesAdminList = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Name",
+        Header: t('NAME'),
         accessor: "name",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: "Description",
+        Header: t('DESCRIPTION'),
         accessor: "description",
         className: "font-medium",
         sortable: false,

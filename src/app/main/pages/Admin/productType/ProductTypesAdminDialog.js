@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import _ from '@lodash';
 import * as yup from 'yup';
@@ -41,6 +42,7 @@ const schema = yup.object().shape({
 });
 
 function ProductTypesAdminDialog(props) {
+  const { t } = useTranslation('productTypeAdminPage');
   const dispatch = useDispatch();
   const productTypesAdminDialog = useSelector(({ productTypesAdminApp }) => productTypesAdminApp.productTypes.productTypesAdminDialog);
 
@@ -129,7 +131,7 @@ function ProductTypesAdminDialog(props) {
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            {productTypesAdminDialog.type === 'new' ? 'New Product Type' : 'Edit Product Type'}
+            {productTypesAdminDialog.type === 'new' ? t('NEW_PRODUCT_TYPE') : t('EDIT_PRODUCT_TYPE')}
           </Typography>
         </Toolbar>
         <div className="flex flex-col items-center justify-center pb-24">
@@ -157,7 +159,7 @@ function ProductTypesAdminDialog(props) {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Name"
+                  label={t('NAME')}
                   id="name"
                   error={!!errors.name}
                   helperText={errors?.name?.message}
@@ -180,7 +182,7 @@ function ProductTypesAdminDialog(props) {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Description"
+                  label={t('DESCRIPTION')}
                   id="description"
                   error={!!errors.description}
                   helperText={errors?.description?.message}
@@ -202,7 +204,7 @@ function ProductTypesAdminDialog(props) {
                 type="submit"
                 disabled={_.isEmpty(dirtyFields) || !isValid}
               >
-                Add
+                {t('ADD')}
               </Button>
             </div>
           </DialogActions>
@@ -215,7 +217,7 @@ function ProductTypesAdminDialog(props) {
                 type="submit"
                 disabled={_.isEmpty(dirtyFields) || !isValid}
               >
-                Save
+                {t('SAVE')}
               </Button>
             </div>
             <IconButton onClick={handleRemove} size="large">
