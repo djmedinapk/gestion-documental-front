@@ -8,17 +8,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import { setSelectedItem, selectFiles } from "./store/searchsSlice";
+import { setSelectedItem, setSelectedItemId } from "./store/searchsSlice";
 import { selectSearchs } from "./store/searchsSlice";
 import StyledIcon from "./StyledIcon";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const FileList = (props) => {
+const SearchList = (props) => {
   const dispatch = useDispatch();
   const files = useSelector(selectSearchs);
   const selectedItemId = useSelector(
-    ({ fileManagerApp }) => fileManagerApp.files.selectedItemId
+    ({ searchApp }) => searchApp.searchs.selectedItemId
   );
 
   const [dataFolders, setDataFolders] = useState([]);
@@ -29,7 +29,7 @@ const FileList = (props) => {
       setDataFolders(files[0].folders);
       setDataFiles(files[0].files);
     }
-  }, [files]);
+  }, [files, selectedItemId]);
 
   return (
     <motion.div
@@ -56,7 +56,10 @@ const FileList = (props) => {
               <TableRow
                 key={i}
                 hover
-                onClick={(event) => dispatch(setSelectedItem(item))}
+                onClick={(event) => {
+                  dispatch(setSelectedItem(item));
+                  dispatch(setSelectedItemId(i));
+                }}
                 selected={i === selectedItemId}
                 className="cursor-pointer h-64"
               >
@@ -93,7 +96,10 @@ const FileList = (props) => {
               <TableRow
                 key={dataFolders.length + i}
                 hover
-                onClick={(event) => dispatch(setSelectedItem(item))}
+                onClick={(event) => {
+                  dispatch(setSelectedItem(item));
+                  dispatch(setSelectedItemId(i + dataFolders.length));
+                }}
                 selected={dataFolders.length + i === selectedItemId}
                 className="cursor-pointer h-64"
               >
@@ -133,4 +139,4 @@ const FileList = (props) => {
   );
 };
 
-export default FileList;
+export default SearchList;

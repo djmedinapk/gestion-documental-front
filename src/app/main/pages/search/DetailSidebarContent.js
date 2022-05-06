@@ -1,16 +1,13 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import { selectedItem } from "./store/filesSlice";
 import StyledIcon from "./StyledIcon";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const DetailSidebarContent = (props) => {
   const selectedItem = useSelector(
-    ({ fileManagerApp }) => fileManagerApp.searchs.selectedItem
+    ({ searchApp }) => searchApp.searchs.selectedItem
   );
   const [icon, setIcon] = useState([]);
 

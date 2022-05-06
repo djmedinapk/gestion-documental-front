@@ -3,11 +3,10 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import { selectFileById } from "./store/searchsSlice";
 
 function DetailSidebarHeader(props) {
   const selectedItem = useSelector(
-    ({ fileManagerApp }) => fileManagerApp.searchs.selectedItem
+    ({ searchApp }) => searchApp.searchs.selectedItem
   );
 
   if (!selectedItem) {

@@ -3,7 +3,7 @@ import FuseUtils from "@fuse/utils";
 import LoginPageConfig from "app/main/pages/auth/login/LoginPageConfig";
 import FuseLoading from "@fuse/core/FuseLoading";
 import Error404Page from "app/main/404/Error404Page";
-import FileManagerAppConfig from "app/main/pages/search/FileManagerAppConfig";
+import SearchAppConfig from "app/main/pages/search/SearchAppConfig";
 import DocumentTypesAdminAppConfig from "app/main/pages/Admin/documentTypes/DocumentTypesAdminAppConfig";
 import FilesAdminAppConfig from "app/main/pages/Admin/files/FilesAdminAppConfig";
 import FoldersAdminAppConfig from "app/main/pages/Admin/folders/FoldersAdminAppConfig";
@@ -13,7 +13,7 @@ import VersionsAdminAppConfig from "app/main/pages/Admin/versions/VersionsAdminA
 
 const routeConfigs = [
   LoginPageConfig,
-  FileManagerAppConfig,
+  SearchAppConfig,
   DocumentTypesAdminAppConfig,
   FilesAdminAppConfig,
   FoldersAdminAppConfig,

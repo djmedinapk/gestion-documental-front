@@ -22,12 +22,12 @@ const navigationConfig = [
         url: '/',
       },
       {
-        id: 'pruebaBuscador-component',
+        id: 'search-component',
         title: 'Search',
         translate: '',
         type: 'item',
         icon: 'search',
-        url: 'apps/file-manager',
+        url: 'apps/search',
       },
       {
         id: 'admin',

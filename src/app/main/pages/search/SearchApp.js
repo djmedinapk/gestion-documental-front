@@ -1,21 +1,15 @@
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import Fab from "@mui/material/Fab";
-import Icon from "@mui/material/Icon";
-import IconButton from "@mui/material/IconButton";
 import withReducer from "app/store/withReducer";
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useRef } from "react";
+import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
-import Breadcrumb from "./Breadcrumb";
-import Breadcrumb2 from "./Breadcrumb2";
+import TextSearchComponent from "./TextSearchComponent";
+import DropdownSearchComponent from "./DropdownSearchComponent";
 import DetailSidebarContent from "./DetailSidebarContent";
 import DetailSidebarHeader from "./DetailSidebarHeader";
-import FileList from "./FileList";
-import MainSidebarContent from "./MainSidebarContent";
-import MainSidebarHeader from "./MainSidebarHeader";
+import SearchList from "./SearchList";
 import reducer from "./store";
-import { selectFileById, getFiles } from "./store/filesSlice";
 import { getDocumentTypes } from "./store/documentTypesSlice";
 import { getProjects } from "./store/projectsSlice";
 import { getSearchs } from "./store/searchsSlice";
@@ -44,7 +38,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   },
 }));
 
-function FileManagerApp() {
+function SearchApp() {
   const dispatch = useDispatch();
   const pageLayout = useRef(null);
   const routeParams = useParams();
@@ -60,19 +54,19 @@ function FileManagerApp() {
       header={
         <div className="flex flex-col flex-1 pt-24 sm:pt-24 pb-12 sm:pb-12 relative">
           <div className="flex items-center justify-between">
-            <Breadcrumb className="flex flex-1 ltr:pl-72 rtl:pr-72 pb-12 text-16 sm:text-24 font-semibold" />
+            <TextSearchComponent className="flex flex-1 ltr:pl-72 rtl:pr-72 pb-12 text-16 sm:text-24 font-semibold" />
           </div>
           <div className="flex-1 items-end">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: { delay: 0.6 } }}
             >
-              <Breadcrumb2 className="flex flex-1 ltr:pl-72 rtl:pr-72 pb-12 text-16 sm:text-24 font-semibold" />
+              <DropdownSearchComponent className="flex flex-1 ltr:pl-72 rtl:pr-72 pb-12 text-16 sm:text-24 font-semibold" />
             </motion.div>
           </div>
         </div>
       }
-      content={<FileList pageLayout={pageLayout} />}
+      content={<SearchList pageLayout={pageLayout} />}
       rightSidebarHeader={<DetailSidebarHeader />}
       rightSidebarContent={<DetailSidebarContent />}
       ref={pageLayout}
@@ -81,4 +75,4 @@ function FileManagerApp() {
   );
 }
 
-export default withReducer("fileManagerApp", reducer)(FileManagerApp);
+export default withReducer("searchApp", reducer)(SearchApp);

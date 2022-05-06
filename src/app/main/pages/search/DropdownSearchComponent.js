@@ -1,48 +1,30 @@
-import Icon from "@mui/material/Icon";
-import Typography from "@mui/material/Typography";
-
 import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
 import { useDispatch, useSelector } from "react-redux";
-import Input from "@mui/material/Input";
 import { ThemeProvider } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 
-import Checkbox from "@mui/material/Checkbox";
-import Table from "@mui/material/Table";
-import PropTypes from "prop-types";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { selectMainTheme } from "app/store/fuse/settingsSlice";
 import { selectDocumentTypes } from "./store/documentTypesSlice";
 import { selectProjects } from "./store/projectsSlice";
 import {
-  selectSearchs,
   changeDocumentTypeSearch,
   changeProjectSearch,
   getSearchs,
 } from "./store/searchsSlice";
 
-const Breadcrumb2 = ({ className, selected }) => {
-  //const arr = selected.location.split('>');
+const DropdownSearchComponent = ({ className, selected }) => {
   const dispatch = useDispatch();
   const mainTheme = useSelector(selectMainTheme);
   const documentTypes = useSelector(selectDocumentTypes);
   const projects = useSelector(selectProjects);
   const documentTypeSearch = useSelector(
-    ({ fileManagerApp }) => fileManagerApp.searchs.documentTypeSearch
+    ({ searchApp }) => searchApp.searchs.documentTypeSearch
   );
   const projectSearch = useSelector(
-    ({ fileManagerApp }) => fileManagerApp.searchs.projectSearch
+    ({ searchApp }) => searchApp.searchs.projectSearch
   );
 
   const [dataDocumentTypes, setDataDocumentTypes] = useState([]);
@@ -125,4 +107,4 @@ const Breadcrumb2 = ({ className, selected }) => {
   );
 };
 
-export default Breadcrumb2;
+export default DropdownSearchComponent;
