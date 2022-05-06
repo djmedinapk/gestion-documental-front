@@ -6,6 +6,11 @@ const locale = {
   EDIT_DOCUMENT_TYPE: 'Editar Tipo de Documento',
   NAME: 'Nombre',
   DESCRIPTION: 'Descripción',
+  REGEX: 'Regex',
+  CODE: 'Code',
+  ICON: 'Icon',
+  EXTENSION_ALLOWED: 'ExtensionAllowed',
+  LAST_UPDATED: 'LastUpdated',
   ADD:'Agregar',
   SAVE:'Guardar',
 };
