@@ -4,10 +4,14 @@ import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 
+import { useTranslation } from "react-i18next";
+
 function DetailSidebarHeader(props) {
   const selectedItem = useSelector(
     ({ searchApp }) => searchApp.searchs.selectedItem
   );
+
+  const { t } = useTranslation("searchPage");
 
   if (!selectedItem) {
     return null;
@@ -51,7 +55,7 @@ function DetailSidebarHeader(props) {
           animate={{ opacity: 1, transition: { delay: 0.3 } }}
         >
           <Typography variant="caption" className="font-medium">
-            <span>Edited</span>
+            <span>{t('EDITED')}</span>
             <span>: -{selectedItem.modified}</span>
           </Typography>
         </motion.div>

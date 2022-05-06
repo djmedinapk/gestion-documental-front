@@ -11,13 +11,16 @@ import { motion } from "framer-motion";
 
 import { changeTextSearch, getSearchs } from "./store/searchsSlice";
 
+import { useTranslation } from 'react-i18next';
+
 function TextSearchComponent({ className, selected }) {
   const mainTheme = useSelector(selectMainTheme);
-
   const dispatch = useDispatch();
   const textSearch = useSelector(
     ({ searchApp }) => searchApp.searchs.textSearch
   );
+
+  const { t } = useTranslation('searchPage');
 
   function handleTextSearchChange(ev) {
     dispatch(changeTextSearch(ev.target.value));
@@ -33,7 +36,7 @@ function TextSearchComponent({ className, selected }) {
               <Icon color="action">search</Icon>
 
               <Input
-                placeholder="Search"
+                placeholder={t('SEARCH')}
                 className="px-16"
                 disableUnderline
                 fullWidth

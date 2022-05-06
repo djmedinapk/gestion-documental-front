@@ -14,6 +14,8 @@ import StyledIcon from "./StyledIcon";
 
 import React, { useEffect, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 const SearchList = (props) => {
   const dispatch = useDispatch();
   const files = useSelector(selectSearchs);
@@ -23,6 +25,8 @@ const SearchList = (props) => {
 
   const [dataFolders, setDataFolders] = useState([]);
   const [dataFiles, setDataFiles] = useState([]);
+
+  const { t } = useTranslation("searchPage");
 
   useEffect(() => {
     if (files[0]) {
@@ -40,13 +44,15 @@ const SearchList = (props) => {
         <TableHead>
           <TableRow>
             <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell className="hidden sm:table-cell">Type</TableCell>
-            <TableCell className="hidden sm:table-cell">Owner</TableCell>
+            <TableCell>{t("NAME")}</TableCell>
+            <TableCell className="hidden sm:table-cell">{t("TYPE")}</TableCell>
+            <TableCell className="hidden sm:table-cell">{t("OWNER")}</TableCell>
             <TableCell className="text-center hidden sm:table-cell">
-              Size
+              {t("SIZE")}
             </TableCell>
-            <TableCell className="hidden sm:table-cell">Modified</TableCell>
+            <TableCell className="hidden sm:table-cell">
+              {t("MODIFIED")}
+            </TableCell>
           </TableRow>
         </TableHead>
 
@@ -67,7 +73,7 @@ const SearchList = (props) => {
                   <StyledIcon type="folder" />
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
-                <TableCell className="hidden sm:table-cell">folder</TableCell>
+                <TableCell className="hidden sm:table-cell">{t('FOLDER')}</TableCell>
                 <TableCell className="hidden sm:table-cell">{i}</TableCell>
                 <TableCell className="text-center hidden sm:table-cell">
                   -{item.size === "" ? "-" : item.size}
@@ -107,7 +113,7 @@ const SearchList = (props) => {
                   <StyledIcon type="document" />
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
-                <TableCell className="hidden sm:table-cell">file</TableCell>
+                <TableCell className="hidden sm:table-cell">{t('FILE')}</TableCell>
                 <TableCell className="hidden sm:table-cell">
                   {dataFolders.length + i}
                 </TableCell>

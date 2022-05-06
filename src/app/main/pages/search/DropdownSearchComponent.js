@@ -15,6 +15,8 @@ import {
   getSearchs,
 } from "./store/searchsSlice";
 
+import { useTranslation } from 'react-i18next';
+
 const DropdownSearchComponent = ({ className, selected }) => {
   const dispatch = useDispatch();
   const mainTheme = useSelector(selectMainTheme);
@@ -29,6 +31,8 @@ const DropdownSearchComponent = ({ className, selected }) => {
 
   const [dataDocumentTypes, setDataDocumentTypes] = useState([]);
   const [dataProjects, setDataProjects] = useState([]);
+
+  const { t } = useTranslation('searchPage');
 
   useEffect(() => {
     if (documentTypes) {
@@ -65,7 +69,7 @@ const DropdownSearchComponent = ({ className, selected }) => {
               classes={{ select: "py-8" }}
             >
               <MenuItem value="">
-                <em>All Document Types</em>
+                <em>{t('ALL_DOCUMENT_TYPES')}</em>
               </MenuItem>
               {dataDocumentTypes.map((row, i) => {
                 return (
@@ -90,7 +94,7 @@ const DropdownSearchComponent = ({ className, selected }) => {
               classes={{ select: "py-8" }}
             >
               <MenuItem value="">
-                <em>All Projects</em>
+                <em>{t('ALL_PROJECTS')}</em>
               </MenuItem>
               {dataProjects.map((row, i) => {
                 return (
