@@ -7,22 +7,20 @@ import axios from "./../../../../../services/Axios/HttpClient";
 
 export const getProductTypes = createAsyncThunk(
   "productTypesAdminApp/productTypes/getProductTypes",
-  async (routeParams, { getState }) => {
-    routeParams =
-      routeParams || getState().productTypesAdminApp.productTypes.routeParams;
-    const response = await axios.getWithParams("/api/ProductType", {
-      params: routeParams,
+  async (routeParams, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/ProductType/WithParams", {
+      params: getState().productTypesAdminApp.productTypes.paramsData,
     });
     const data = await response.data;
-
+    dispatch(changeParamsDataCount(data.count));
     return { data, routeParams };
   }
 );
 
 export const addProductType = createAsyncThunk(
-  'productTypesApp/productTypes/addProductType',
+  "productTypesApp/productTypes/addProductType",
   async (productType, { dispatch, getState }) => {
-    const response = await axios.post('/api/ProductType', productType );
+    const response = await axios.post("/api/ProductType", productType);
     const data = await response.data;
 
     dispatch(getProductTypes());
@@ -32,9 +30,12 @@ export const addProductType = createAsyncThunk(
 );
 
 export const updateProductType = createAsyncThunk(
-  'productTypesAdminApp/productTypes/updateProductTypes',
+  "productTypesAdminApp/productTypes/updateProductTypes",
   async (productTypeData, { dispatch, getState }) => {
-    const response = await axios.put('/api/ProductType/'+productTypeData.id, productTypeData);
+    const response = await axios.put(
+      "/api/ProductType/" + productTypeData.id,
+      productTypeData
+    );
     const data = await response.data;
 
     dispatch(getProductTypes());
@@ -44,9 +45,9 @@ export const updateProductType = createAsyncThunk(
 );
 
 export const removeProductType = createAsyncThunk(
-  'productTypesApp/productTypes/removeProductType',
+  "productTypesApp/productTypes/removeProductType",
   async (productTypeId, { dispatch, getState }) => {
-    await axios.delete('/api/ProductType/'+productTypeId);
+    await axios.delete("/api/ProductType/" + productTypeId);
 
     dispatch(getProductTypes());
 
@@ -66,8 +67,13 @@ const productTypesAdminSlice = createSlice({
   initialState: productTypesAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
+    paramsData: {
+      PageIndex: 1,
+      PageSize: 10,
+      Count: 0,
+    },
     productTypesAdminDialog: {
-      type: 'new',
+      type: "new",
       props: {
         open: false,
       },
@@ -121,11 +127,20 @@ const productTypesAdminSlice = createSlice({
         data: null,
       };
     },
+    changeParamsDataPageIndex: (state, action) => {
+      state.paramsData.PageIndex = action.payload;
+    },
+    changeParamsDataPageSize: (state, action) => {
+      state.paramsData.PageSize = action.payload;
+    },
+    changeParamsDataCount: (state, action) => {
+      state.paramsData.Count = action.payload;
+    },
   },
   extraReducers: {
     [getProductTypes.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
-      productTypesAdminAdapter.setAll(state, data);
+      productTypesAdminAdapter.setAll(state, { data });
       state.routeParams = routeParams;
     },
   },
@@ -136,6 +151,9 @@ export const {
   closeNewProductTypesAdminDialog,
   openEditProductTypesAdminDialog,
   closeEditProductTypesAdminDialog,
+  changeParamsDataPageIndex,
+  changeParamsDataPageSize,
+  changeParamsDataCount,
 } = productTypesAdminSlice.actions;
 
 export default productTypesAdminSlice.reducer;

@@ -8,6 +8,9 @@ const locale = {
   DESCRIPTION: 'Descripción',
   ADD:'Agregar',
   SAVE:'Guardar',
+  SHOWING_DATA_OF: 'Mostrando Datos de',
+  OF:'de',
+  TOTAL_DATA: 'Datos Totales',
 };
 
 export default locale;

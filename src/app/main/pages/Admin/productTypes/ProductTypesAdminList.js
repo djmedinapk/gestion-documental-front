@@ -18,21 +18,21 @@ const ProductTypesAdminList = () => {
   const productTypes = useSelector(selectProductTypes);
 
   useEffect(() => {
-    if (productTypes) {
-      setFilteredData(productTypes);
+    if (productTypes[0]) {
+      setFilteredData(productTypes[0].data);
     }
   }, [productTypes]);
 
   const columns = useMemo(
     () => [
       {
-        Header: t('NAME'),
+        Header: t("NAME"),
         accessor: "name",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('DESCRIPTION'),
+        Header: t("DESCRIPTION"),
         accessor: "description",
         className: "font-medium",
         sortable: false,
