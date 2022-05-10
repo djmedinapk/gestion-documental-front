@@ -1,5 +1,5 @@
 import FuseUtils from "@fuse/utils";
-import { Icon, IconButton, Typography } from "@mui/material";
+import { Icon, IconButton, Typography, Button } from "@mui/material";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,8 @@ import DocumentTypesAdminTable from "./DocumentTypesAdminTable";
 import {
   selectDocumentTypes,
   openEditDocumentTypesAdminDialog,
+  changeFiles,
+  fileUp,
 } from "./store/documentTypesAdminSlice";
 
 const DocumentTypesAdminList = () => {
@@ -16,6 +18,7 @@ const DocumentTypesAdminList = () => {
   const [filteredData, setFilteredData] = useState([]);
   const dispatch = useDispatch();
   const documentTypes = useSelector(selectDocumentTypes);
+  const [filesButton, setFilesButton] = useState([]);
 
   useEffect(() => {
     if (documentTypes) {
@@ -23,46 +26,53 @@ const DocumentTypesAdminList = () => {
     }
   }, [documentTypes]);
 
+  const changeFile = (event) => {
+    setFilesButton({...filesButton, [Object.keys(filesButton).length+""]: event} );
+    dispatch(fileUp(filesButton));
+    console.log(filesButton);
+    debugger;
+  };
+
   const columns = useMemo(
     () => [
       {
-        Header: t('NAME'),
+        Header: t("NAME"),
         accessor: "name",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('DESCRIPTION'),
+        Header: t("DESCRIPTION"),
         accessor: "description",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('REGEX'),
+        Header: t("REGEX"),
         accessor: "regex",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('CODE'),
+        Header: t("CODE"),
         accessor: "code",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('ICON'),
+        Header: t("ICON"),
         accessor: "icon",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('EXTENSION_ALLOWED'),
+        Header: t("EXTENSION_ALLOWED"),
         accessor: "extensionAllowed",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('LAST_UPDATED'),
+        Header: t("LAST_UPDATED"),
         accessor: "lastUpdated",
         className: "font-medium",
         sortable: false,
@@ -91,6 +101,24 @@ const DocumentTypesAdminList = () => {
   if (filteredData.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center h-full">
+        <input
+          accept="image/*"
+          style={{ display: "none" }}
+          id="raised-button-file"
+          multiple
+          type="file"
+          onChange={(event) => {
+            changeFile(event.target.files[0]);
+          }}
+          onClick={(event) => {
+            event.target.value = null;
+          }}
+        />
+        <label htmlFor="raised-button-file">
+          <Button variant="raised" component="span">
+            Upload
+          </Button>
+        </label>
         <Typography color="textSecondary" variant="h5">
           {t("NO_DATA_TO_SHOW")}
         </Typography>
@@ -104,6 +132,24 @@ const DocumentTypesAdminList = () => {
       animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
       className="flex flex-auto w-full max-h-full"
     >
+      <input
+        accept="image/*"
+        style={{ display: "none" }}
+        id="raised-button-file"
+        multiple
+        type="file"
+        onChange={(event) => {
+          changeFile(event.target.files[0]);
+        }}
+        onClick={(event) => {
+          event.target.value = null;
+        }}
+      />
+      <label htmlFor="raised-button-file">
+        <Button variant="raised" component="span">
+          Upload
+        </Button>
+      </label>
       <DocumentTypesAdminTable
         columns={columns}
         data={filteredData}

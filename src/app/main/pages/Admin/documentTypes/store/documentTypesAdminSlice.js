@@ -20,9 +20,9 @@ export const getDocumentTypes = createAsyncThunk(
 );
 
 export const addDocumentType = createAsyncThunk(
-  'documentTypesApp/documentTypes/addDocumentType',
+  "documentTypesApp/documentTypes/addDocumentType",
   async (documentType, { dispatch, getState }) => {
-    const response = await axios.post('/api/DocumentType', documentType );
+    const response = await axios.post("/api/DocumentType", documentType);
     const data = await response.data;
 
     dispatch(getDocumentTypes());
@@ -32,9 +32,12 @@ export const addDocumentType = createAsyncThunk(
 );
 
 export const updateDocumentType = createAsyncThunk(
-  'documentTypesAdminApp/documentTypes/updateDocumentTypes',
+  "documentTypesAdminApp/documentTypes/updateDocumentTypes",
   async (documentTypeData, { dispatch, getState }) => {
-    const response = await axios.put('/api/DocumentType/'+documentTypeData.id, documentTypeData);
+    const response = await axios.put(
+      "/api/DocumentType/" + documentTypeData.id,
+      documentTypeData
+    );
     const data = await response.data;
 
     dispatch(getDocumentTypes());
@@ -44,13 +47,36 @@ export const updateDocumentType = createAsyncThunk(
 );
 
 export const removeDocumentType = createAsyncThunk(
-  'documentTypesApp/documentTypes/removeDocumentType',
+  "documentTypesApp/documentTypes/removeDocumentType",
   async (documentTypeId, { dispatch, getState }) => {
-    await axios.delete('/api/DocumentType/'+documentTypeId);
+    await axios.delete("/api/DocumentType/" + documentTypeId);
 
     dispatch(getDocumentTypes());
 
     return documentTypeId;
+  }
+);
+
+export const fileUp = createAsyncThunk(
+  "documentTypesApp/documentTypes/addDocumentType",
+  async (selectedFile, { dispatch, getState }) => {
+    const formData = new FormData();
+    const dataPe = JSON.stringify({
+      name: "eme",
+      description: "description",
+    });
+debugger;
+
+    for (var i = 0; i < Object.keys(selectedFile).length+1; i++) {
+      formData.append(i + "", selectedFile[i])
+    } 
+    formData.append("datos", dataPe);
+    const response = await axios.post("/api/DocumentType/file", formData);
+    const data = await response.data;
+
+    dispatch(getDocumentTypes());
+
+    return data;
   }
 );
 
@@ -66,8 +92,9 @@ const documentTypesAdminSlice = createSlice({
   initialState: documentTypesAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
+    files: {},
     documentTypesAdminDialog: {
-      type: 'new',
+      type: "new",
       props: {
         open: false,
       },
@@ -121,6 +148,9 @@ const documentTypesAdminSlice = createSlice({
         data: null,
       };
     },
+    changeFiles: (state, action) => {
+      state.files = action.payload;
+    },
   },
   extraReducers: {
     [getDocumentTypes.fulfilled]: (state, action) => {
@@ -136,6 +166,7 @@ export const {
   closeNewDocumentTypesAdminDialog,
   openEditDocumentTypesAdminDialog,
   closeEditDocumentTypesAdminDialog,
+  changeFiles,
 } = documentTypesAdminSlice.actions;
 
 export default documentTypesAdminSlice.reducer;

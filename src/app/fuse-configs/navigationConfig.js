@@ -30,6 +30,22 @@ const navigationConfig = [
         url: 'apps/search',
       },
       {
+        id: '1',
+        title: 'PO',
+        type: 'collapse',
+        icon: 'shopping_cart',
+        url: 'apps/e-commerce',
+        children: [
+          
+          {
+            id: 'e-commerce-new-product',
+            title: 'New PO',
+            type: 'item',
+            url: 'apps/e-commerce/products/new',
+          },
+        ],
+      },
+      {
         id: 'admin',
         title: 'Admin',
         type: 'collapse',

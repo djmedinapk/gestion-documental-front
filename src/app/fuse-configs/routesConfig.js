@@ -10,6 +10,7 @@ import FoldersAdminAppConfig from "app/main/pages/Admin/folders/FoldersAdminAppC
 import ProductTypesAdminAppConfig from "app/main/pages/Admin/productTypes/ProductTypesAdminAppConfig";
 import ProjectsAdminAppConfig from "app/main/pages/Admin/projects/ProjectsAdminAppConfig";
 import VersionsAdminAppConfig from "app/main/pages/Admin/versions/VersionsAdminAppConfig";
+import ECommerceAppConfig from "app/main/pages/e-commerce/ECommerceAppConfig";
 
 const routeConfigs = [
   LoginPageConfig,
@@ -20,6 +21,7 @@ const routeConfigs = [
   ProductTypesAdminAppConfig,
   ProjectsAdminAppConfig,
   VersionsAdminAppConfig,
+  ECommerceAppConfig,
 ];
 
 const routes = [
