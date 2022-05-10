@@ -11,14 +11,26 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Icon from "@mui/material/Icon";
 
-function ShippingTab(props) {
+import { changeDatosPOs } from "./../../store/productsSlice";
+
+const ShippingTab = () => {
+  const dispatch = useDispatch();
   const methods = useFormContext();
   const { control } = methods;
-  const [map, setMap] = useState("shipping");
+  const datosSS = JSON.parse(
+    JSON.stringify(
+      useSelector(({ eCommerceApp }) => eCommerceApp.products.datosPOs)
+    )
+  );
+
+  const handleUpdate = () => {
+    dispatch(changeDatosPOs(datosSS));
+  };
 
   return (
     <div>
@@ -109,296 +121,126 @@ function ShippingTab(props) {
           </Select>
         </FormControl>
       </div>
-      <Accordion
-        className="border-0 shadow-0 overflow-hidden"
-        expanded={map === "shipping"}
-        onChange={() => setMap(map !== "shipping" ? "shipping" : false)}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          classes={{ root: "border border-solid rounded-16 mt-16" }}
-        >
-          <Typography className="font-semibold">Aduanas</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <div className="flex flex-col md:flex-row -mx-8">
-            <Controller
-              name="depth"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mt-8  mx-4"
-                  label="DODA"
-                  id="depth"
-                  variant="outlined"
-                  size="small"
-                  disabled={true}
-                  fullWidth
-                />
-              )}
-            />
-
-            <Button
-              variant="contained"
-              color="secondary"
-              className="mt-8  mx-4"
-              //onClick={handleRemoveProduct}
-              startIcon={<Icon size="small">save</Icon>}
-              size="small"
-              style={{ minWidth: "15%" }}
-            >
-              Choose File
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className="mt-8  mx-4"
-              //onClick={handleRemoveProduct}
-              size="small"
-            >
-              <Icon>help</Icon>
-            </Button>
-          </div>
-          <div className="flex flex-col md:flex-row -mx-8">
-            <Controller
-              name="depth"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mt-8  mx-4"
-                  label="Pediment"
-                  id="depth"
-                  variant="outlined"
-                  size="small"
-                  disabled={true}
-                  fullWidth
-                />
-              )}
-            />
-
-            <Button
-              variant="contained"
-              color="secondary"
-              className="mt-8  mx-4 md:w-25"
-              //onClick={handleRemoveProduct}
-              startIcon={<Icon size="small">save</Icon>}
-              size="small"
-              style={{ minWidth: "15%" }}
-              
-            >
-              Choose File
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className="mt-8  mx-4"
-              //onClick={handleRemoveProduct}
-
-              size="small"
-              
-            >
-              <Icon>help</Icon>
-            </Button>
-          </div>
-          <div className="flex flex-col md:flex-row -mx-8">
-            <Button
-              variant="contained"
-              color="inherit"
-              className="mt-8  mx-4"
-              //onClick={handleRemoveProduct}
-              startIcon={<Icon>add</Icon>}
-              size="small"
-              fullWidth
-            ></Button>
-          </div>
-          <Accordion
-            className="border-0 shadow-0 overflow-hidden"
-            //expanded={map === "prueba"}
-            //onChange={() => setMap(map !== "prueba" ? "prueba" : false)}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              classes={{ root: "border border-solid rounded-16 mt-16" }}
-            >
-              <Typography className="font-semibold">Subcarpeta</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div className="flex flex-col md:flex-row -mx-8">
-                <Controller
-                  name="depth"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      className="mt-8  mx-4 md-2"
-                      label="DODA"
-                      id="depth"
-                      variant="outlined"
-                      size="small"
-                      disabled={true}
-                      fullWidth
-                    />
-                  )}
-                />
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className="mt-8  mx-4 md:w-25"
-                  //onClick={handleRemoveProduct}
-                  startIcon={<Icon size="small">save</Icon>}
-                  size="small"
-                  style={{ minWidth: "15%" }}
-                  
-                >
-                  Choose File
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className="mt-8  mx-4"
-                  //onClick={handleRemoveProduct}
-
-                  size="small"
-                  
-                >
-                  <Icon>help</Icon>
-                </Button>
-              </div>
-              <div className="flex flex-col md:flex-row -mx-8">
-                <Controller
-                  name="depth"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      className="mt-8  mx-4"
-                      label="Pediment"
-                      id="depth"
-                      variant="outlined"
-                      size="small"
-                      disabled={true}
-                      fullWidth
-                    />
-                  )}
-                />
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className="mt-8  mx-4 md:w-25"
-                  //onClick={handleRemoveProduct}
-                  startIcon={<Icon size="small">save</Icon>}
-                  size="small"
-                  style={{ minWidth: "15%" }}
-                  
-                >
-                  Choose File
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className="mt-8  mx-4"
-                  //onClick={handleRemoveProduct}
-
-                  size="small"
-                  
-                >
-                  <Icon>help</Icon>
-                </Button>
-              </div>
-              <div className="flex flex-col md:flex-row -mx-8">
-                <Controller
-                  name="depth"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      className="mt-8  mx-4"
-                      label="Pediment"
-                      id="depth"
-                      variant="outlined"
-                      size="small"
-                      disabled={true}
-                      fullWidth
-                    />
-                  )}
-                />
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className="mt-8  mx-4 md:w-25"
-                  //onClick={handleRemoveProduct}
-                  startIcon={<Icon size="small">save</Icon>}
-                  size="small"
-                  style={{ minWidth: "15%" }}
-                  
-                >
-                  Choose File
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className="mt-8  mx-4"
-                  //onClick={handleRemoveProduct}
-
-                  size="small"
-                  
-                >
-                  <Icon>help</Icon>
-                </Button>
-              </div>
-              <div className="flex flex-col md:flex-row -mx-8">
-                <Controller
-                  name="depth"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      className="mt-8  mx-4"
-                      label="Pediment"
-                      id="depth"
-                      variant="outlined"
-                      size="small"
-                      disabled={true}
-                      fullWidth
-                    />
-                  )}
-                />
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className="mt-8  mx-4 md:w-25"
-                  //onClick={handleRemoveProduct}
-                  startIcon={<Icon size="small">save</Icon>}
-                  size="small"
-                  style={{ minWidth: "15%" }}
-                  
-                >
-                  Choose File
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className="mt-8  mx-4"
-                  //onClick={handleRemoveProduct}
-
-                  size="small"
-                  
-                >
-                  <Icon>help</Icon>
-                </Button>
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        </AccordionDetails>
-      </Accordion>
+      {datosSS.folders.map((folder, y) => (
+        <AcordionComponent
+          //map={map}
+          dataPO={datosSS.folders[y]}
+          control={control}
+          handleUpdate={handleUpdate}
+        />
+      ))}
     </div>
   );
-}
+};
+
+const AcordionComponent = (props) => {
+  const dispatch = useDispatch();
+
+  const params = useSelector(
+    ({ eCommerceApp }) => eCommerceApp.products.datosPOs
+  );
+
+  const [map, setMap] = useState(props.dataPO.name);
+
+  useEffect(() => {}, [props, params]);
+
+  const handleAdd = () => {
+    console.log(props.dataPO);
+    props.dataPO.folders.push({
+      name: "Pepe",
+      files: [{ name: "Factura Agente Aduanal (.pdf)" }],
+      folders: [],
+    });
+    props.dataPO.files.push({ name: "Factura Agente Aduanal (.pdf)" });
+    props.handleUpdate();
+  };
+
+  return (
+    <Accordion
+      className="border-0 shadow-0 overflow-hidden"
+      expanded={map === props.dataPO.name}
+      onChange={() =>
+        setMap(map !== props.dataPO.name ? props.dataPO.name : false)
+      }
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        classes={{ root: "border border-solid rounded-16 mt-16" }}
+      >
+        <Typography className="font-semibold">{props.dataPO.name}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        {props.dataPO.files !== null ? (
+          props.dataPO.files.map((file, i) => (
+            <div className="flex flex-col md:flex-row -mx-8">
+              <Controller
+                name={file.name}
+                control={props.control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mt-8  mx-4"
+                    label={file.name}
+                    id={file.name}
+                    variant="outlined"
+                    size="small"
+                    disabled={true}
+                    fullWidth
+                  />
+                )}
+              />
+
+              <Button
+                variant="contained"
+                color="secondary"
+                className="mt-8  mx-4"
+                //onClick={handleRemoveProduct}
+                startIcon={<Icon size="small">save</Icon>}
+                size="small"
+                style={{ minWidth: "15%" }}
+              >
+                Choose File
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className="mt-8  mx-4"
+                //onClick={handleRemoveProduct}
+                size="small"
+              >
+                <Icon>help</Icon>
+              </Button>
+            </div>
+          ))
+        ) : (
+          <></>
+        )}
+
+        {props.dataPO.folders !== null ? (
+          props.dataPO.folders.map((headerGroup, i) => (
+            <AcordionComponent
+              dataPO={props.dataPO.folders[i]}
+              control={props.control}
+              handleUpdate={props.handleUpdate}
+            />
+          ))
+        ) : (
+          <></>
+        )}
+        <div className="flex flex-col md:flex-row -mx-8">
+          <Button
+            variant="contained"
+            color="inherit"
+            className="mt-8  mx-4"
+            onClick={handleAdd}
+            startIcon={<Icon>add</Icon>}
+            size="small"
+            fullWidth
+          ></Button>
+        </div>
+      </AccordionDetails>
+    </Accordion>
+  );
+};
 
 export default ShippingTab;
