@@ -30,7 +30,6 @@ const DocumentTypesAdminList = () => {
     setFilesButton({...filesButton, [Object.keys(filesButton).length+""]: event} );
     dispatch(fileUp(filesButton));
     console.log(filesButton);
-    debugger;
   };
 
   const columns = useMemo(

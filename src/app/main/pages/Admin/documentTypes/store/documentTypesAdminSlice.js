@@ -65,7 +65,6 @@ export const fileUp = createAsyncThunk(
       name: "eme",
       description: "description",
     });
-debugger;
 
     for (var i = 0; i < Object.keys(selectedFile).length+1; i++) {
       formData.append(i + "", selectedFile[i])
