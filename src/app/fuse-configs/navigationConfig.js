@@ -34,7 +34,6 @@ const navigationConfig = [
         title: 'PO',
         type: 'collapse',
         icon: 'shopping_cart',
-        url: 'apps/e-commerce',
         children: [
           
           {
