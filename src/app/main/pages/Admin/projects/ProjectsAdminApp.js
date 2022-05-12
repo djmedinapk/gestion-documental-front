@@ -7,8 +7,10 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import ProjectsAdminHeader from './ProjectsAdminHeader';
 import ProjectsAdminList from './ProjectsAdminList';
+import ProjectsAdminSidebarContent from './ProjectsAdminSidebarContent';
+import ProjectsAdminDialog from './ProjectsAdminDialog';
 import reducer from './store';
-import { getProjects } from './store/projectsSlice';
+import { getProjects } from './store/projectsAdminSlice';
 
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
@@ -56,11 +58,12 @@ const ProjectsAdminApp = (props) => {
         <Root
             header={<ProjectsAdminHeader pageLayout={pageLayout} />}
             content={<ProjectsAdminList/>}
-            leftSidebarContent={<></>}
+            leftSidebarContent={<ProjectsAdminSidebarContent />}
             sidebarInner
             ref={pageLayout}
             innerScroll
         />
+        <ProjectsAdminDialog/>
     </>
     );
 };

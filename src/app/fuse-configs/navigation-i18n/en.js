@@ -1,9 +1,15 @@
 const locale = {
   APPLICATIONS: 'Applications',
   EXAMPLE: 'Example',
-  PROJECTPAGE: 'Projects',
+  ADMIN:"Admin",
+  DOCUMENTTYPEPAGE: 'Document Types',
+  FILEPAGE: 'Files',
+  FOLDERPAGE: 'Folders',
   PRODUCTTYPEPAGE: 'Product Types',
-  ADMIN:"Admin"
+  PROJECTPAGE: 'Projects',
+  VERSIONPAGE: 'Versions',
+  
+  
 };
 
 export default locale;

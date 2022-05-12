@@ -14,14 +14,6 @@ const navigationConfig = [
     icon: 'apps',
     children: [
       {
-        id: 'example-component',
-        title: 'Example',
-        translate: 'EXAMPLE',
-        type: 'item',
-        icon: 'whatshot',
-        url: 'example',
-      },
-      {
         id: 'project-component',
         title: 'Project',
         translate: 'PROJECTPAGE',
@@ -30,12 +22,27 @@ const navigationConfig = [
         url: '/',
       },
       {
-        id: 'pruebaBuscador-component',
+        id: 'search-component',
         title: 'Search',
         translate: '',
         type: 'item',
         icon: 'search',
-        url: 'apps/file-manager',
+        url: 'apps/search',
+      },
+      {
+        id: '1',
+        title: 'PO',
+        type: 'collapse',
+        icon: 'shopping_cart',
+        children: [
+          
+          {
+            id: 'e-commerce-new-product',
+            title: 'New PO',
+            type: 'item',
+            url: 'apps/e-commerce/products/new',
+          },
+        ],
       },
       {
         id: 'admin',
@@ -43,7 +50,39 @@ const navigationConfig = [
         type: 'collapse',
         translate: 'ADMIN',
         icon: 'info',
-        children: [          
+        children: [  
+          {
+            id: 'documentTypesAdmin',
+            title: 'documentTypes',
+            translate: 'DOCUMENTTYPEPAGE',
+            type: 'item',
+            icon: 'account_tree',
+            url: 'apps/admin/documentTypes',
+          },
+          {
+            id: 'filesAdmin',
+            title: 'files',
+            translate: 'FILEPAGE',
+            type: 'item',
+            icon: 'account_tree',
+            url: 'apps/admin/files',
+          },
+          {
+            id: 'foldersAdmin',
+            title: 'folders',
+            translate: 'FOLDERPAGE',
+            type: 'item',
+            icon: 'account_tree',
+            url: 'apps/admin/folders',
+          },
+          {
+            id: 'productTypesAdmin',
+            title: 'productTypes',
+            translate: 'PRODUCTTYPEPAGE',
+            type: 'item',
+            icon: 'account_tree',
+            url: 'apps/admin/productTypes',
+          },        
           {
             id: 'projectsAdmin',
             title: 'projects',
@@ -53,13 +92,14 @@ const navigationConfig = [
             url: 'apps/admin/projects',
           },
           {
-            id: 'productTypesAdmin',
-            title: 'productTypes',
-            translate: 'PRODUCTTYPEPAGE',
+            id: 'versionsAdmin',
+            title: 'versions',
+            translate: 'VERSIONPAGE',
             type: 'item',
             icon: 'account_tree',
-            url: 'apps/admin/productTypes',
+            url: 'apps/admin/versions',
           },
+          
         ],
       },
     ],

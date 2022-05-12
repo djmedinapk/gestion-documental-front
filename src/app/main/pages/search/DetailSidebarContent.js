@@ -1,18 +1,19 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import { selectedItem } from "./store/filesSlice";
 import StyledIcon from "./StyledIcon";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import { useTranslation } from "react-i18next";
 
 const DetailSidebarContent = (props) => {
   const selectedItem = useSelector(
-    ({ fileManagerApp }) => fileManagerApp.searchs.selectedItem
+    ({ searchApp }) => searchApp.searchs.selectedItem
   );
   const [icon, setIcon] = useState([]);
+
+  const { t } = useTranslation("searchPage");
 
   useEffect(() => {
     if (selectedItem) {
@@ -44,43 +45,43 @@ const DetailSidebarContent = (props) => {
       </div>
 
       <Typography variant="subtitle1" className="py-16">
-        Info
+        {t('INFO')}
       </Typography>
 
       <table className="w-full text-justify">
         <tbody>
           <tr className="type h-52">
-            <th className="font-semibold">Type</th>
-            <td>{icon}</td>
+            <th className="font-semibold">{t('TYPE')}</th>
+            <td>{t((""+icon).toUpperCase())}</td>
           </tr>
 
           <tr className="size h-52">
-            <th className="font-semibold">Size</th>
+            <th className="font-semibold">{t('SIZE')}</th>
             <td>-{selectedItem.size === "" ? "-" : selectedItem.size}</td>
           </tr>
 
           <tr className="location h-52 text-left">
-            <th className="font-semibold">Location</th>
+            <th className="font-semibold">{t('LOCATION')}</th>
             <td>-{selectedItem.location}</td>
           </tr>
 
           <tr className="owner h-52">
-            <th className="font-semibold">Owner</th>
+            <th className="font-semibold">{t('OWNER')}</th>
             <td>-{selectedItem.owner}</td>
           </tr>
 
           <tr className="modified h-52">
-            <th className="font-semibold">Modified</th>
+            <th className="font-semibold">{t('MODIFIED')}</th>
             <td>-{selectedItem.modified}</td>
           </tr>
 
           <tr className="opened h-52">
-            <th className="font-semibold">Opened</th>
+            <th className="font-semibold">{t('OPENED')}</th>
             <td>-{selectedItem.opened}</td>
           </tr>
 
           <tr className="created h-52">
-            <th className="font-semibold">Created</th>
+            <th className="font-semibold">{t('CREATED')}</th>
             <td>-{selectedItem.created}</td>
           </tr>
         </tbody>

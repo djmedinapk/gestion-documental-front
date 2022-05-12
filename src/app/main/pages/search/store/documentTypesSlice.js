@@ -6,7 +6,7 @@ import {
 import axios from "./../../../../services/Axios/HttpClient";
 
 export const getDocumentTypes = createAsyncThunk(
-  "fileManagerApp/documentTypes/getDocumentTypes",
+  "searchApp/documentTypes/getDocumentTypes",
   async (routeParams, { getState }) => {
     const response = await axios.getWithParams("/api/DocumentType");
     const data = await response.data;
@@ -18,11 +18,11 @@ const documentTypesAdminAdapter = createEntityAdapter({});
 
 export const { selectAll: selectDocumentTypes } =
   documentTypesAdminAdapter.getSelectors(
-    (state) => state.fileManagerApp.documentTypes
+    (state) => state.searchApp.documentTypes
   );
 
 const documentTypesAdminSlice = createSlice({
-  name: "fileManagerApp/documentTypes",
+  name: "searchApp/documentTypes",
   initialState: documentTypesAdminAdapter.getInitialState({
     routeParams: {},
   }),

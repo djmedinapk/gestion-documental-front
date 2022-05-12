@@ -6,7 +6,7 @@ const ProjectsAdminHeader = (props) => {
     const { t } = useTranslation('projectAdminPage');
       return (
       <div className="flex flex-1 items-center justify-between p-4 sm:p-24">
-        <div className="flex shrink items-center sm:w-224">
+        <div className="flex shrink items-center">
           <Hidden lgUp>
             <IconButton
               onClick={(ev) => {

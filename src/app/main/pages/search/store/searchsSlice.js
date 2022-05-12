@@ -6,12 +6,12 @@ import {
 import axios from "./../../../../services/Axios/HttpClient";
 
 export const getSearchs = createAsyncThunk(
-  "fileManagerApp/searchs/getSearchs",
+  "searchApp/searchs/getSearchs",
   async (routeParams, { getState }) => {
     const paramsData = {
-      Name: getState().fileManagerApp.searchs.textSearch,
-      DocumentTypeId: getState().fileManagerApp.searchs.documentTypeSearch,
-      ProjectId: getState().fileManagerApp.searchs.projectSearch,
+      Name: getState().searchApp.searchs.textSearch,
+      DocumentTypeId: getState().searchApp.searchs.documentTypeSearch,
+      ProjectId: getState().searchApp.searchs.projectSearch,
     };
     const response = await axios.getWithParams("/api/Search", {
       params: paramsData,
@@ -25,16 +25,17 @@ export const getSearchs = createAsyncThunk(
 const searchsAdminAdapter = createEntityAdapter({});
 
 export const { selectAll: selectSearchs } = searchsAdminAdapter.getSelectors(
-  (state) => state.fileManagerApp.searchs
+  (state) => state.searchApp.searchs
 );
 
 const searchsSlice = createSlice({
-  name: "fileManagerApp/searchs",
+  name: "searchApp/searchs",
   initialState: searchsAdminAdapter.getInitialState({
     textSearch: "",
     documentTypeSearch: "",
     projectSearch: "",
     selectedItem: null,
+    selectedItemId: "",
     routeParams: {},
   }),
   reducers: {
@@ -49,6 +50,9 @@ const searchsSlice = createSlice({
     },
     setSelectedItem: (state, action) => {
       state.selectedItem = action.payload;
+    },
+    setSelectedItemId: (state, action) => {
+      state.selectedItemId = action.payload;
     },
   },
   extraReducers: {
@@ -65,6 +69,7 @@ export const {
   changeDocumentTypeSearch,
   changeProjectSearch,
   setSelectedItem,
+  setSelectedItemId,
 } = searchsSlice.actions;
 
 export default searchsSlice.reducer;

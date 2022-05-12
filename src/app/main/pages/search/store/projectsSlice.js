@@ -6,9 +6,9 @@ import {
 import axios from "./../../../../services/Axios/HttpClient";
 
 export const getProjects = createAsyncThunk(
-  "fileManagerApp/projects/getProjects",
+  "searchApp/projects/getProjects",
   async (routeParams, { getState }) => {
-    routeParams = routeParams || getState().fileManagerApp.projects.routeParams;
+    routeParams = routeParams || getState().searchApp.projects.routeParams;
     const response = await axios.getWithParams("/api/Project");
     const data = await response.data;
 
@@ -19,11 +19,11 @@ export const getProjects = createAsyncThunk(
 const projectsAdminAdapter = createEntityAdapter({});
 
 export const { selectAll: selectProjects } = projectsAdminAdapter.getSelectors(
-  (state) => state.fileManagerApp.projects
+  (state) => state.searchApp.projects
 );
 
 const contactsSlice = createSlice({
-  name: "fileManagerApp/projects",
+  name: "searchApp/projects",
   initialState: projectsAdminAdapter.getInitialState({
     routeParams: {},
   }),
