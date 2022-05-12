@@ -7,13 +7,17 @@ import Error404Page from 'app/main/404/Error404Page';
 import FileManagerAppConfig from 'app/main/pages/search/FileManagerAppConfig';
 import ProjectsAdminAppConfig from 'app/main/pages/Admin/projects/ProjectsAdminAppConfig';
 import ProductTypesAdminAppConfig from 'app/main/pages/Admin/productType/ProductTypesAdminAppConfig'
+import ProjectConfig from 'app/main/pages/project/ProjectConfig';
+import ExplorerConfig from 'app/main/pages/explorer/ExplorerConfig';
 
 const routeConfigs = [
   ExampleConfig, 
   LoginPageConfig,
   ProjectsAdminAppConfig,
   ProductTypesAdminAppConfig,
-  FileManagerAppConfig
+  FileManagerAppConfig,
+  ProjectConfig,
+  ExplorerConfig
 ];
 
 const routes = [
