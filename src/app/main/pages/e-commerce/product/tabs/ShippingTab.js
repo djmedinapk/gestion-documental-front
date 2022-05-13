@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import Icon from "@mui/material/Icon";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
+import { useNavigate } from "react-router-dom";
 
 import { useDeepCompareEffect } from "@fuse/hooks";
 
@@ -30,9 +31,17 @@ const ShippingTab = () => {
   const methods = useFormContext();
   const { control } = methods;
 
+  const navigate = useNavigate();
+
   const datosSS = JSON.parse(
     JSON.stringify(
       useSelector(({ eCommerceApp }) => eCommerceApp.products.datosPOs)
+    )
+  );
+
+  const dataClient = JSON.parse(
+    JSON.stringify(
+      useSelector(({ globalParams }) => globalParams.generalParams.newPO.client)
     )
   );
 
@@ -45,6 +54,9 @@ const ShippingTab = () => {
   const [dataYears, setDataYears] = useState([]);
 
   useDeepCompareEffect(() => {
+    if (dataClient.id === 0 && dataClient.name === "") {
+      navigate("/projects");
+    }
     setDataYears(getYearsData());
   }, [dispatch, datosProductTypes, datosDocumentTypes]);
 
@@ -263,7 +275,7 @@ const ShippingTab = () => {
               variant="outlined"
               disabled={true}
               fullWidth
-              //value={cliente}
+              value={dataClient.name}
             />
           )}
         />
@@ -278,7 +290,7 @@ const ShippingTab = () => {
         datosDocumentTypes={datosDocumentTypes}
       />
 
-      <div style={{paddingTop:"25px"}}>
+      <div style={{ paddingTop: "25px" }}>
         {datosSS.files !== null ? (
           datosSS.files.map((file, i) =>
             file.statePO === "old" ? (
@@ -356,7 +368,7 @@ const ShippingTab = () => {
                     labelId="category-select-label"
                     id="category-select"
                     label="Category"
-                    name={i+""}
+                    name={i + ""}
                     value={file.documentType.name}
                     onChange={handleDocumentTypeState}
                   >

@@ -8,7 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import reducer from "./store";
 import withReducer from "app/store/withReducer";
-import { getCurrentFolder, getFiles, handleNewFolderDialog, selectFiles } from "./store/explorerSlice";
+import {
+  getCurrentFolder,
+  getFiles,
+  handleNewFolderDialog,
+  selectFiles,
+} from "./store/explorerSlice";
 import { useParams } from "react-router";
 import Breadcrumb from "./Breadcrumb";
 import MainSidebarHeader from "./MainSidebarHeader";
@@ -25,6 +30,9 @@ import {
 } from "@mui/material";
 import NewFolderDialog from "./NewFolderDialog";
 import FileList from "./FileList";
+
+import { useNavigate } from "react-router-dom";
+import { changeGeneralParamsNewPOClient } from "./../../../store/globalParamsSlice";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -51,6 +59,8 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 const ExplorerApp = () => {
   const dispatch = useDispatch();
   const routeParams = useParams();
+  const navigate = useNavigate();
+
   const project = useSelector(
     ({ explorerApp }) => explorerApp.explorer.projectData
   );
@@ -63,20 +73,29 @@ const ExplorerApp = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
 
+  const dataClient = JSON.parse(
+    JSON.stringify(
+      useSelector(({ globalParams }) => globalParams.generalParams.newPO.client)
+    )
+  );
+
   useEffect(() => {
     if (routeParams && routeParams.folder == "folder") {
       setIsFolder(true);
       dispatch(getCurrentFolder({ routeParams, isFolder: true }));
-    }else {
+    } else {
       setIsFolder(false);
       dispatch(getCurrentFolder({ routeParams, isFolder: false }));
     }
-    
   }, [dispatch]);
 
   useEffect(() => {
     if (project && project.name) {
       setCurrentUrl(project.name);
+    }
+
+    if (dataClient.id !== 0 && dataClient.name !== "") {
+      dispatch(changeGeneralParamsNewPOClient({ id: 0, name: "" }));
     }
   }, [project]);
 
@@ -88,7 +107,12 @@ const ExplorerApp = () => {
   const handleAddNewFolder = () => {
     dispatch(handleNewFolderDialog());
     setOpen(!open);
-  }
+  };
+
+  const handleRedirectNewPO = () => {
+    dispatch(changeGeneralParamsNewPOClient(project));
+    navigate("/apps/e-commerce/products/new");
+  };
 
   return (
     <>
@@ -115,7 +139,7 @@ const ExplorerApp = () => {
               </motion.div>
             </div>
             <Popper
-              id={'simple-popover'}
+              id={"simple-popover"}
               open={open}
               anchorEl={anchorEl}
               onClose={handleAdd}
@@ -146,6 +170,12 @@ const ExplorerApp = () => {
                         </ListItemIcon>
                         <ListItemText primary="Add File" />
                       </ListItemButton>
+                      <ListItemButton onClick={handleRedirectNewPO}>
+                        <ListItemIcon>
+                          <Icon>post_add</Icon>
+                        </ListItemIcon>
+                        <ListItemText primary="Add New PO" />
+                      </ListItemButton>
                     </List>
                   </Paper>
                 </Fade>
@@ -160,10 +190,7 @@ const ExplorerApp = () => {
                 aria-label="add"
                 className="absolute bottom-0 ltr:left-0 rtl:right-0 mx-16 -mb-28 z-999"
               >
-                <IconButton
-                  onClick={handleAdd}
-                  aria-label="search"
-                >
+                <IconButton onClick={handleAdd} aria-label="search">
                   <Icon>add</Icon>
                 </IconButton>
               </Fab>
