@@ -18,7 +18,12 @@ import Icon from "@mui/material/Icon";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
+import { useDeepCompareEffect } from "@fuse/hooks";
+
 import { changeDatosPOs } from "./../../store/productsSlice";
+import { selectProductTypes } from "./../../store/productTypesAdminSlice";
+import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
+import { months, currentYear } from "./../../store/Params";
 
 const ShippingTab = () => {
   const dispatch = useDispatch();
@@ -33,28 +38,34 @@ const ShippingTab = () => {
 
   const [chooseFilesDataUpload, setChooseFilesDataUpload] = useState([]);
 
+  const datosProductTypes = useSelector(selectProductTypes);
+
+  const datosDocumentTypes = useSelector(selectDocumentTypes);
+
+  const [dataYears, setDataYears] = useState([]);
+
+  useDeepCompareEffect(() => {
+    setDataYears(getYearsData());
+  }, [dispatch, datosProductTypes, datosDocumentTypes]);
+
+  useEffect(() => {}, [datosProductTypes]);
+
   const handleUpdate = () => {
     dispatch(changeDatosPOs(datosSS));
   };
 
-  const chooseFile = (event, indexFolder, indexFile) => {
-    props.setChooseFilesDataUpload({
-      ...props.chooseFilesDataUpload,
-      [Object.keys(props.chooseFilesDataUpload).length + ""]: event,
+  const chooseFile = (event, indexFile) => {
+    setChooseFilesDataUpload({
+      ...chooseFilesDataUpload,
+      [Object.keys(chooseFilesDataUpload).length + ""]: event,
     });
-    props.dataPO.folders[indexFolder].files[indexFile].contentFile.name =
-      event.name;
-    props.dataPO.folders[indexFolder].files[
-      indexFile
-    ].contentFile.lastModified = event.lastModified;
-    props.dataPO.folders[indexFolder].files[
-      indexFile
-    ].contentFile.lastModifiedDate = event.lastModifiedDate;
-    props.dataPO.folders[indexFolder].files[indexFile].contentFile.size =
-      event.size;
-    props.dataPO.folders[indexFolder].files[indexFile].contentFile.type =
-      event.type;
-    props.handleUpdate();
+    datosSS.files[indexFile].contentFile.name = event.name;
+    datosSS.files[indexFile].contentFile.lastModified = event.lastModified;
+    datosSS.files[indexFile].contentFile.lastModifiedDate =
+      event.lastModifiedDate;
+    datosSS.files[indexFile].contentFile.size = event.size;
+    datosSS.files[indexFile].contentFile.type = event.type;
+    handleUpdate();
   };
 
   const handleAdd = () => {
@@ -62,18 +73,25 @@ const ShippingTab = () => {
       datosSS.folders.push({
         name: datosSS.addSourceState.nameFolder,
         statePO: "new",
-        accordionState:
-          datosSS.addSourceState.nameFolder,
+        accordionState: datosSS.addSourceState.nameFolder,
         addSourceState: { state: "", nameFolder: "" },
         files: [],
         folders: [],
       });
-    } else if (
-      datosSS.addSourceState.state === "file"
-    ) {
+    } else if (datosSS.addSourceState.state === "file") {
       datosSS.files.push({
         name: "New File",
         statePO: "new",
+        documentType: {
+          id: 0,
+          name: "",
+          description: "",
+          regex: "",
+          code: "",
+          icon: "",
+          extensionAllowed: "",
+          lastUpdated: "",
+        },
         contentFile: {
           name: "",
           lastModified: 0,
@@ -89,14 +107,9 @@ const ShippingTab = () => {
     handleUpdate();
   };
 
-  const handleRemoveFolder = (index) => {
-    props.dataPO.folders.splice(index, 1);
-    props.handleUpdate();
-  };
-
-  const handleRemoveFile = (indexFolder, indexFile) => {
-    props.dataPO.folders[indexFolder].files.splice(indexFile, 1);
-    props.handleUpdate();
+  const handleRemoveFile = (indexFile) => {
+    datosSS.files.splice(indexFile, 1);
+    handleUpdate();
   };
 
   function handleAddSourceState(ev) {
@@ -105,10 +118,39 @@ const ShippingTab = () => {
   }
 
   const onChangeTextNewFolder = (ev) => {
-    datosSS.addSourceState.nameFolder =
-      ev.target.value;
+    datosSS.addSourceState.nameFolder = ev.target.value;
     handleUpdate();
     console.log(datosSS.addSourceState.nameFolder);
+  };
+
+  const handleProductTypePOState = (ev) => {
+    datosSS.productType = ev.target.value;
+    handleUpdate();
+  };
+
+  const handleMonthPOState = (ev) => {
+    datosSS.month = ev.target.value;
+    handleUpdate();
+  };
+
+  const handleYearPOState = (ev) => {
+    datosSS.year = ev.target.value;
+    handleUpdate();
+  };
+
+  const handleDocumentTypeState = (ev) => {
+    datosSS.files[ev.target.name].documentType.name = ev.target.value;
+    handleUpdate();
+  };
+
+  const getYearsData = () => {
+    const years = [];
+
+    for (let index = currentYear; index > currentYear - 5; index--) {
+      years.push({ name: index });
+    }
+
+    return years;
   };
 
   return (
@@ -154,11 +196,16 @@ const ShippingTab = () => {
             labelId="category-select-label"
             id="category-select"
             label="Category"
-            // value="all"
+            value={datosSS.year}
+            onChange={handleYearPOState}
           >
-            <MenuItem value="all">
-              <em> All </em>
-            </MenuItem>
+            {dataYears.length !== 0
+              ? dataYears.map((year, i) => (
+                  <MenuItem key={i} value={year.name}>
+                    <em> {year.name} </em>
+                  </MenuItem>
+                ))
+              : false}
           </Select>
         </FormControl>
         <FormControl className="w-full mt-8  mx-4" size="small">
@@ -167,10 +214,16 @@ const ShippingTab = () => {
             labelId="category-select-label"
             id="category-select"
             label="Category"
+            value={datosSS.month}
+            onChange={handleMonthPOState}
           >
-            <MenuItem value="all">
-              <em> All </em>
-            </MenuItem>
+            {months.length !== 0
+              ? months.map((month, i) => (
+                  <MenuItem key={i} value={month.name}>
+                    <em> {month.name} </em>
+                  </MenuItem>
+                ))
+              : false}
           </Select>
         </FormControl>
       </div>
@@ -181,24 +234,39 @@ const ShippingTab = () => {
             labelId="category-select-label"
             id="category-select"
             label="Category"
+            value={datosSS.productType}
+            onChange={handleProductTypePOState}
           >
-            <MenuItem value="all">
-              <em> All </em>
-            </MenuItem>
+            {datosProductTypes.length !== 0
+              ? datosProductTypes[0].data.map((productTypeData, i) => (
+                  <MenuItem
+                    key={productTypeData.id}
+                    value={productTypeData.name}
+                  >
+                    <em> {productTypeData.name} </em>
+                  </MenuItem>
+                ))
+              : false}
           </Select>
         </FormControl>
-        <FormControl className="w-full mt-8  mx-4" size="small">
-          <InputLabel id="category-select-label">Client</InputLabel>
-          <Select
-            labelId="category-select-label"
-            id="category-select"
-            label="Category"
-          >
-            <MenuItem value="all">
-              <em> All </em>
-            </MenuItem>
-          </Select>
-        </FormControl>
+        <Controller
+          name="width"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mt-8  mx-4"
+              label="Client"
+              autoFocus
+              id="width"
+              size="small"
+              variant="outlined"
+              disabled={true}
+              fullWidth
+              //value={cliente}
+            />
+          )}
+        />
       </div>
       <AcordionComponent
         //map={map}
@@ -207,11 +275,194 @@ const ShippingTab = () => {
         handleUpdate={handleUpdate}
         chooseFilesDataUpload={chooseFilesDataUpload}
         setChooseFilesDataUpload={setChooseFilesDataUpload}
+        datosDocumentTypes={datosDocumentTypes}
       />
+
+      <div style={{paddingTop:"25px"}}>
+        {datosSS.files !== null ? (
+          datosSS.files.map((file, i) =>
+            file.statePO === "old" ? (
+              <div key={i} className="flex flex-col md:flex-row -mx-8">
+                {console.log(file)}
+                <Controller
+                  name={file.name}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="mt-8  mx-4"
+                      label={file.name}
+                      value={file.contentFile.name}
+                      id={file.name}
+                      variant="outlined"
+                      size="small"
+                      disabled={true}
+                      fullWidth
+                    />
+                  )}
+                />
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id={file.name + i + "fuGeneral"}
+                  multiple
+                  type="file"
+                  onChange={(event) => {
+                    chooseFile(event.target.files[0], i);
+                  }}
+                  onClick={(event) => {
+                    event.target.value = null;
+                  }}
+                />
+                <label
+                  htmlFor={file.name + i + "fuGeneral"}
+                  className="mt-8  mx-4"
+                  style={{ minWidth: "15%" }}
+                >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<Icon size="small">save</Icon>}
+                    size="small"
+                    style={{ height: "100%" }}
+                    fullWidth
+                    component="span"
+                  >
+                    Choose File
+                  </Button>
+                </label>
+
+                <Tooltip
+                  title={file.name}
+                  placement="left"
+                  arrow
+                  TransitionComponent={Zoom}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="mt-8  mx-4"
+                    size="small"
+                  >
+                    <Icon>help</Icon>
+                  </Button>
+                </Tooltip>
+              </div>
+            ) : file.statePO === "new" ? (
+              <div key={i} className="flex flex-col md:flex-row -mx-8">
+                <FormControl className="w-full mt-8  mx-4" size="small">
+                  <InputLabel id="category-select-label">More Files</InputLabel>
+                  <Select
+                    labelId="category-select-label"
+                    id="category-select"
+                    label="Category"
+                    name={i+""}
+                    value={file.documentType.name}
+                    onChange={handleDocumentTypeState}
+                  >
+                    {datosDocumentTypes.length !== 0
+                      ? datosDocumentTypes[0].data.map(
+                          (documentTypeData, i) => (
+                            <MenuItem
+                              key={documentTypeData.id}
+                              value={documentTypeData.name}
+                            >
+                              <em> {documentTypeData.name} </em>
+                            </MenuItem>
+                          )
+                        )
+                      : false}
+                  </Select>
+                </FormControl>
+                <Controller
+                  name={file.name}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="mt-8  mx-4"
+                      label={file.name}
+                      value={file.contentFile.name}
+                      variant="outlined"
+                      size="small"
+                      style={{ minWidth: "50%" }}
+                      disabled={true}
+                      fullWidth
+                    />
+                  )}
+                />
+
+                <input
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id={file.name + i + "fu"}
+                  multiple
+                  type="file"
+                  onChange={(event) => {
+                    chooseFile(event.target.files[0], i);
+                  }}
+                  onClick={(event) => {
+                    event.target.value = null;
+                  }}
+                />
+                <label
+                  htmlFor={file.name + i + "fu"}
+                  className="mt-8  mx-4"
+                  style={{ minWidth: "15%" }}
+                >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<Icon size="small">save</Icon>}
+                    size="small"
+                    style={{ height: "100%" }}
+                    fullWidth
+                    component="span"
+                  >
+                    Choose File
+                  </Button>
+                </label>
+                <Tooltip
+                  title={file.name}
+                  placement="left"
+                  arrow
+                  TransitionComponent={Zoom}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="mt-8  mx-4"
+                    //onClick={handleRemoveProduct}
+                    size="small"
+                  >
+                    <Icon>help</Icon>
+                  </Button>
+                </Tooltip>
+                <Button
+                  variant="contained"
+                  color="error"
+                  className="mt-8  mx-4"
+                  id={file.name + i + "deleteFile"}
+                  key={file.name + i + "deleteFile"}
+                  onClick={() => handleRemoveFile(i)}
+                  size="small"
+                >
+                  <Icon>delete</Icon>
+                </Button>
+              </div>
+            ) : (
+              <></>
+            )
+          )
+        ) : (
+          <></>
+        )}
+      </div>
+
       <div className="flex flex-col md:flex-row -mx-8 pt-20">
         <FormControl className="w-full mt-8  mx-4" size="small">
           <InputLabel id={datosSS.name + "selectNewResourceGeneral"}>
-            Type
+            Type Source
           </InputLabel>
           <Select
             labelId={datosSS.name + "selectNewResourceGeneral"}
@@ -222,9 +473,7 @@ const ShippingTab = () => {
             onChange={handleAddSourceState}
           >
             <MenuItem
-              key={
-                datosSS.name + "menuItemSelectNewResourceFolderGeneral"
-              }
+              key={datosSS.name + "menuItemSelectNewResourceFolderGeneral"}
               value="folder"
             >
               <em> Folder </em>
@@ -247,9 +496,7 @@ const ShippingTab = () => {
                 className="mt-8  mx-4"
                 label="New Folder"
                 name={datosSS.name + "GeneralText"}
-                value={
-                  datosSS.addSourceState.nameFolder
-                }
+                value={datosSS.addSourceState.nameFolder}
                 onChange={onChangeTextNewFolder}
                 variant="outlined"
                 size="small"
@@ -340,6 +587,16 @@ const AcordionComponent = (props) => {
       props.dataPO.folders[indexFolder].files.push({
         name: "New File",
         statePO: "new",
+        documentType: {
+          id: 0,
+          name: "",
+          description: "",
+          regex: "",
+          code: "",
+          icon: "",
+          extensionAllowed: "",
+          lastUpdated: "",
+        },
         contentFile: {
           name: "",
           lastModified: 0,
@@ -375,6 +632,13 @@ const AcordionComponent = (props) => {
       ev.target.value;
     props.handleUpdate();
     console.log(props.dataPO.folders[ev.target.name].addSourceState.nameFolder);
+  };
+
+  const handleDocumentTypeState = (ev) => {
+    var arrayIndex = ev.target.name.split(".");
+    props.dataPO.folders[arrayIndex[0]].files[arrayIndex[1]].documentType.name =
+      ev.target.value;
+    props.handleUpdate();
   };
 
   return (
@@ -502,10 +766,22 @@ const AcordionComponent = (props) => {
                           labelId="category-select-label"
                           id="category-select"
                           label="Category"
+                          name={iFolderPO + "." + i}
+                          value={file.documentType.name}
+                          onChange={handleDocumentTypeState}
                         >
-                          <MenuItem value="all">
-                            <em> All </em>
-                          </MenuItem>
+                          {props.datosDocumentTypes.length !== 0
+                            ? props.datosDocumentTypes[0].data.map(
+                                (documentTypeData, i) => (
+                                  <MenuItem
+                                    key={documentTypeData.id}
+                                    value={documentTypeData.name}
+                                  >
+                                    <em> {documentTypeData.name} </em>
+                                  </MenuItem>
+                                )
+                              )
+                            : false}
                         </Select>
                       </FormControl>
                       <Controller
@@ -595,6 +871,7 @@ const AcordionComponent = (props) => {
                 dataPO={folderPO}
                 control={props.control}
                 handleUpdate={props.handleUpdate}
+                datosDocumentTypes={props.datosDocumentTypes}
               />
 
               <div className="flex flex-col md:flex-row -mx-8 pt-20">
@@ -602,7 +879,7 @@ const AcordionComponent = (props) => {
                   <InputLabel
                     id={folderPO.name + "selectNewResource" + iFolderPO}
                   >
-                    Type
+                    Type Source
                   </InputLabel>
                   <Select
                     labelId={folderPO.name + "selectNewResource" + iFolderPO}

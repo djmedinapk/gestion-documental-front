@@ -35,6 +35,11 @@ const productsSlice = createSlice({
     searchText: "",
     datosPOs: {
       name: "TEK-20221202-adaf",
+      pediment: "",
+      year: "",
+      month: "",
+      productType: "",
+      client:"",
       statePO: "old",
       accordionState: "TEK-20221202-adaf",
       addSourceState: { state: "", nameFolder: "" },
@@ -42,6 +47,16 @@ const productsSlice = createSlice({
         {
           name: "DODA",
           statePO: "old",
+          documentType: {
+            id: 0,
+            name: "",
+            description: "",
+            regex: "",
+            code: "",
+            icon: "",
+            extensionAllowed: "",
+            lastUpdated: "",
+          },
           contentFile: {
             name: "",
             lastModified: 0,
@@ -61,6 +76,16 @@ const productsSlice = createSlice({
             {
               name: "DODA",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -72,6 +97,16 @@ const productsSlice = createSlice({
             {
               name: "Pedimento",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -83,6 +118,16 @@ const productsSlice = createSlice({
             {
               name: "Pedimento Simplificado",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -94,6 +139,16 @@ const productsSlice = createSlice({
             {
               name: "Pedimento Rectificado",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -105,6 +160,16 @@ const productsSlice = createSlice({
             {
               name: "Factura de Importación",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -116,6 +181,16 @@ const productsSlice = createSlice({
             {
               name: "Carta UVA",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -128,6 +203,16 @@ const productsSlice = createSlice({
             {
               name: "Series",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -139,6 +224,16 @@ const productsSlice = createSlice({
             {
               name: "Packing List",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -150,6 +245,16 @@ const productsSlice = createSlice({
             {
               name: "Hojas de Calculo",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -161,6 +266,16 @@ const productsSlice = createSlice({
             {
               name: "Manifestacion de Valor",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -172,6 +287,16 @@ const productsSlice = createSlice({
             {
               name: "Archivo M con numeros de Pedimento",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -192,6 +317,16 @@ const productsSlice = createSlice({
             {
               name: "Orden de Compra",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -203,6 +338,16 @@ const productsSlice = createSlice({
             {
               name: "Shipping Notice",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -214,6 +359,16 @@ const productsSlice = createSlice({
             {
               name: 'Guia Aerea NO Revalidada "rated" (fleteada)',
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -225,6 +380,16 @@ const productsSlice = createSlice({
             {
               name: "Polizas de Seguro",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -245,6 +410,16 @@ const productsSlice = createSlice({
             {
               name: "Dictamen",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -256,6 +431,16 @@ const productsSlice = createSlice({
             {
               name: "Solicitud de la UVA",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -285,6 +470,16 @@ const productsSlice = createSlice({
             {
               name: "COVE",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -296,6 +491,16 @@ const productsSlice = createSlice({
             {
               name: "ACUSE COVE",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -307,6 +512,16 @@ const productsSlice = createSlice({
             {
               name: "Certificados",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -318,6 +533,16 @@ const productsSlice = createSlice({
             {
               name: "Guia Aerea",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -338,6 +563,16 @@ const productsSlice = createSlice({
             {
               name: "Factura Agente Aduanal (.pdf)",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -349,6 +584,16 @@ const productsSlice = createSlice({
             {
               name: "Factura Agente Aduanal (.xml)",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -360,6 +605,16 @@ const productsSlice = createSlice({
             {
               name: "Depositos a Agente Aduanal",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,
@@ -371,6 +626,16 @@ const productsSlice = createSlice({
             {
               name: "Fletes Pagados",
               statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
               contentFile: {
                 name: "",
                 lastModified: 0,

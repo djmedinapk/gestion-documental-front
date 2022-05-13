@@ -19,7 +19,7 @@ const navigationConfig = [
         translate: 'PROJECTPAGE',
         type: 'item',
         icon: 'whatshot',
-        url: '/',
+        url: '/projects',
       },
       {
         id: 'search-component',

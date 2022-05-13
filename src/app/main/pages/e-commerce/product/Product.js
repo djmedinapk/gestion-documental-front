@@ -24,6 +24,14 @@ import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
 import ShippingTab from './tabs/ShippingTab';
 
+import {
+  getProductTypes,
+} from "./../store/productTypesAdminSlice";
+
+import {
+  getDocumentTypes,
+} from "./../store/documentTypesAdminSlice";
+
 const Root = styled(FusePageCarded)(({ theme }) => ({
   '& .FusePageCarded-header': {
     minHeight: 72,
@@ -84,6 +92,8 @@ function Product(props) {
         });
       }
     }
+    dispatch(getProductTypes());
+    dispatch(getDocumentTypes());
 
     updateProductState();
   }, [dispatch, routeParams]);
@@ -103,6 +113,7 @@ function Product(props) {
       /**
        * Reset Product on component unload
        */
+       dispatch(getProductTypes());
       dispatch(resetProduct());
       setNoProduct(false);
     };
