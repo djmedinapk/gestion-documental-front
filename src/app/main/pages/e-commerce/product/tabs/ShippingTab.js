@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useDeepCompareEffect } from "@fuse/hooks";
 
-import { changeDatosPOs } from "./../../store/productsSlice";
+import { changeDatosPOs, fileUp } from "./../../store/productsSlice";
 import { selectProductTypes } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
 import { months, currentYear } from "./../../store/Params";
@@ -56,6 +56,10 @@ const ShippingTab = () => {
   useDeepCompareEffect(() => {
     if (dataClient.id === 0 && dataClient.name === "") {
       navigate("/projects");
+    } else {
+      datosSS.client.id = dataClient.id;
+      datosSS.client.name = dataClient.name;
+      handleUpdate();
     }
     setDataYears(getYearsData());
   }, [dispatch, datosProductTypes, datosDocumentTypes]);
@@ -132,7 +136,16 @@ const ShippingTab = () => {
   const onChangeTextNewFolder = (ev) => {
     datosSS.addSourceState.nameFolder = ev.target.value;
     handleUpdate();
-    console.log(datosSS.addSourceState.nameFolder);
+  };
+
+  const handleNamePOState = (ev) => {
+    datosSS.name = ev.target.value;
+    handleUpdate();
+  };
+
+  const handlePedimentPOState = (ev) => {
+    datosSS.pediment = ev.target.value;
+    handleUpdate();
   };
 
   const handleProductTypePOState = (ev) => {
@@ -165,8 +178,27 @@ const ShippingTab = () => {
     return years;
   };
 
+  const handleSaveDataPO = () => {
+    dispatch(fileUp({ files: chooseFilesDataUpload, data: datosSS }));
+  };
+
   return (
     <div>
+      <div
+        className="flex -mx-4"
+        style={{ paddingBottom: "15px", justifyContent: "end" }}
+      >
+        <Button
+          className="whitespace-nowrap mx-4"
+          variant="contained"
+          color="success"
+          onClick={handleSaveDataPO}
+          startIcon={<Icon>save</Icon>}
+        >
+          Update
+        </Button>
+      </div>
+
       <div className="flex -mx-4">
         <Controller
           name="width"
@@ -181,6 +213,8 @@ const ShippingTab = () => {
               size="small"
               variant="outlined"
               fullWidth
+              value={datosSS.name}
+              onChange={handleNamePOState}
             />
           )}
         />
@@ -197,6 +231,8 @@ const ShippingTab = () => {
               variant="outlined"
               size="small"
               fullWidth
+              value={datosSS.pediment}
+              onChange={handlePedimentPOState}
             />
           )}
         />
@@ -295,7 +331,6 @@ const ShippingTab = () => {
           datosSS.files.map((file, i) =>
             file.statePO === "old" ? (
               <div key={i} className="flex flex-col md:flex-row -mx-8">
-                {console.log(file)}
                 <Controller
                   name={file.name}
                   control={control}
@@ -540,6 +575,20 @@ const ShippingTab = () => {
       <div className="pt-20">
         <hr style={{ borderTop: "3px solid #bbb" }} />
       </div>
+      <div
+        className="flex -mx-4"
+        style={{ paddingTop: "15px", justifyContent: "end" }}
+      >
+        <Button
+          className="whitespace-nowrap mx-4"
+          variant="contained"
+          color="success"
+          onClick={handleSaveDataPO}
+          startIcon={<Icon>save</Icon>}
+        >
+          Update
+        </Button>
+      </div>
     </div>
   );
 };
@@ -643,7 +692,6 @@ const AcordionComponent = (props) => {
     props.dataPO.folders[ev.target.name].addSourceState.nameFolder =
       ev.target.value;
     props.handleUpdate();
-    console.log(props.dataPO.folders[ev.target.name].addSourceState.nameFolder);
   };
 
   const handleDocumentTypeState = (ev) => {

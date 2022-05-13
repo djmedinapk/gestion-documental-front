@@ -24,6 +24,22 @@ export const removeProducts = createAsyncThunk(
   }
 );
 
+export const fileUp = createAsyncThunk(
+  "eCommerceApp/products/fileUp",
+  async (dataPO, { dispatch, getState }) => {
+    const formData = new FormData();
+    const dataPe = JSON.stringify(dataPO.data);
+
+    for (var i = 0; i < Object.keys(dataPO.files).length + 1; i++) {
+      formData.append(i + "", dataPO.files[i]);
+    }
+    formData.append("dataJson", dataPe);
+    const response = await axios.post("/api/DocumentType/file", formData);
+    const data = await response.data;
+    return data;
+  }
+);
+
 const productsAdapter = createEntityAdapter({});
 
 export const { selectAll: selectProducts, selectById: selectProductById } =
@@ -39,7 +55,7 @@ const productsSlice = createSlice({
       year: "",
       month: "",
       productType: "",
-      client:"",
+      client: { id: 0, name: "" },
       statePO: "old",
       accordionState: "TEK-20221202-adaf",
       addSourceState: { state: "", nameFolder: "" },
