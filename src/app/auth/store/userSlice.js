@@ -75,7 +75,16 @@ export const createUserSettingsFirebase = (authUser) => async (dispatch, getStat
   return dispatch(setUserData(user));
 };
 
-export const setUserData = (user) => async (dispatch, getState) => {
+export const setUserData = (usera) => async (dispatch, getState) => {
+  const user = {
+    uuid: usera.id,
+    role: 'admin',//reemplazar por roles en DB
+    data: {
+      displayName: `${usera.name} ${usera.lastName}`,
+      photoURL: 'assets/images/avatars/Arnold.jpg',
+      email: usera.email,
+    }
+  };
   /*
   You can redirect the logged-in user to a specific route depending on his role
   */
@@ -86,7 +95,7 @@ export const setUserData = (user) => async (dispatch, getState) => {
   /*
   Set User Settings
   */
-  dispatch(setDefaultSettings(user.data.settings));
+  //dispatch(setDefaultSettings(user.data.settings));
 
   dispatch(setUser(user));
 };

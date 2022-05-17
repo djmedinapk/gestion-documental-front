@@ -14,6 +14,9 @@ import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
 import History from '@history';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { submitLogin } from 'app/auth/store/loginSlice';
 
 /**
  * Form Validation Schema
@@ -29,11 +32,15 @@ const schema = yup.object().shape({
 const defaultValues = {
   email: '',
   password: '',
-  remember: true,
+  remember: false,
 };
 
 function LoginPage() {
-  const { control, formState, handleSubmit, reset } = useForm({
+
+  const dispatch = useDispatch();
+  const login = useSelector(({ auth }) => auth.login);
+
+  const { control, formState, handleSubmit, reset, setError } = useForm({
     mode: 'onChange',
     defaultValues,
     resolver: yupResolver(schema),
@@ -41,11 +48,18 @@ function LoginPage() {
 
   const { isValid, dirtyFields, errors } = formState;
 
-  function onSubmit() {
-    History.push({
-      pathname: '/Example',
+  useEffect(() => {
+    login.errors.forEach((error) => {
+      setError(error.type, {
+        type: 'manual',
+        message: error.message,
+      });
     });
-    reset(defaultValues);
+  }, [login.errors, setError]);
+
+  function onSubmit(model) {
+    dispatch(submitLogin(model));
+
   }
 
   return (

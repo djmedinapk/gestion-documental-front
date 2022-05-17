@@ -1,3 +1,4 @@
+import { authRoles } from 'app/auth';
 import i18next from 'i18next';
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
@@ -15,6 +16,7 @@ const FoldersAdminAppConfig = {
       config: {},
     },
   },
+  auth: authRoles.admin,
   routes: [
     {
       path: 'apps/admin/folders/:id',

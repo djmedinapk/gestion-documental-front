@@ -1,6 +1,7 @@
 import i18next from 'i18next';
 import es from './navigation-i18n/es';
 import en from './navigation-i18n/en';
+import { authRoles } from 'app/auth';
 
 i18next.addResourceBundle('en', 'navigation', en);
 i18next.addResourceBundle('es', 'navigation', es);
@@ -35,6 +36,7 @@ const navigationConfig = [
         type: 'collapse',
         translate: 'ADMIN',
         icon: 'info',
+        auth: authRoles.admin,
         children: [  
           {
             id: 'documentTypesAdmin',
