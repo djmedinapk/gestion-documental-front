@@ -388,8 +388,8 @@ const ShippingTab = () => {
         chooseFilesDataUpload={chooseFilesDataUpload}
         setChooseFilesDataUpload={setChooseFilesDataUpload}
         datosDocumentTypes={datosDocumentTypes}
-        folderRoute={datosSS.name}
-        parentPOFolder={datosSS.name}
+        folderRouteEvidenciasUVA={datosSS.name+"/UVA/Evidencias"}
+        parentPOFolder={datosSS.name+"/"}
       />
 
       <div style={{ paddingTop: "25px" }}>

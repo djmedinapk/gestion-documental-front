@@ -477,9 +477,17 @@ const productsSlice = createSlice({
                   name: "pepe",
                   model: "2",
                   statePO: "old",
+                  tempName:"pepe",
                   files: [
                     {
                       name: "prueba",
+                      lastModified: 0,
+                      lastModifiedDate: null,
+                      size: 0,
+                      type: "",
+                    },
+                    {
+                      name: "prueba2",
                       lastModified: 0,
                       lastModifiedDate: null,
                       size: 0,
@@ -491,6 +499,7 @@ const productsSlice = createSlice({
                   name: "pepe2",
                   model: "2",
                   statePO: "new",
+                  tempName:"pepe2",
                   files: [],
                 },
               ],
