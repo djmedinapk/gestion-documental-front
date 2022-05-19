@@ -472,6 +472,28 @@ const productsSlice = createSlice({
               statePO: "old",
               accordionState: "Evidencias",
               addSourceState: { state: "", nameFolder: "" },
+              products: [
+                {
+                  name: "pepe",
+                  model: "2",
+                  statePO: "old",
+                  files: [
+                    {
+                      name: "prueba",
+                      lastModified: 0,
+                      lastModifiedDate: null,
+                      size: 0,
+                      type: "",
+                    },
+                  ],
+                },
+                {
+                  name: "pepe2",
+                  model: "2",
+                  statePO: "new",
+                  files: [],
+                },
+              ],
               files: [],
               folders: [],
             },

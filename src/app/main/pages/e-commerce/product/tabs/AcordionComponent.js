@@ -1,0 +1,960 @@
+import TextField from "@mui/material/TextField";
+import { Controller, useFormContext, useForm } from "react-hook-form";
+
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
+import { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "@mui/material/Button";
+import Icon from "@mui/material/Icon";
+import Tooltip from "@mui/material/Tooltip";
+import Zoom from "@mui/material/Zoom";
+
+const AcordionComponent = (props) => {
+  const dispatch = useDispatch();
+
+  const params = useSelector(
+    ({ eCommerceApp }) => eCommerceApp.products.datosPOs
+  );
+
+  useEffect(() => {}, [props, params]);
+
+  const handleAccordionState = (indexFolder, folder) => {
+    if (props.dataPO.folders[indexFolder].accordionState !== folder.name) {
+      props.dataPO.folders[indexFolder].accordionState = folder.name;
+    } else {
+      props.dataPO.folders[indexFolder].accordionState = false;
+    }
+    props.handleUpdate();
+  };
+
+  const chooseFile = (event, indexFolder, indexFile) => {
+    console.log(props);
+    props.setChooseFilesDataUpload({
+      ...props.chooseFilesDataUpload,
+      [Object.keys(props.chooseFilesDataUpload).length + ""]: event,
+    });
+    props.dataPO.folders[indexFolder].files[indexFile].contentFile.name =
+      event.name;
+    props.dataPO.folders[indexFolder].files[
+      indexFile
+    ].contentFile.lastModified = event.lastModified;
+    props.dataPO.folders[indexFolder].files[
+      indexFile
+    ].contentFile.lastModifiedDate = event.lastModifiedDate;
+    props.dataPO.folders[indexFolder].files[indexFile].contentFile.size =
+      event.size;
+    props.dataPO.folders[indexFolder].files[indexFile].contentFile.type =
+      event.type;
+    props.handleUpdate();
+  };
+
+  const chooseFileProductFolder = (
+    event,
+    indexFolder,
+    indexProduct,
+    indexFile
+  ) => {
+    props.setChooseFilesDataUpload({
+      ...props.chooseFilesDataUpload,
+      [Object.keys(props.chooseFilesDataUpload).length + ""]: event,
+    });
+    props.dataPO.folders[indexFolder].products[indexProduct].files[
+      indexFile
+    ].name = event.name;
+    props.dataPO.folders[indexFolder].products[indexProduct].files[
+      indexFile
+    ].contentFile.name = event.name;
+    props.dataPO.folders[indexFolder].products[indexProduct].files[
+      indexFile
+    ].contentFile.lastModified = event.lastModified;
+    props.dataPO.folders[indexFolder].products[indexProduct].files[
+      indexFile
+    ].contentFile.lastModifiedDate = event.lastModifiedDate;
+    props.dataPO.folders[indexFolder].products[indexProduct].files[
+      indexFile
+    ].contentFile.size = event.size;
+    props.dataPO.folders[indexFolder].products[indexProduct].files[
+      indexFile
+    ].contentFile.type = event.type;
+    props.handleUpdate();
+  };
+
+  const chooseFilesProductFolder = (event, indexFolder, indexProduct) => {
+    props.dataPO.folders[indexFolder].products[indexProduct].files = event;
+
+    props.handleUpdate();
+  };
+
+  const handleAdd = (indexFolder) => {
+    if (props.dataPO.folders[indexFolder].addSourceState.state === "folder") {
+      props.dataPO.folders[indexFolder].folders.push({
+        name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+        statePO: "new",
+        accordionState:
+          props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+        addSourceState: { state: "", nameFolder: "" },
+        files: [],
+        folders: [],
+      });
+    } else if (
+      props.dataPO.folders[indexFolder].addSourceState.state === "file"
+    ) {
+      props.dataPO.folders[indexFolder].files.push({
+        name: "New File",
+        statePO: "new",
+        documentType: {
+          id: 0,
+          name: "",
+          description: "",
+          regex: "",
+          code: "",
+          icon: "",
+          extensionAllowed: "",
+          lastUpdated: "",
+        },
+        contentFile: {
+          name: "",
+          lastModified: 0,
+          lastModifiedDate: null,
+          size: 0,
+          type: "",
+        },
+      });
+    } else if (
+      props.dataPO.folders[indexFolder].addSourceState.state === "product"
+    ) {
+      props.dataPO.folders[indexFolder].products.push({
+        name: "",
+        model: "",
+        statePO: "new",
+        files: [],
+      });
+    }
+    props.dataPO.folders[indexFolder].addSourceState.state = "";
+    props.dataPO.folders[indexFolder].addSourceState.nameFolder = "";
+
+    props.handleUpdate();
+  };
+
+  const handleAddFileProductFolder = (indexFolder, indexProduct) => {
+    props.dataPO.folders[indexFolder].products[indexProduct].files.push({
+      name: "New File",
+      statePO: "new",
+      documentType: {
+        id: 0,
+        name: "",
+        description: "",
+        regex: "",
+        code: "",
+        icon: "",
+        extensionAllowed: "",
+        lastUpdated: "",
+      },
+      contentFile: {
+        name: "",
+        lastModified: 0,
+        lastModifiedDate: null,
+        size: 0,
+        type: "",
+      },
+    });
+
+    props.handleUpdate();
+  };
+
+  const handleRemoveFolder = (index) => {
+    props.dataPO.folders.splice(index, 1);
+    props.handleUpdate();
+  };
+
+  const handleRemoveFile = (indexFolder, indexFile) => {
+    props.dataPO.folders[indexFolder].files.splice(indexFile, 1);
+    props.handleUpdate();
+  };
+
+  const handleRemoveProduct = (indexFolder, indexProduct) => {
+    props.dataPO.folders[indexFolder].products.splice(indexProduct, 1);
+    props.handleUpdate();
+  };
+  const handleRemoveFileProduct = (indexFolder, indexProduct, indexFile) => {
+    props.dataPO.folders[indexFolder].products[indexProduct].files.splice(
+      indexFile,
+      1
+    );
+    props.handleUpdate();
+  };
+
+  function handleAddSourceState(ev) {
+    props.dataPO.folders[ev.target.name].addSourceState.state = ev.target.value;
+    props.handleUpdate();
+  }
+
+  const onChangeTextNewFolder = (ev) => {
+    props.dataPO.folders[ev.target.name].addSourceState.nameFolder =
+      ev.target.value;
+    props.handleUpdate();
+  };
+
+  const handleDocumentTypeState = (ev) => {
+    var arrayIndex = ev.target.name.split(".");
+    props.dataPO.folders[arrayIndex[0]].files[arrayIndex[1]].documentType.name =
+      ev.target.value;
+    props.handleUpdate();
+  };
+
+  return (
+    <>
+      {props.dataPO.folders.map((folderPO, iFolderPO) =>
+        props.folderRoute + "/" + folderPO.name ===
+        props.parentPOFolder + "/UVA/Evidencias" ? (
+          false
+        ) : (
+          <div key={props.parentPOFolder + "/" + folderPO.name + "/...DivMain"}>
+            <div
+              key={
+                props.parentPOFolder +
+                "/" +
+                folderPO.name +
+                "/...DivButtonDeleteFolder"
+              }
+              style={{
+                justifyContent: "end",
+                display: "flex",
+                paddingTop: "2%",
+              }}
+            >
+              {folderPO.statePO === "new" ? (
+                <Button
+                  key={
+                    props.parentPOFolder +
+                    "/" +
+                    folderPO.name +
+                    "/...ButtonDeleteFolder"
+                  }
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleRemoveFolder(iFolderPO)}
+                  size="small"
+                  style={{ maxWidth: "10%" }}
+                >
+                  <Icon>delete</Icon>
+                </Button>
+              ) : (
+                false
+              )}
+            </div>
+
+            <Accordion
+              key={
+                props.parentPOFolder +
+                "/" +
+                folderPO.name +
+                "/...AcordionFolder"
+              }
+              className="border-0 shadow-0 overflow-hidden"
+              expanded={folderPO.name === folderPO.accordionState}
+              onChange={() => handleAccordionState(iFolderPO, folderPO)}
+            >
+              <AccordionSummary
+                key={
+                  props.parentPOFolder +
+                  "/" +
+                  folderPO.name +
+                  "/...AcordionSummaryFolder"
+                }
+                expandIcon={<ExpandMoreIcon />}
+                classes={{ root: "border border-solid rounded-16 mt-8" }}
+              >
+                <div
+                  key={
+                    props.parentPOFolder +
+                    "/" +
+                    folderPO.name +
+                    "/...DivAcordionSummaryFolder"
+                  }
+                  style={{
+                    justifyContent: "space-between",
+                    display: "inline-flex",
+                    minWidth: "95%",
+                  }}
+                >
+                  <Typography
+                    key={
+                      props.parentPOFolder +
+                      "/" +
+                      folderPO.name +
+                      "/...TypographyDivAcordionSummaryFolder"
+                    }
+                    className="font-semibold"
+                    style={{ alignSelf: "center" }}
+                  >
+                    {folderPO.name}
+                  </Typography>
+                </div>
+              </AccordionSummary>
+              <AccordionDetails
+                key={
+                  props.parentPOFolder +
+                  "/" +
+                  folderPO.name +
+                  "/...AcordionDetailsFolder"
+                }
+              >
+                {folderPO.files !== null
+                  ? folderPO.files.map((filePO, iFilePO) =>
+                      filePO.statePO === "old" ? (
+                        <div
+                          key={
+                            props.parentPOFolder +
+                            "/" +
+                            folderPO.name +
+                            "/" +
+                            filePO.name +
+                            "-" +
+                            iFilePO +
+                            "/...AcordionDetailsFolderFileDiv"
+                          }
+                          className="flex flex-col md:flex-row -mx-8"
+                        >
+                          <Controller
+                            key={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivController"
+                            }
+                            name={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivController"
+                            }
+                            control={props.control}
+                            render={({ field }) => (
+                              <TextField
+                                {...field}
+                                className="mt-8  mx-4"
+                                label={filePO.name}
+                                value={filePO.contentFile.name}
+                                id={
+                                  props.parentPOFolder +
+                                  "/" +
+                                  folderPO.name +
+                                  "/" +
+                                  filePO.name +
+                                  "-" +
+                                  iFilePO +
+                                  "/...AcordionDetailsFolderFileDivControllerTextField"
+                                }
+                                key={
+                                  props.parentPOFolder +
+                                  "/" +
+                                  folderPO.name +
+                                  "/" +
+                                  filePO.name +
+                                  "-" +
+                                  iFilePO +
+                                  "/...AcordionDetailsFolderFileDivControllerTextField"
+                                }
+                                variant="outlined"
+                                size="small"
+                                disabled={true}
+                                fullWidth
+                              />
+                            )}
+                          />
+                          <input
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            key={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivInput"
+                            }
+                            id={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivInput"
+                            }
+                            type="file"
+                            onChange={(event) => {
+                              chooseFile(
+                                event.target.files[0],
+                                iFolderPO,
+                                iFilePO
+                              );
+                            }}
+                            onClick={(event) => {
+                              event.target.value = null;
+                            }}
+                          />
+                          <label
+                            htmlFor={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivInput"
+                            }
+                            className="mt-8  mx-4"
+                            style={{ minWidth: "15%" }}
+                          >
+                            <Button
+                              key={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivInputButtonSave"
+                              }
+                              variant="contained"
+                              color="secondary"
+                              startIcon={<Icon size="small">save</Icon>}
+                              size="small"
+                              style={{ height: "100%" }}
+                              fullWidth
+                              component="span"
+                            >
+                              Choose File
+                            </Button>
+                          </label>
+
+                          <Tooltip
+                            key={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivTooltip"
+                            }
+                            title={filePO.name}
+                            placement="left"
+                            arrow
+                            TransitionComponent={Zoom}
+                          >
+                            <Button
+                              key={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivTooltipButtonHelp"
+                              }
+                              variant="contained"
+                              color="primary"
+                              className="mt-8  mx-4"
+                              size="small"
+                            >
+                              <Icon>help</Icon>
+                            </Button>
+                          </Tooltip>
+                        </div>
+                      ) : filePO.statePO === "new" ? (
+                        <div
+                          key={
+                            props.parentPOFolder +
+                            "/" +
+                            folderPO.name +
+                            "/" +
+                            filePO.name +
+                            "-" +
+                            iFilePO +
+                            "/...AcordionDetailsFolderFileDivNew"
+                          }
+                          className="flex flex-col md:flex-row -mx-8"
+                        >
+                          <FormControl
+                            key={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivNewFormControl"
+                            }
+                            className="w-full mt-8  mx-4"
+                            size="small"
+                          >
+                            <InputLabel
+                              id={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivNewFormControlInputLabel"
+                              }
+                              keys={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivNewFormControlInputLabel"
+                              }
+                            >
+                              More Files
+                            </InputLabel>
+                            <Select
+                              labelId={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivNewFormControlSelect"
+                              }
+                              id={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivNewFormControlSelect"
+                              }
+                              label="Category"
+                              name={iFolderPO + "." + iFilePO}
+                              value={filePO.documentType.name}
+                              onChange={handleDocumentTypeState}
+                            >
+                              {props.datosDocumentTypes.length !== 0
+                                ? props.datosDocumentTypes[0].data.map(
+                                    (documentTypeData, iDocumentTypeData) => (
+                                      <MenuItem
+                                        key={
+                                          props.parentPOFolder +
+                                          "/" +
+                                          folderPO.name +
+                                          "/" +
+                                          filePO.name +
+                                          "-" +
+                                          iFilePO +
+                                          "/" +
+                                          documentTypeData.name +
+                                          "-" +
+                                          iDocumentTypeData +
+                                          "/...AcordionDetailsFolderFileDivNewFormControlSelectMenuItem"
+                                        }
+                                        value={documentTypeData.name}
+                                      >
+                                        <em> {documentTypeData.name} </em>
+                                      </MenuItem>
+                                    )
+                                  )
+                                : false}
+                            </Select>
+                          </FormControl>
+                          <Controller
+                            name={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivNewController"
+                            }
+                            control={props.control}
+                            render={({ field }) => (
+                              <TextField
+                                {...field}
+                                key={
+                                  props.parentPOFolder +
+                                  "/" +
+                                  folderPO.name +
+                                  "/" +
+                                  filePO.name +
+                                  "-" +
+                                  iFilePO +
+                                  "/...AcordionDetailsFolderFileDivNewControllerTextField"
+                                }
+                                className="mt-8  mx-4"
+                                label={filePO.name}
+                                value={filePO.contentFile.name}
+                                variant="outlined"
+                                size="small"
+                                style={{ minWidth: "50%" }}
+                                disabled={true}
+                                fullWidth
+                              />
+                            )}
+                          />
+
+                          <input
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            id={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivNewInput"
+                            }
+                            type="file"
+                            onChange={(event) => {
+                              chooseFile(
+                                event.target.files[0],
+                                iFolderPO,
+                                iFilePO
+                              );
+                            }}
+                            onClick={(event) => {
+                              event.target.value = null;
+                            }}
+                          />
+                          <label
+                            htmlFor={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivNewInput"
+                            }
+                            className="mt-8  mx-4"
+                            style={{ minWidth: "15%" }}
+                          >
+                            <Button
+                              key={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivNewInputButtonSave"
+                              }
+                              variant="contained"
+                              color="secondary"
+                              startIcon={<Icon size="small">save</Icon>}
+                              size="small"
+                              style={{ height: "100%" }}
+                              fullWidth
+                              component="span"
+                            >
+                              Choose File
+                            </Button>
+                          </label>
+                          <Tooltip
+                            key={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivNewTooltip"
+                            }
+                            title={filePO.name}
+                            placement="left"
+                            arrow
+                            TransitionComponent={Zoom}
+                          >
+                            <Button
+                              key={
+                                props.parentPOFolder +
+                                "/" +
+                                folderPO.name +
+                                "/" +
+                                filePO.name +
+                                "-" +
+                                iFilePO +
+                                "/...AcordionDetailsFolderFileDivNewTooltipButtonHelp"
+                              }
+                              variant="contained"
+                              color="primary"
+                              className="mt-8  mx-4"
+                              size="small"
+                            >
+                              <Icon>help</Icon>
+                            </Button>
+                          </Tooltip>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            className="mt-8  mx-4"
+                            id={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivNewButtonDelete"
+                            }
+                            key={
+                              props.parentPOFolder +
+                              "/" +
+                              folderPO.name +
+                              "/" +
+                              filePO.name +
+                              "-" +
+                              iFilePO +
+                              "/...AcordionDetailsFolderFileDivNewButtonDelete"
+                            }
+                            onClick={() => handleRemoveFile(iFolderPO, iFilePO)}
+                            size="small"
+                          >
+                            <Icon>delete</Icon>
+                          </Button>
+                        </div>
+                      ) : (
+                        false
+                      )
+                    )
+                  : false}
+                {folderPO.folders.length !== 0 ? (
+                  <AcordionComponent
+                    key={
+                      props.parentPOFolder +
+                      "/" +
+                      folderPO.name +
+                      "/...AcordionDetailsFolderRecall"
+                    }
+                    dataPO={folderPO}
+                    control={props.control}
+                    handleUpdate={props.handleUpdate}
+                    datosDocumentTypes={props.datosDocumentTypes}
+                    folderRoute={props.folderRoute + "/" + folderPO.name}
+                    parentPOFolder={props.parentPOFolder}
+                    chooseFilesDataUpload={props.chooseFilesDataUpload}
+                    setChooseFilesDataUpload={props.setChooseFilesDataUpload}
+                    setFiles={props.setFiles}
+                  />
+                ) : (
+                  false
+                )}
+
+                <div
+                  key={
+                    props.parentPOFolder +
+                    "/" +
+                    folderPO.name +
+                    "/...AcordionDetailsFolderDivSource"
+                  }
+                  className="flex flex-col md:flex-row -mx-8 pt-20"
+                >
+                  <FormControl
+                    key={
+                      props.parentPOFolder +
+                      "/" +
+                      folderPO.name +
+                      "/...AcordionDetailsFolderDivSourceFormControl"
+                    }
+                    className="w-full mt-8  mx-4"
+                    size="small"
+                  >
+                    <InputLabel
+                      id={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceFormControlInputLabel"
+                      }
+                      key={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceFormControlInputLabel"
+                      }
+                    >
+                      Type Source
+                    </InputLabel>
+                    <Select
+                      labelId={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceFormControlSelect"
+                      }
+                      id={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceFormControlSelect"
+                      }
+                      key={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceFormControlSelect"
+                      }
+                      label="Category"
+                      value={folderPO.addSourceState.state}
+                      name={iFolderPO + ""}
+                      onChange={handleAddSourceState}
+                    >
+                      <MenuItem
+                        key={
+                          props.parentPOFolder +
+                          "/" +
+                          folderPO.name +
+                          "/...AcordionDetailsFolderDivSourceFormControlSelectMenuItemFolder"
+                        }
+                        value="folder"
+                      >
+                        <em> Folder </em>
+                      </MenuItem>
+                      <MenuItem
+                        key={
+                          props.parentPOFolder +
+                          "/" +
+                          folderPO.name +
+                          "/...AcordionDetailsFolderDivSourceFormControlSelectMenuItemFile"
+                        }
+                        value="file"
+                      >
+                        <em> File </em>
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                  {folderPO.addSourceState.state === "folder" ? (
+                    <Controller
+                      name={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceControllerNewFolder"
+                      }
+                      key={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceControllerNewFolder"
+                      }
+                      control={props.control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          key={
+                            props.parentPOFolder +
+                            "/" +
+                            folderPO.name +
+                            "/...AcordionDetailsFolderDivSourceControllerNewFolderTextField"
+                          }
+                          className="mt-8  mx-4"
+                          label="New Folder"
+                          name={iFolderPO + ""}
+                          value={
+                            props.dataPO.folders[iFolderPO].addSourceState
+                              .nameFolder
+                          }
+                          onChange={onChangeTextNewFolder}
+                          variant="outlined"
+                          size="small"
+                          style={{ minWidth: "40%" }}
+                          fullWidth
+                        />
+                      )}
+                    />
+                  ) : (
+                    false
+                  )}
+                  <Button
+                    id={
+                      props.parentPOFolder +
+                      "/" +
+                      folderPO.name +
+                      "/...AcordionDetailsFolderDivSourceButtonAddSourceNew"
+                    }
+                    key={
+                      props.parentPOFolder +
+                      "/" +
+                      folderPO.name +
+                      "/...AcordionDetailsFolderDivSourceButtonAddSourceNew"
+                    }
+                    variant="contained"
+                    color="info"
+                    className="mt-8  mx-4"
+                    onClick={() => handleAdd(iFolderPO)}
+                    startIcon={<Icon>add_circle</Icon>}
+                    size="small"
+                    style={
+                      folderPO.addSourceState.state === "folder"
+                        ? { minWidth: "40%" }
+                        : { minWidth: "80%" }
+                    }
+                    fullWidth
+                  >
+                    Add Source
+                  </Button>
+                </div>
+
+                <div
+                  key={
+                    props.parentPOFolder +
+                    "/" +
+                    folderPO.name +
+                    "/...AcordionDivHr"
+                  }
+                  className="pt-20"
+                >
+                  <hr style={{ borderTop: "3px solid #bbb" }} />
+                </div>
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        )
+      )}
+    </>
+  );
+};
+
+export default AcordionComponent;
