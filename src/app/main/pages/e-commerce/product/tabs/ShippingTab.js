@@ -1,6 +1,6 @@
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useForm } from "react-hook-form";
 
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,13 +11,18 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Icon from "@mui/material/Icon";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 import { useNavigate } from "react-router-dom";
+
+import AcordionComponent from "./AcordionComponent";
+
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useDeepCompareEffect } from "@fuse/hooks";
 
@@ -29,8 +34,6 @@ import { months, currentYear } from "./../../store/Params";
 const ShippingTab = () => {
   const dispatch = useDispatch();
   const methods = useFormContext();
-  const { control } = methods;
-
   const navigate = useNavigate();
 
   const datosSS = JSON.parse(
@@ -39,6 +42,9 @@ const ShippingTab = () => {
     )
   );
 
+  const datosSS2 = useSelector(
+    ({ eCommerceApp }) => eCommerceApp.products.datosPOs
+  );
   const dataClient = JSON.parse(
     JSON.stringify(
       useSelector(({ globalParams }) => globalParams.generalParams.newPO.client)
@@ -53,22 +59,63 @@ const ShippingTab = () => {
 
   const [dataYears, setDataYears] = useState([]);
 
+  //validation
+
+  const defaultValues = {
+    name: "",
+    pediment: "",
+  };
+
+  const schema = yup.object().shape({
+    name: yup.string().required("You must enter a name"),
+    pediment: yup.string().required("You must enter a pediment"),
+  });
+
+  const { control, watch, reset, handleSubmit, formState, getValues } = useForm(
+    {
+      mode: "onChange",
+      validationSchema: defaultValues,
+      resolver: yupResolver(schema),
+    }
+  );
+
+  const { isValid, dirtyFields, errors } = formState;
+
+  const po = watch("po");
+  const pediment = watch("pediment");
+
+  //--------------------------------
+
   useDeepCompareEffect(() => {
-    if (dataClient.id === 0 && dataClient.name === "") {
+    /*if (dataClient.id === 0 && dataClient.name === "") {
       navigate("/projects");
     } else {
       datosSS.client.id = dataClient.id;
       datosSS.client.name = dataClient.name;
       handleUpdate();
-    }
+    }*/
     setDataYears(getYearsData());
   }, [dispatch, datosProductTypes, datosDocumentTypes]);
 
-  useEffect(() => {}, [datosProductTypes]);
+  useEffect(() => {
+    initDialog();
+  }, [datosProductTypes]);
 
   const handleUpdate = () => {
     dispatch(changeDatosPOs(datosSS));
   };
+
+  const setFiles = (files) => {
+    setChooseFilesDataUpload([...chooseFilesDataUpload, ...files]);
+  };
+
+  const initDialog = useCallback(() => {
+    reset({
+      ...defaultValues,
+      ...datosSS2,
+    });
+    console.log(datosSS2);
+  }, [datosSS2, reset]);
 
   const chooseFile = (event, indexFile) => {
     setChooseFilesDataUpload({
@@ -140,11 +187,21 @@ const ShippingTab = () => {
 
   const handleNamePOState = (ev) => {
     datosSS.name = ev.target.value;
+    if (datosSS.name === "") {
+      errors.name = true;
+    } else {
+      errors.name = false;
+    }
     handleUpdate();
   };
 
   const handlePedimentPOState = (ev) => {
     datosSS.pediment = ev.target.value;
+    if (datosSS.pediment === "") {
+      errors.pediment = true;
+    } else {
+      errors.pediment = false;
+    }
     handleUpdate();
   };
 
@@ -195,24 +252,26 @@ const ShippingTab = () => {
           onClick={handleSaveDataPO}
           startIcon={<Icon>save</Icon>}
         >
-          Update
+          Save
         </Button>
       </div>
 
       <div className="flex -mx-4">
         <Controller
-          name="width"
+          name="name"
           control={control}
           render={({ field }) => (
             <TextField
               {...field}
               className="mt-8  mx-4"
               label="PO"
-              autoFocus
-              id="width"
+              id="name"
               size="small"
               variant="outlined"
               fullWidth
+              required
+              error={!!errors.name}
+              helperText={errors.name ? "errgd" : false}
               value={datosSS.name}
               onChange={handleNamePOState}
             />
@@ -220,17 +279,20 @@ const ShippingTab = () => {
         />
 
         <Controller
-          name="depth"
+          name="pediment"
           control={control}
           render={({ field }) => (
             <TextField
               {...field}
               className="mt-8  mx-4"
               label="Pediment"
-              id="depth"
+              id="pediment"
               variant="outlined"
               size="small"
               fullWidth
+              required
+              error={!!errors.pediment}
+              helperText={errors.name ? "errgd" : false}
               value={datosSS.pediment}
               onChange={handlePedimentPOState}
             />
@@ -318,12 +380,16 @@ const ShippingTab = () => {
       </div>
       <AcordionComponent
         //map={map}
+        key={"key:" + datosSS.name}
         dataPO={datosSS}
         control={control}
         handleUpdate={handleUpdate}
+        setFiles={setFiles}
         chooseFilesDataUpload={chooseFilesDataUpload}
         setChooseFilesDataUpload={setChooseFilesDataUpload}
         datosDocumentTypes={datosDocumentTypes}
+        folderRoute={datosSS.name}
+        parentPOFolder={datosSS.name}
       />
 
       <div style={{ paddingTop: "25px" }}>
@@ -352,7 +418,6 @@ const ShippingTab = () => {
                   accept="image/*"
                   style={{ display: "none" }}
                   id={file.name + i + "fuGeneral"}
-                  multiple
                   type="file"
                   onChange={(event) => {
                     chooseFile(event.target.files[0], i);
@@ -443,7 +508,6 @@ const ShippingTab = () => {
                   accept="image/*"
                   style={{ display: "none" }}
                   id={file.name + i + "fu"}
-                  multiple
                   type="file"
                   onChange={(event) => {
                     chooseFile(event.target.files[0], i);
@@ -570,7 +634,9 @@ const ShippingTab = () => {
               : { minWidth: "80%" }
           }
           fullWidth
-        ></Button>
+        >
+          Add Source
+        </Button>
       </div>
       <div className="pt-20">
         <hr style={{ borderTop: "3px solid #bbb" }} />
@@ -586,441 +652,10 @@ const ShippingTab = () => {
           onClick={handleSaveDataPO}
           startIcon={<Icon>save</Icon>}
         >
-          Update
+          Save
         </Button>
       </div>
     </div>
-  );
-};
-
-const AcordionComponent = (props) => {
-  const dispatch = useDispatch();
-
-  const params = useSelector(
-    ({ eCommerceApp }) => eCommerceApp.products.datosPOs
-  );
-
-  useEffect(() => {}, [props, params]);
-
-  const handleAccordionState = (indexFolder, folder) => {
-    if (props.dataPO.folders[indexFolder].accordionState !== folder.name) {
-      props.dataPO.folders[indexFolder].accordionState = folder.name;
-    } else {
-      props.dataPO.folders[indexFolder].accordionState = false;
-    }
-    props.handleUpdate();
-  };
-
-  const chooseFile = (event, indexFolder, indexFile) => {
-    props.setChooseFilesDataUpload({
-      ...props.chooseFilesDataUpload,
-      [Object.keys(props.chooseFilesDataUpload).length + ""]: event,
-    });
-    props.dataPO.folders[indexFolder].files[indexFile].contentFile.name =
-      event.name;
-    props.dataPO.folders[indexFolder].files[
-      indexFile
-    ].contentFile.lastModified = event.lastModified;
-    props.dataPO.folders[indexFolder].files[
-      indexFile
-    ].contentFile.lastModifiedDate = event.lastModifiedDate;
-    props.dataPO.folders[indexFolder].files[indexFile].contentFile.size =
-      event.size;
-    props.dataPO.folders[indexFolder].files[indexFile].contentFile.type =
-      event.type;
-    props.handleUpdate();
-  };
-
-  const handleAdd = (indexFolder) => {
-    if (props.dataPO.folders[indexFolder].addSourceState.state === "folder") {
-      props.dataPO.folders[indexFolder].folders.push({
-        name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-        statePO: "new",
-        accordionState:
-          props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-        addSourceState: { state: "", nameFolder: "" },
-        files: [],
-        folders: [],
-      });
-    } else if (
-      props.dataPO.folders[indexFolder].addSourceState.state === "file"
-    ) {
-      props.dataPO.folders[indexFolder].files.push({
-        name: "New File",
-        statePO: "new",
-        documentType: {
-          id: 0,
-          name: "",
-          description: "",
-          regex: "",
-          code: "",
-          icon: "",
-          extensionAllowed: "",
-          lastUpdated: "",
-        },
-        contentFile: {
-          name: "",
-          lastModified: 0,
-          lastModifiedDate: null,
-          size: 0,
-          type: "",
-        },
-      });
-    }
-    props.dataPO.folders[indexFolder].addSourceState.state = "";
-    props.dataPO.folders[indexFolder].addSourceState.nameFolder = "";
-
-    props.handleUpdate();
-  };
-
-  const handleRemoveFolder = (index) => {
-    props.dataPO.folders.splice(index, 1);
-    props.handleUpdate();
-  };
-
-  const handleRemoveFile = (indexFolder, indexFile) => {
-    props.dataPO.folders[indexFolder].files.splice(indexFile, 1);
-    props.handleUpdate();
-  };
-
-  function handleAddSourceState(ev) {
-    props.dataPO.folders[ev.target.name].addSourceState.state = ev.target.value;
-    props.handleUpdate();
-  }
-
-  const onChangeTextNewFolder = (ev) => {
-    props.dataPO.folders[ev.target.name].addSourceState.nameFolder =
-      ev.target.value;
-    props.handleUpdate();
-  };
-
-  const handleDocumentTypeState = (ev) => {
-    var arrayIndex = ev.target.name.split(".");
-    props.dataPO.folders[arrayIndex[0]].files[arrayIndex[1]].documentType.name =
-      ev.target.value;
-    props.handleUpdate();
-  };
-
-  return (
-    <>
-      {props.dataPO.folders.map((folderPO, iFolderPO) => (
-        <>
-          <div
-            style={{ justifyContent: "end", display: "flex", paddingTop: "2%" }}
-          >
-            {folderPO.statePO === "new" ? (
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => handleRemoveFolder(iFolderPO)}
-                size="small"
-                style={{ maxWidth: "10%" }}
-              >
-                <Icon>delete</Icon>
-              </Button>
-            ) : (
-              <></>
-            )}
-          </div>
-          <Accordion
-            className="border-0 shadow-0 overflow-hidden"
-            expanded={folderPO.name === folderPO.accordionState}
-            onChange={() => handleAccordionState(iFolderPO, folderPO)}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              classes={{ root: "border border-solid rounded-16 mt-8" }}
-            >
-              <div
-                style={{
-                  justifyContent: "space-between",
-                  display: "inline-flex",
-                  minWidth: "95%",
-                }}
-              >
-                <Typography
-                  className="font-semibold"
-                  style={{ alignSelf: "center" }}
-                >
-                  {folderPO.name}
-                </Typography>
-              </div>
-            </AccordionSummary>
-
-            <AccordionDetails>
-              {folderPO.files !== null ? (
-                folderPO.files.map((file, i) =>
-                  file.statePO === "old" ? (
-                    <div key={i} className="flex flex-col md:flex-row -mx-8">
-                      <Controller
-                        name={file.name}
-                        control={props.control}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
-                            className="mt-8  mx-4"
-                            label={file.name}
-                            value={file.contentFile.name}
-                            id={file.name}
-                            variant="outlined"
-                            size="small"
-                            disabled={true}
-                            fullWidth
-                          />
-                        )}
-                      />
-                      <input
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        id={file.name + i + "fu"}
-                        multiple
-                        type="file"
-                        onChange={(event) => {
-                          chooseFile(event.target.files[0], iFolderPO, i);
-                        }}
-                        onClick={(event) => {
-                          event.target.value = null;
-                        }}
-                      />
-                      <label
-                        htmlFor={file.name + i + "fu"}
-                        className="mt-8  mx-4"
-                        style={{ minWidth: "15%" }}
-                      >
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          startIcon={<Icon size="small">save</Icon>}
-                          size="small"
-                          style={{ height: "100%" }}
-                          fullWidth
-                          component="span"
-                        >
-                          Choose File
-                        </Button>
-                      </label>
-
-                      <Tooltip
-                        title={file.name}
-                        placement="left"
-                        arrow
-                        TransitionComponent={Zoom}
-                      >
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          className="mt-8  mx-4"
-                          size="small"
-                        >
-                          <Icon>help</Icon>
-                        </Button>
-                      </Tooltip>
-                    </div>
-                  ) : file.statePO === "new" ? (
-                    <div key={i} className="flex flex-col md:flex-row -mx-8">
-                      <FormControl className="w-full mt-8  mx-4" size="small">
-                        <InputLabel id="category-select-label">
-                          More Files
-                        </InputLabel>
-                        <Select
-                          labelId="category-select-label"
-                          id="category-select"
-                          label="Category"
-                          name={iFolderPO + "." + i}
-                          value={file.documentType.name}
-                          onChange={handleDocumentTypeState}
-                        >
-                          {props.datosDocumentTypes.length !== 0
-                            ? props.datosDocumentTypes[0].data.map(
-                                (documentTypeData, i) => (
-                                  <MenuItem
-                                    key={documentTypeData.id}
-                                    value={documentTypeData.name}
-                                  >
-                                    <em> {documentTypeData.name} </em>
-                                  </MenuItem>
-                                )
-                              )
-                            : false}
-                        </Select>
-                      </FormControl>
-                      <Controller
-                        name={file.name}
-                        control={props.control}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
-                            className="mt-8  mx-4"
-                            label={file.name}
-                            value={file.contentFile.name}
-                            variant="outlined"
-                            size="small"
-                            style={{ minWidth: "50%" }}
-                            disabled={true}
-                            fullWidth
-                          />
-                        )}
-                      />
-
-                      <input
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        id={file.name + i + "fu"}
-                        multiple
-                        type="file"
-                        onChange={(event) => {
-                          chooseFile(event.target.files[0], iFolderPO, i);
-                        }}
-                        onClick={(event) => {
-                          event.target.value = null;
-                        }}
-                      />
-                      <label
-                        htmlFor={file.name + i + "fu"}
-                        className="mt-8  mx-4"
-                        style={{ minWidth: "15%" }}
-                      >
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          startIcon={<Icon size="small">save</Icon>}
-                          size="small"
-                          style={{ height: "100%" }}
-                          fullWidth
-                          component="span"
-                        >
-                          Choose File
-                        </Button>
-                      </label>
-                      <Tooltip
-                        title={file.name}
-                        placement="left"
-                        arrow
-                        TransitionComponent={Zoom}
-                      >
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          className="mt-8  mx-4"
-                          //onClick={handleRemoveProduct}
-                          size="small"
-                        >
-                          <Icon>help</Icon>
-                        </Button>
-                      </Tooltip>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        className="mt-8  mx-4"
-                        id={file.name + i + "deleteFile"}
-                        key={file.name + i + "deleteFile"}
-                        onClick={() => handleRemoveFile(iFolderPO, i)}
-                        size="small"
-                      >
-                        <Icon>delete</Icon>
-                      </Button>
-                    </div>
-                  ) : (
-                    <></>
-                  )
-                )
-              ) : (
-                <></>
-              )}
-              <AcordionComponent
-                dataPO={folderPO}
-                control={props.control}
-                handleUpdate={props.handleUpdate}
-                datosDocumentTypes={props.datosDocumentTypes}
-              />
-
-              <div className="flex flex-col md:flex-row -mx-8 pt-20">
-                <FormControl className="w-full mt-8  mx-4" size="small">
-                  <InputLabel
-                    id={folderPO.name + "selectNewResource" + iFolderPO}
-                  >
-                    Type Source
-                  </InputLabel>
-                  <Select
-                    labelId={folderPO.name + "selectNewResource" + iFolderPO}
-                    id={folderPO.name + "categorySelectNewResource" + iFolderPO}
-                    label="Category"
-                    value={folderPO.addSourceState.state}
-                    name={iFolderPO + ""}
-                    onChange={handleAddSourceState}
-                  >
-                    <MenuItem
-                      key={
-                        folderPO.name +
-                        "menuItemSelectNewResourceFolder" +
-                        iFolderPO
-                      }
-                      value="folder"
-                    >
-                      <em> Folder </em>
-                    </MenuItem>
-                    <MenuItem
-                      key={
-                        folderPO.name +
-                        "menuItemSelectNewResourceFile" +
-                        iFolderPO
-                      }
-                      value="file"
-                    >
-                      <em> File </em>
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-                {folderPO.addSourceState.state === "folder" ? (
-                  <Controller
-                    name="New Folderf"
-                    control={props.control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        className="mt-8  mx-4"
-                        label="New Folder"
-                        name={iFolderPO + ""}
-                        value={
-                          props.dataPO.folders[iFolderPO].addSourceState
-                            .nameFolder
-                        }
-                        onChange={onChangeTextNewFolder}
-                        variant="outlined"
-                        size="small"
-                        style={{ minWidth: "40%" }}
-                        fullWidth
-                      />
-                    )}
-                  />
-                ) : (
-                  <></>
-                )}
-                <Button
-                  id={folderPO.name + "addNewFileFolder"}
-                  key={folderPO.name + "addNewFileFolder"}
-                  variant="contained"
-                  color="info"
-                  className="mt-8  mx-4"
-                  onClick={() => handleAdd(iFolderPO)}
-                  startIcon={<Icon>add_circle</Icon>}
-                  size="small"
-                  style={
-                    folderPO.addSourceState.state === "folder"
-                      ? { minWidth: "40%" }
-                      : { minWidth: "80%" }
-                  }
-                  fullWidth
-                ></Button>
-              </div>
-              <div className="pt-20">
-                <hr style={{ borderTop: "3px solid #bbb" }} />
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        </>
-      ))}
-    </>
   );
 };
 
