@@ -97,12 +97,21 @@ const explorerSlice = createSlice({
     folderData: null,
     newFolderDialog: {
       open: false
+    },
+    newFileDialog: {
+      open: false,
+      data: null,
     }
   }),
   reducers: {
     handleNewFolderDialog: (state, action) => {
       state.newFolderDialog = {
         open: !state.newFolderDialog.open
+      }
+    },
+    handleNewFileDialog: (state, action) => {
+      state.newFileDialog = {
+        open: !state.newFileDialog.open
       }
     }
   },
@@ -127,7 +136,8 @@ const explorerSlice = createSlice({
 });
 
 export const {
-  handleNewFolderDialog
+  handleNewFolderDialog,
+  handleNewFileDialog
 } = explorerSlice.actions;
 
 export default explorerSlice.reducer;

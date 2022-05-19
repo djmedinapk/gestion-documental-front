@@ -11,6 +11,7 @@ import withReducer from "app/store/withReducer";
 import {
   getCurrentFolder,
   getFiles,
+  handleNewFileDialog,
   handleNewFolderDialog,
   selectFiles,
 } from "./store/explorerSlice";
@@ -29,10 +30,12 @@ import {
   Typography,
 } from "@mui/material";
 import NewFolderDialog from "./NewFolderDialog";
+import NewFileDialog from "./NewFileDialog";
 import FileList from "./FileList";
 
 import { useNavigate } from "react-router-dom";
 import { changeGeneralParamsNewPOClient } from "./../../../store/globalParamsSlice";
+import { getDocumentTypes } from "./store/documentTypeSlice";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -87,6 +90,7 @@ const ExplorerApp = () => {
       setIsFolder(false);
       dispatch(getCurrentFolder({ routeParams, isFolder: false }));
     }
+    dispatch(getDocumentTypes());
   }, [dispatch]);
 
   useEffect(() => {
@@ -108,6 +112,11 @@ const ExplorerApp = () => {
     dispatch(handleNewFolderDialog());
     setOpen(!open);
   };
+
+  const handleAddNewFile = () => {
+    dispatch(handleNewFileDialog());
+    setOpen(!open);
+  };  
 
   const handleRedirectNewPO = () => {
     dispatch(changeGeneralParamsNewPOClient(project));
@@ -164,7 +173,7 @@ const ExplorerApp = () => {
                         </ListItemIcon>
                         <ListItemText primary="Add Folder" />
                       </ListItemButton>
-                      <ListItemButton>
+                      <ListItemButton onClick={() => handleAddNewFile()}>
                         <ListItemIcon>
                           <Icon>note_add</Icon>
                         </ListItemIcon>
@@ -218,6 +227,7 @@ const ExplorerApp = () => {
         innerScroll
       />
       <NewFolderDialog />
+      <NewFileDialog/>
     </>
   );
 };
