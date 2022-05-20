@@ -29,16 +29,48 @@ export const fileUp = createAsyncThunk(
   async (dataPO, { dispatch, getState }) => {
     const formData = new FormData();
     const dataPe = JSON.stringify(dataPO.data);
-
-    for (var i = 0; i < Object.keys(dataPO.files).length + 1; i++) {
-      formData.append(i + "", dataPO.files[i]);
-    }
+    var filesToBack = extractFiles(dataPO.files, dataPO.files.name, dataPO.files.name + "/");
+    console.log(filesToBack);
+    var fr = new File(filesToBack[1]);
+    /*for (var i = 0; i < filesToBack.length; i++) {
+      formData.append(i + "", new File(filesToBack[i]));
+    }*/
+    console.log(fr);
     formData.append("dataJson", dataPe);
     const response = await axios.post("/api/DocumentType/file", formData);
     const data = await response.data;
     return data;
   }
 );
+
+const extractFiles = (data, mainFolder, route) => {
+  var arrayFiles = [];
+
+  data.files.forEach((element) => {
+    arrayFiles.push(element.contentFile);
+  });
+
+  if (data.folders.length !== 0) {
+    data.folders.forEach((element) => {
+      var arrayFilesInside = extractFiles(
+        element,
+        mainFolder,
+        route + element.name + "/"
+      );
+      arrayFiles = arrayFiles.concat(arrayFilesInside);
+    });
+  }
+
+  if ((route === mainFolder + "/UVA/Evidencias/")) {
+    data.products.forEach((element) => {
+      element.files.forEach((element2) => {
+        arrayFiles.push(element2);
+      });
+    });
+  }
+
+  return arrayFiles;
+};
 
 const productsAdapter = createEntityAdapter({});
 
@@ -215,7 +247,27 @@ const productsSlice = createSlice({
                 type: "",
               },
             },
-            { name: "Folio de UVA" },
+            {
+              name: "Folio de UVA",
+              statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: "",
+                lastUpdated: "",
+              },
+              contentFile: {
+                name: "",
+                lastModified: 0,
+                lastModifiedDate: null,
+                size: 0,
+                type: "",
+              },
+            },
             {
               name: "Series",
               statePO: "old",
@@ -472,37 +524,7 @@ const productsSlice = createSlice({
               statePO: "old",
               accordionState: "Evidencias",
               addSourceState: { state: "", nameFolder: "" },
-              products: [
-                {
-                  name: "pepe",
-                  model: "2",
-                  statePO: "old",
-                  tempName:"pepe",
-                  files: [
-                    {
-                      name: "prueba",
-                      lastModified: 0,
-                      lastModifiedDate: null,
-                      size: 0,
-                      type: "",
-                    },
-                    {
-                      name: "prueba2",
-                      lastModified: 0,
-                      lastModifiedDate: null,
-                      size: 0,
-                      type: "",
-                    },
-                  ],
-                },
-                {
-                  name: "pepe2",
-                  model: "2",
-                  statePO: "new",
-                  tempName:"pepe2",
-                  files: [],
-                },
-              ],
+              products: [],
               files: [],
               folders: [],
             },

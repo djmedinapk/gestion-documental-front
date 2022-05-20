@@ -45,11 +45,14 @@ const ShippingTab = () => {
   const datosSS2 = useSelector(
     ({ eCommerceApp }) => eCommerceApp.products.datosPOs
   );
+
   const dataClient = JSON.parse(
     JSON.stringify(
       useSelector(({ globalParams }) => globalParams.generalParams.newPO.client)
     )
   );
+
+  //const filesGeneral = JSON.parse(JSON.stringify(datosSS));
 
   const [chooseFilesDataUpload, setChooseFilesDataUpload] = useState([]);
 
@@ -101,8 +104,25 @@ const ShippingTab = () => {
     initDialog();
   }, [datosProductTypes]);
 
+  const [filesGeneral, setFilesGeneral] = useState(null);
+
+  useEffect(() => {
+    setFilesGeneral(JSON.parse(JSON.stringify(datosSS)));
+  }, []);
+
   const handleUpdate = () => {
     dispatch(changeDatosPOs(datosSS));
+  };
+
+  const chooseFilesProductFolder = (
+    files,
+    indexFolder,
+    indexProduct,
+    product
+  ) => {
+    //filesGeneral.folders[2].folders[0].products[indexProduct].files = [...filesGeneral.folders[2].folders[0].products[indexProduct].files,...event];
+    setFiles(files);
+    handleUpdate();
   };
 
   const setFiles = (files) => {
@@ -114,7 +134,6 @@ const ShippingTab = () => {
       ...defaultValues,
       ...datosSS2,
     });
-    console.log(datosSS2);
   }, [datosSS2, reset]);
 
   const chooseFile = (event, indexFile) => {
@@ -197,11 +216,11 @@ const ShippingTab = () => {
 
   const handlePedimentPOState = (ev) => {
     datosSS.pediment = ev.target.value;
-    if (datosSS.pediment === "") {
+    /*if (datosSS.pediment === "") {
       errors.pediment = true;
     } else {
       errors.pediment = false;
-    }
+    }*/
     handleUpdate();
   };
 
@@ -236,7 +255,8 @@ const ShippingTab = () => {
   };
 
   const handleSaveDataPO = () => {
-    dispatch(fileUp({ files: chooseFilesDataUpload, data: datosSS }));
+    //console.log("este",filesGeneral);
+    //dispatch(fileUp({ files: filesGeneral, data: datosSS }));
   };
 
   return (
@@ -292,9 +312,12 @@ const ShippingTab = () => {
               fullWidth
               required
               error={!!errors.pediment}
-              helperText={errors.name ? "errgd" : false}
+              helperText={errors?.pediment?.message}
               value={datosSS.pediment}
-              onChange={handlePedimentPOState}
+              onChange={(event) => {
+                field.onChange(event);
+                handlePedimentPOState(event);
+              }}
             />
           )}
         />
@@ -378,19 +401,24 @@ const ShippingTab = () => {
           )}
         />
       </div>
-      <AcordionComponent
-        //map={map}
-        key={"key:" + datosSS.name}
-        dataPO={datosSS}
-        control={control}
-        handleUpdate={handleUpdate}
-        setFiles={setFiles}
-        chooseFilesDataUpload={chooseFilesDataUpload}
-        setChooseFilesDataUpload={setChooseFilesDataUpload}
-        datosDocumentTypes={datosDocumentTypes}
-        folderRouteEvidenciasUVA={datosSS.name+"/UVA/Evidencias"}
-        parentPOFolder={datosSS.name+"/"}
-      />
+      {filesGeneral ? (
+        <AcordionComponent
+          key={"key:" + datosSS.name}
+          dataPO={datosSS}
+          control={control}
+          handleUpdate={handleUpdate}
+          setFiles={setFiles}
+          chooseFilesDataUpload={chooseFilesDataUpload}
+          setChooseFilesDataUpload={setChooseFilesDataUpload}
+          datosDocumentTypes={datosDocumentTypes}
+          folderRouteEvidenciasUVA={datosSS.name + "/UVA/Evidencias"}
+          parentPOFolder={datosSS.name + "/"}
+          filesGeneral={filesGeneral}
+          chooseFilesProductFolder={chooseFilesProductFolder}
+        />
+      ) : (
+        ""
+      )}
 
       <div style={{ paddingTop: "25px" }}>
         {datosSS.files !== null ? (

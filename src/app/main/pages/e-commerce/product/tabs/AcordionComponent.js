@@ -17,6 +17,8 @@ import Icon from "@mui/material/Icon";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
+import { useDeepCompareEffect } from "@fuse/hooks";
+
 const AcordionComponent = (props) => {
   const dispatch = useDispatch();
 
@@ -36,11 +38,12 @@ const AcordionComponent = (props) => {
   };
 
   const chooseFile = (event, indexFolder, indexFile) => {
-    console.log(props);
-    props.setChooseFilesDataUpload({
+    props.filesGeneral.folders[indexFolder].files[indexFile].contentFile =
+      event;
+    /*props.setChooseFilesDataUpload({
       ...props.chooseFilesDataUpload,
       [Object.keys(props.chooseFilesDataUpload).length + ""]: event,
-    });
+    });*/
     props.dataPO.folders[indexFolder].files[indexFile].contentFile.name =
       event.name;
     props.dataPO.folders[indexFolder].files[
@@ -87,15 +90,19 @@ const AcordionComponent = (props) => {
     props.handleUpdate();
   };
 
-  const chooseFilesProductFolder = (event, indexFolder, indexProduct) => {
-    props.dataPO.folders[indexFolder].products[indexProduct].files = event;
-
-    props.handleUpdate();
-  };
-
   const handleAdd = (indexFolder) => {
     if (props.dataPO.folders[indexFolder].addSourceState.state === "folder") {
       props.dataPO.folders[indexFolder].folders.push({
+        name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+        statePO: "new",
+        accordionState:
+          props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+        addSourceState: { state: "", nameFolder: "" },
+        files: [],
+        folders: [],
+      });
+
+      props.filesGeneral.folders[indexFolder].folders.push({
         name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
         statePO: "new",
         accordionState:
@@ -128,10 +135,37 @@ const AcordionComponent = (props) => {
           type: "",
         },
       });
+      props.filesGeneral.folders[indexFolder].files.push({
+        name: "New File",
+        statePO: "new",
+        documentType: {
+          id: 0,
+          name: "",
+          description: "",
+          regex: "",
+          code: "",
+          icon: "",
+          extensionAllowed: "",
+          lastUpdated: "",
+        },
+        contentFile: {
+          name: "",
+          lastModified: 0,
+          lastModifiedDate: null,
+          size: 0,
+          type: "",
+        },
+      });
     } else if (
       props.dataPO.folders[indexFolder].addSourceState.state === "product"
     ) {
       props.dataPO.folders[indexFolder].products.push({
+        name: "",
+        model: "",
+        statePO: "new",
+        files: [],
+      });
+      props.filesGeneral.folders[indexFolder].products.push({
         name: "",
         model: "",
         statePO: "new",
@@ -223,6 +257,80 @@ const AcordionComponent = (props) => {
     props.handleUpdate();
   };
 
+  const chooseFilesProductFolderInput = (event, indexFolder, indexProduct) => {
+    props.dataPO.folders[indexFolder].products[indexProduct].files = [];
+    for (let index = 0; index < event.length; index++) {
+      props.dataPO.folders[indexFolder].products[indexProduct].files.push({
+        name: "New File",
+        statePO: "new",
+        documentType: {
+          id: 0,
+          name: "",
+          description: "",
+          regex: "",
+          code: "",
+          icon: "",
+          extensionAllowed: "",
+          lastUpdated: "",
+        },
+        contentFile: {
+          name: "",
+          lastModified: 0,
+          lastModifiedDate: null,
+          size: 0,
+          type: "",
+        },
+      });
+
+      props.dataPO.folders[indexFolder].products[indexProduct].files[
+        index
+      ].contentFile.name = event[index].name;
+      props.dataPO.folders[indexFolder].products[indexProduct].files[
+        index
+      ].contentFile.lastModified = event[index].lastModified;
+      props.dataPO.folders[indexFolder].products[indexProduct].files[
+        index
+      ].contentFile.lastModifiedDate = event[index].lastModifiedDate;
+      props.dataPO.folders[indexFolder].products[indexProduct].files[
+        index
+      ].contentFile.size = event[index].size;
+      props.dataPO.folders[indexFolder].products[indexProduct].files[
+        index
+      ].contentFile.type = event[index].type;
+    }
+
+    props.handleUpdate();
+
+    props.filesGeneral.folders[indexFolder].products[indexProduct].files = [];
+
+    for (let index = 0; index < event.length; index++) {
+      props.filesGeneral.folders[indexFolder].products[indexProduct].files.push(
+        {
+          name: "New File",
+          statePO: "new",
+          documentType: {
+            id: 0,
+            name: "",
+            description: "",
+            regex: "",
+            code: "",
+            icon: "",
+            extensionAllowed: "",
+            lastUpdated: "",
+          },
+          contentFile: null,
+        }
+      );
+      const pepe = new FormData();
+      pepe.append("archivo",event[index]);
+      props.filesGeneral.folders[indexFolder].products[indexProduct].files[
+        index
+      ].contentFile = event[index];
+    }
+
+  };
+
+
   return (
     <>
       {props.dataPO.folders.map((folderPO, iFolderPO) => (
@@ -313,8 +421,7 @@ const AcordionComponent = (props) => {
                 folderPO.name +
                 "/...AcordionDetailsFolder"
               }
-
-              style={{border:"1px solid", borderTopStyle:"hidden"}}
+              style={{ border: "1px solid", borderTopStyle: "hidden" }}
             >
               {props.parentPOFolder + folderPO.name ===
               props.folderRouteEvidenciasUVA
@@ -559,7 +666,8 @@ const AcordionComponent = (props) => {
                               className="mt-8  mx-4"
                               label="Evidences"
                               value={productPO.files.map(
-                                (fileProductMap) => fileProductMap.name
+                                (fileProductMap) =>
+                                  fileProductMap.contentFile.name
                               )}
                               id={
                                 props.parentPOFolder +
@@ -604,10 +712,11 @@ const AcordionComponent = (props) => {
                           type="file"
                           multiple
                           onChange={(event) => {
-                            chooseFilesProductFolder(
+                            chooseFilesProductFolderInput(
                               event.target.files,
                               iFolderPO,
-                              iProductPO
+                              iProductPO,
+                              productPO
                             );
                           }}
                           onClick={(event) => {
@@ -701,7 +810,12 @@ const AcordionComponent = (props) => {
                         }
                         className="pt-20"
                       >
-                        <hr style={{ borderTop: "2px solid #bbb", paddingBottom:"10px" }} />
+                        <hr
+                          style={{
+                            borderTop: "2px solid #bbb",
+                            paddingBottom: "10px",
+                          }}
+                        />
                       </div>
                     </div>
                   ))
@@ -1176,6 +1290,8 @@ const AcordionComponent = (props) => {
                   chooseFilesDataUpload={props.chooseFilesDataUpload}
                   setChooseFilesDataUpload={props.setChooseFilesDataUpload}
                   setFiles={props.setFiles}
+                  filesGeneral={props.filesGeneral.folders[iFolderPO]}
+                  chooseFilesProductFolder={props.chooseFilesProductFolder}
                 />
               ) : (
                 false
@@ -1361,8 +1477,6 @@ const AcordionComponent = (props) => {
                   Add Source
                 </Button>
               </div>
-
-              
             </AccordionDetails>
           </Accordion>
         </div>
