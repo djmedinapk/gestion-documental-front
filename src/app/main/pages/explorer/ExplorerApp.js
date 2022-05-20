@@ -120,7 +120,7 @@ const ExplorerApp = () => {
 
   const handleRedirectNewPO = () => {
     dispatch(changeGeneralParamsNewPOClient(project));
-    navigate("/apps/e-commerce/products/new");
+    navigate("/apps/po/po-general-template");
   };
 
   return (

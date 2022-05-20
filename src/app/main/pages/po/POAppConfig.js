@@ -9,12 +9,12 @@ const POAppConfig = {
   },
   routes: [
     {
-      path: 'apps/e-commerce/products/:productId/*',
+      path: 'apps/po/po-general-template',
       element: <POGeneralTemplate />,
     },
     {
-      path: 'apps/e-commerce',
-      element: <Navigate to="products" />,
+      path: 'apps/po',
+      element: <Navigate to="po-general-template" />,
     },
   ],
 };
