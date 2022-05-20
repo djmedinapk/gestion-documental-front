@@ -38,12 +38,16 @@ const NewPOTab = () => {
 
   const datosSS = JSON.parse(
     JSON.stringify(
-      useSelector(({ poGeneralTemplateApp }) => poGeneralTemplateApp.poGeneralTemplate.datosPOs)
+      useSelector(
+        ({ poGeneralTemplateApp }) =>
+          poGeneralTemplateApp.poGeneralTemplate.datosPOs
+      )
     )
   );
 
   const datosSS2 = useSelector(
-    ({ poGeneralTemplateApp }) => poGeneralTemplateApp.poGeneralTemplate.datosPOs
+    ({ poGeneralTemplateApp }) =>
+      poGeneralTemplateApp.poGeneralTemplate.datosPOs
   );
 
   const dataClient = JSON.parse(
@@ -65,12 +69,12 @@ const NewPOTab = () => {
   //validation
 
   const defaultValues = {
-    name: "",
+    namePO: "",
     pediment: "",
   };
 
   const schema = yup.object().shape({
-    name: yup.string().required("You must enter a name"),
+    namePO: yup.string().required("You must enter a name"),
     pediment: yup.string().required("You must enter a pediment"),
   });
 
@@ -84,7 +88,7 @@ const NewPOTab = () => {
 
   const { isValid, dirtyFields, errors } = formState;
 
-  const po = watch("po");
+  const namePO = watch("po");
   const pediment = watch("pediment");
 
   //--------------------------------
@@ -205,11 +209,6 @@ const NewPOTab = () => {
 
   const handleNamePOState = (ev) => {
     datosSS.name = ev.target.value;
-    if (datosSS.name === "") {
-      errors.name = true;
-    } else {
-      errors.name = false;
-    }
     handleUpdate();
   };
 
@@ -277,22 +276,25 @@ const NewPOTab = () => {
 
       <div className="flex -mx-4">
         <Controller
-          name="name"
+          name="namePO"
           control={control}
           render={({ field }) => (
             <TextField
               {...field}
               className="mt-8  mx-4"
               label="PO"
-              id="name"
+              id="namePO"
               size="small"
               variant="outlined"
               fullWidth
               required
-              error={!!errors.name}
-              helperText={errors.name ? "errgd" : false}
+              error={!!errors.namePO}
+              helperText={errors?.namePO?.message}
               value={datosSS.name}
-              onChange={handleNamePOState}
+              onChange={(event) => {
+                field.onChange(event);
+                handleNamePOState(event);
+              }}
             />
           )}
         />

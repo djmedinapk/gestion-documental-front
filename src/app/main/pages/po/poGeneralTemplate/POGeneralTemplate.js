@@ -111,7 +111,7 @@ function POGeneralTemplate(props) {
           </Tabs>
         }
         content={
-          <div className="p-16 sm:p-24 max-w-2xl">
+          <div className="p-16 sm:p-24">
             <div className={tabValue !== 0 ? "hidden" : ""}>
               <NewPOTab />
             </div>
