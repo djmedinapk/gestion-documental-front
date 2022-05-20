@@ -6,10 +6,10 @@ import {
 import axios from "./../../../../services/Axios/HttpClient";
 
 export const getDocumentTypes = createAsyncThunk(
-  "eCommerceApp/documentTypes/getDocumentTypes",
+  "poGeneralTemplateApp/documentTypes/getDocumentTypes",
   async (routeParams, { dispatch, getState }) => {
     const response = await axios.getWithParams("/api/DocumentType/WithParams", {
-      params: getState().eCommerceApp.documentTypes.paramsData,
+      params: getState().poGeneralTemplateApp.documentTypes.paramsData,
     });
     const data = await response.data;
     dispatch(changeParamsDataCount(data.count));
@@ -30,7 +30,7 @@ export const addDocumentType = createAsyncThunk(
 );
 
 export const updateDocumentType = createAsyncThunk(
-  "eCommerceApp/documentTypes/updateDocumentTypes",
+  "poGeneralTemplateApp/documentTypes/updateDocumentTypes",
   async (documentTypeData, { dispatch, getState }) => {
     const response = await axios.put(
       "/api/DocumentType/" + documentTypeData.id,
@@ -81,11 +81,11 @@ const documentTypesAdminAdapter = createEntityAdapter({});
 
 export const { selectAll: selectDocumentTypes } =
   documentTypesAdminAdapter.getSelectors(
-    (state) => state.eCommerceApp.documentTypes
+    (state) => state.poGeneralTemplateApp.documentTypes
   );
 
 const documentTypesAdminSlice = createSlice({
-  name: "eCommerceApp/documentTypes",
+  name: "poGeneralTemplateApp/documentTypes",
   initialState: documentTypesAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},

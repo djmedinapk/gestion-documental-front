@@ -4,13 +4,9 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useFormContext } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import _ from "@lodash";
-import { saveProduct, removeProduct } from "../store/productSlice";
-import { changeDatosPOs } from "./../store/productsSlice";
 
-function ProductHeader(props) {
+function POGeneralTemplateHeader(props) {
   const methods = useFormContext();
   const { formState, watch, getValues } = methods;
   const { isValid, dirtyFields } = formState;
@@ -28,19 +24,11 @@ function ProductHeader(props) {
             initial={{ scale: 0 }}
             animate={{ scale: 1, transition: { delay: 0.3 } }}
           >
-            {images.length > 0 && featuredImageId ? (
-              <img
-                className="w-32 sm:w-48 rounded"
-                src={_.find(images, { id: featuredImageId }).url}
-                alt={name}
-              />
-            ) : (
-              <img
-                className="w-32 sm:w-48 rounded"
-                src="assets/images/ecommerce/product-image-placeholder.png"
-                alt={name}
-              />
-            )}
+            <img
+              className="w-32 sm:w-48 rounded"
+              src="assets/images/ecommerce/product-image-placeholder.png"
+              alt={name}
+            />
           </motion.div>
           <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
             <motion.div
@@ -61,4 +49,4 @@ function ProductHeader(props) {
   );
 }
 
-export default ProductHeader;
+export default POGeneralTemplateHeader;

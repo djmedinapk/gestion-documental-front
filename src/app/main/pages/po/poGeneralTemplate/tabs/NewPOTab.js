@@ -26,24 +26,24 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useDeepCompareEffect } from "@fuse/hooks";
 
-import { changeDatosPOs, fileUp } from "./../../store/productsSlice";
+import { changeDatosPOs, fileUp } from "./../../store/poGeneralTemplateSlice";
 import { selectProductTypes } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
 import { months, currentYear } from "./../../store/Params";
 
-const ShippingTab = () => {
+const NewPOTab = () => {
   const dispatch = useDispatch();
   const methods = useFormContext();
   const navigate = useNavigate();
 
   const datosSS = JSON.parse(
     JSON.stringify(
-      useSelector(({ eCommerceApp }) => eCommerceApp.products.datosPOs)
+      useSelector(({ poGeneralTemplateApp }) => poGeneralTemplateApp.poGeneralTemplate.datosPOs)
     )
   );
 
   const datosSS2 = useSelector(
-    ({ eCommerceApp }) => eCommerceApp.products.datosPOs
+    ({ poGeneralTemplateApp }) => poGeneralTemplateApp.poGeneralTemplate.datosPOs
   );
 
   const dataClient = JSON.parse(
@@ -120,7 +120,6 @@ const ShippingTab = () => {
     indexProduct,
     product
   ) => {
-    //filesGeneral.folders[2].folders[0].products[indexProduct].files = [...filesGeneral.folders[2].folders[0].products[indexProduct].files,...event];
     setFiles(files);
     handleUpdate();
   };
@@ -687,4 +686,4 @@ const ShippingTab = () => {
   );
 };
 
-export default ShippingTab;
+export default NewPOTab;

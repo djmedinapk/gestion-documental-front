@@ -22,11 +22,9 @@ import { useDeepCompareEffect } from "@fuse/hooks";
 const AcordionComponent = (props) => {
   const dispatch = useDispatch();
 
-  const params = useSelector(
-    ({ eCommerceApp }) => eCommerceApp.products.datosPOs
-  );
+  
 
-  useEffect(() => {}, [props, params]);
+  useEffect(() => {}, [props]);
 
   const handleAccordionState = (indexFolder, folder) => {
     if (props.dataPO.folders[indexFolder].accordionState !== folder.name) {

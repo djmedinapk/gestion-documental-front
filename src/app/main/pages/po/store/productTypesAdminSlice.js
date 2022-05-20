@@ -6,10 +6,10 @@ import {
 import axios from "./../../../../services/Axios/HttpClient";
 
 export const getProductTypes = createAsyncThunk(
-  "eCommerceApp/productTypes/getProductTypes",
+  "poGeneralTemplateApp/productTypes/getProductTypes",
   async (routeParams, { dispatch, getState }) => {
     const response = await axios.getWithParams("/api/ProductType/WithParams", {
-      params: getState().eCommerceApp.productTypes.paramsData,
+      params: getState().poGeneralTemplateApp.productTypes.paramsData,
     });
     const data = await response.data;
     dispatch(changeParamsDataCount(data.count));
@@ -30,7 +30,7 @@ export const addProductType = createAsyncThunk(
 );
 
 export const updateProductType = createAsyncThunk(
-  "eCommerceApp/productTypes/updateProductTypes",
+  "poGeneralTemplateApp/productTypes/updateProductTypes",
   async (productTypeData, { dispatch, getState }) => {
     const response = await axios.put(
       "/api/ProductType/" + productTypeData.id,
@@ -59,11 +59,11 @@ const productTypesAdminAdapter = createEntityAdapter({});
 
 export const { selectAll: selectProductTypes } =
   productTypesAdminAdapter.getSelectors(
-    (state) => state.eCommerceApp.productTypes
+    (state) => state.poGeneralTemplateApp.productTypes
   );
 
 const productTypesAdminSlice = createSlice({
-  name: "eCommerceApp/productTypes",
+  name: "poGeneralTemplateApp/productTypes",
   initialState: productTypesAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
