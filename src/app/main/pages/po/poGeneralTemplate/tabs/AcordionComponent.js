@@ -22,8 +22,6 @@ import { useDeepCompareEffect } from "@fuse/hooks";
 const AcordionComponent = (props) => {
   const dispatch = useDispatch();
 
-  
-
   useEffect(() => {}, [props]);
 
   const handleAccordionState = (indexFolder, folder) => {
@@ -88,27 +86,48 @@ const AcordionComponent = (props) => {
     props.handleUpdate();
   };
 
+  
+
   const handleAdd = (indexFolder) => {
     if (props.dataPO.folders[indexFolder].addSourceState.state === "folder") {
-      props.dataPO.folders[indexFolder].folders.push({
-        name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-        statePO: "new",
-        accordionState:
-          props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-        addSourceState: { state: "", nameFolder: "" },
-        files: [],
-        folders: [],
-      });
+      if (props.dataPO.folders[indexFolder].addSourceState.nameFolder !== "") {
+        if (
+          !props.validationFolderName(
+            props.dataPO.folders[indexFolder].folders,
+            props.dataPO.folders[indexFolder].addSourceState.nameFolder
+          )
+        ) {
+          props.dataPO.folders[indexFolder].folders.push({
+            name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            statePO: "new",
+            accordionState:
+              props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            addSourceState: { state: "", nameFolder: "" },
+            files: [],
+            folders: [],
+          });
 
-      props.filesGeneral.folders[indexFolder].folders.push({
-        name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-        statePO: "new",
-        accordionState:
-          props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-        addSourceState: { state: "", nameFolder: "" },
-        files: [],
-        folders: [],
-      });
+          props.filesGeneral.folders[indexFolder].folders.push({
+            name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            statePO: "new",
+            accordionState:
+              props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            addSourceState: { state: "", nameFolder: "" },
+            files: [],
+            folders: [],
+          });
+          props.dataPO.folders[indexFolder].addSourceState.state = "";
+          props.dataPO.folders[indexFolder].addSourceState.nameFolder = "";
+
+          props.handleUpdate();
+        } else {
+          console.log(props.dataPO.folders[indexFolder].folders);
+          props.messageDispatch("The folder name already exists", "error");
+        }
+      } else {
+        console.log(props.dataPO.folders[indexFolder].folders);
+        props.messageDispatch("You must enter a folder name", "error");
+      }
     } else if (
       props.dataPO.folders[indexFolder].addSourceState.state === "file"
     ) {
@@ -154,6 +173,9 @@ const AcordionComponent = (props) => {
           type: "",
         },
       });
+      props.dataPO.folders[indexFolder].addSourceState.state = "";
+
+      props.handleUpdate();
     } else if (
       props.dataPO.folders[indexFolder].addSourceState.state === "product"
     ) {
@@ -169,11 +191,10 @@ const AcordionComponent = (props) => {
         statePO: "new",
         files: [],
       });
-    }
-    props.dataPO.folders[indexFolder].addSourceState.state = "";
-    props.dataPO.folders[indexFolder].addSourceState.nameFolder = "";
+      props.dataPO.folders[indexFolder].addSourceState.state = "";
 
-    props.handleUpdate();
+      props.handleUpdate();
+    }
   };
 
   const handleAddFileProductFolder = (indexFolder, indexProduct) => {
@@ -254,6 +275,10 @@ const AcordionComponent = (props) => {
       ev.target.value;
     props.handleUpdate();
   };
+  const handleValidationYup = (index) => {
+    console.log(index);
+    //props.setValidationYup(index);
+  };
 
   const chooseFilesProductFolderInput = (event, indexFolder, indexProduct) => {
     props.dataPO.folders[indexFolder].products[indexProduct].files = [];
@@ -320,14 +345,12 @@ const AcordionComponent = (props) => {
         }
       );
       const pepe = new FormData();
-      pepe.append("archivo",event[index]);
+      pepe.append("archivo", event[index]);
       props.filesGeneral.folders[indexFolder].products[indexProduct].files[
         index
       ].contentFile = event[index];
     }
-
   };
-
 
   return (
     <>
@@ -835,6 +858,16 @@ const AcordionComponent = (props) => {
                         }
                         className="flex flex-col md:flex-row -mx-8"
                       >
+                        {handleValidationYup(
+                          props.parentPOFolder +
+                            "/" +
+                            folderPO.name +
+                            "/" +
+                            filePO.name +
+                            "-" +
+                            iFilePO +
+                            "/...AcordionDetailsFolderFileDivController"
+                        )}
                         <Controller
                           key={
                             props.parentPOFolder +
@@ -861,8 +894,14 @@ const AcordionComponent = (props) => {
                             <TextField
                               {...field}
                               className="mt-8  mx-4"
-                              label={filePO.name}
+                              label={
+                                filePO.name +
+                                " (" +
+                                filePO.documentType.extensionAllowed +
+                                ")"
+                              }
                               value={filePO.contentFile.name}
+                              required
                               id={
                                 props.parentPOFolder +
                                 "/" +
@@ -871,7 +910,7 @@ const AcordionComponent = (props) => {
                                 filePO.name +
                                 "-" +
                                 iFilePO +
-                                "/...AcordionDetailsFolderFileDivControllerTextField"
+                                "/...AcordionDetailsFolderFileDivController"
                               }
                               key={
                                 props.parentPOFolder +
@@ -891,7 +930,7 @@ const AcordionComponent = (props) => {
                           )}
                         />
                         <input
-                          accept="image/*"
+                          accept={filePO.documentType.extensionAllowed}
                           style={{ display: "none" }}
                           key={
                             props.parentPOFolder +
@@ -1280,7 +1319,6 @@ const AcordionComponent = (props) => {
                     "/...AcordionDetailsFolderRecall"
                   }
                   dataPO={folderPO}
-                  control={props.control}
                   handleUpdate={props.handleUpdate}
                   datosDocumentTypes={props.datosDocumentTypes}
                   folderRouteEvidenciasUVA={props.folderRouteEvidenciasUVA}
@@ -1290,6 +1328,16 @@ const AcordionComponent = (props) => {
                   setFiles={props.setFiles}
                   filesGeneral={props.filesGeneral.folders[iFolderPO]}
                   chooseFilesProductFolder={props.chooseFilesProductFolder}
+                  control={props.control}
+                  defaultValues={props.defaultValues}
+                  schema={props.schema}
+                  formState={props.formState}
+                  isValid={props.isValid}
+                  dirtyFields={props.dirtyFields}
+                  errors={props.errors}
+                  setValidationYup={props.setValidationYup}
+                  messageDispatch={props.messageDispatch}
+                  validationFolderName={props.validationFolderName}
                 />
               ) : (
                 false
@@ -1429,7 +1477,7 @@ const AcordionComponent = (props) => {
                           "/...AcordionDetailsFolderDivSourceControllerNewFolderTextField"
                         }
                         className="mt-8  mx-4"
-                        label="New Folder"
+                        label="New Folder Name"
                         name={iFolderPO + ""}
                         value={
                           props.dataPO.folders[iFolderPO].addSourceState

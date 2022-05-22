@@ -26,6 +26,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useDeepCompareEffect } from "@fuse/hooks";
 
+import { hideMessage, showMessage } from "app/store/fuse/messageSlice";
+
 import { changeDatosPOs, fileUp } from "./../../store/poGeneralTemplateSlice";
 import { selectProductTypes } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
@@ -33,8 +35,6 @@ import { months, currentYear } from "./../../store/Params";
 
 const NewPOTab = () => {
   const dispatch = useDispatch();
-  const methods = useFormContext();
-  const navigate = useNavigate();
 
   const datosSS = JSON.parse(
     JSON.stringify(
@@ -43,11 +43,6 @@ const NewPOTab = () => {
           poGeneralTemplateApp.poGeneralTemplate.datosPOs
       )
     )
-  );
-
-  const datosSS2 = useSelector(
-    ({ poGeneralTemplateApp }) =>
-      poGeneralTemplateApp.poGeneralTemplate.datosPOs
   );
 
   const dataClient = JSON.parse(
@@ -71,25 +66,26 @@ const NewPOTab = () => {
   const defaultValues = {
     namePO: "",
     pediment: "",
+    year: "",
+    month: "",
+    type: "",
   };
 
   const schema = yup.object().shape({
     namePO: yup.string().required("You must enter a name"),
     pediment: yup.string().required("You must enter a pediment"),
+    year: yup.string().required("You must select a year"),
+    month: yup.string().required("You must select a month"),
+    type: yup.string().required("You must select a type"),
   });
 
-  const { control, watch, reset, handleSubmit, formState, getValues } = useForm(
-    {
-      mode: "onChange",
-      validationSchema: defaultValues,
-      resolver: yupResolver(schema),
-    }
-  );
+  const { control, formState } = useForm({
+    mode: "onChange",
+    validationSchema: defaultValues,
+    resolver: yupResolver(schema),
+  });
 
   const { isValid, dirtyFields, errors } = formState;
-
-  const namePO = watch("po");
-  const pediment = watch("pediment");
 
   //--------------------------------
 
@@ -104,9 +100,7 @@ const NewPOTab = () => {
     setDataYears(getYearsData());
   }, [dispatch, datosProductTypes, datosDocumentTypes]);
 
-  useEffect(() => {
-    initDialog();
-  }, [datosProductTypes]);
+  useEffect(() => {}, [datosProductTypes]);
 
   const [filesGeneral, setFilesGeneral] = useState(null);
 
@@ -132,13 +126,6 @@ const NewPOTab = () => {
     setChooseFilesDataUpload([...chooseFilesDataUpload, ...files]);
   };
 
-  const initDialog = useCallback(() => {
-    reset({
-      ...defaultValues,
-      ...datosSS2,
-    });
-  }, [datosSS2, reset]);
-
   const chooseFile = (event, indexFile) => {
     setChooseFilesDataUpload({
       ...chooseFilesDataUpload,
@@ -155,14 +142,31 @@ const NewPOTab = () => {
 
   const handleAdd = () => {
     if (datosSS.addSourceState.state === "folder") {
-      datosSS.folders.push({
-        name: datosSS.addSourceState.nameFolder,
-        statePO: "new",
-        accordionState: datosSS.addSourceState.nameFolder,
-        addSourceState: { state: "", nameFolder: "" },
-        files: [],
-        folders: [],
-      });
+      if (datosSS.addSourceState.nameFolder !== "") {
+        if (
+          !validationFolderName(
+            datosSS.folders,
+            datosSS.addSourceState.nameFolder
+          )
+        ) {
+          datosSS.folders.push({
+            name: datosSS.addSourceState.nameFolder,
+            statePO: "new",
+            accordionState: datosSS.addSourceState.nameFolder,
+            addSourceState: { state: "", nameFolder: "" },
+            files: [],
+            folders: [],
+          });
+          datosSS.addSourceState.state = "";
+          datosSS.addSourceState.nameFolder = "";
+
+          handleUpdate();
+        } else {
+          messageDispatch("The folder name already exists", "error");
+        }
+      } else {
+        messageDispatch("You must enter a folder name", "error");
+      }
     } else if (datosSS.addSourceState.state === "file") {
       datosSS.files.push({
         name: "New File",
@@ -185,11 +189,10 @@ const NewPOTab = () => {
           type: "",
         },
       });
-    }
-    datosSS.addSourceState.state = "";
-    datosSS.addSourceState.nameFolder = "";
+      datosSS.addSourceState.state = "";
 
-    handleUpdate();
+      handleUpdate();
+    }
   };
 
   const handleRemoveFile = (indexFile) => {
@@ -252,9 +255,77 @@ const NewPOTab = () => {
     return years;
   };
 
+  const messageDispatch = (messageD, variantD) => {
+    dispatch(
+      showMessage({
+        message: messageD,
+        autoHideDuration: 2000, //ms
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        variant: variantD,
+      })
+    );
+  };
+
+  const validationFolderName = (folders, nameNewFolder) => {
+    var validationReturn = false;
+
+    folders.forEach((folderElement) => {
+      if (folderElement.name === nameNewFolder) {
+        validationReturn = true;
+      }
+    });
+
+    return validationReturn;
+  };
+
+  const validationFilesStorage = (dataVFS) => {
+    var validationReturn = true;
+
+    console.log(dataVFS);
+    dataVFS.files.forEach((fileElement) => {
+      if (fileElement.contentFile.name === "") {
+        validationReturn = false;
+      }
+    });
+
+    dataVFS.folders.forEach((folderElement) => {
+      if (validationReturn) {
+        validationReturn = validationFilesStorage(folderElement);
+      }
+    });
+
+    return validationReturn;
+  };
+
   const handleSaveDataPO = () => {
     //console.log("este",filesGeneral);
     //dispatch(fileUp({ files: filesGeneral, data: datosSS }));
+
+    var validationSave = true;
+
+    if (datosSS.name === "") {
+      validationSave = false;
+      messageDispatch("You must enter a Name PO", "error");
+    } else if (datosSS.year === "") {
+      validationSave = false;
+      messageDispatch("You must select a year", "error");
+    } else if (datosSS.month === "") {
+      validationSave = false;
+      messageDispatch("You must select a month", "error");
+    } else if (datosSS.productType === "") {
+      validationSave = false;
+      messageDispatch("You must select a Product Type", "error");
+    } else if (!validationFilesStorage(datosSS)) {
+      validationSave = false;
+      messageDispatch("You must select all files", "error");
+    }
+
+    if (validationSave === true) {
+      messageDispatch("The PO was save!!", "success");
+    }
   };
 
   return (
@@ -269,6 +340,7 @@ const NewPOTab = () => {
           color="success"
           onClick={handleSaveDataPO}
           startIcon={<Icon>save</Icon>}
+          //disabled={_.isEmpty(dirtyFields) || !isValid}
         >
           Save
         </Button>
@@ -282,7 +354,7 @@ const NewPOTab = () => {
             <TextField
               {...field}
               className="mt-8  mx-4"
-              label="PO"
+              label="Name PO"
               id="namePO"
               size="small"
               variant="outlined"
@@ -311,9 +383,8 @@ const NewPOTab = () => {
               variant="outlined"
               size="small"
               fullWidth
-              required
-              error={!!errors.pediment}
-              helperText={errors?.pediment?.message}
+              //error={!!errors.pediment}
+              //helperText={errors?.pediment?.message}
               value={datosSS.pediment}
               onChange={(event) => {
                 field.onChange(event);
@@ -324,67 +395,104 @@ const NewPOTab = () => {
         />
       </div>
       <div className="flex -mx-4">
-        <FormControl className="w-full mt-8  mx-4" size="small">
-          <InputLabel id="category-select-label">Year</InputLabel>
-          <Select
-            labelId="category-select-label"
-            id="category-select"
-            label="Category"
-            value={datosSS.year}
-            onChange={handleYearPOState}
-          >
-            {dataYears.length !== 0
-              ? dataYears.map((year, i) => (
-                  <MenuItem key={i} value={year.name}>
-                    <em> {year.name} </em>
-                  </MenuItem>
-                ))
-              : false}
-          </Select>
-        </FormControl>
-        <FormControl className="w-full mt-8  mx-4" size="small">
-          <InputLabel id="category-select-label">Month</InputLabel>
-          <Select
-            labelId="category-select-label"
-            id="category-select"
-            label="Category"
-            value={datosSS.month}
-            onChange={handleMonthPOState}
-          >
-            {months.length !== 0
-              ? months.map((month, i) => (
-                  <MenuItem key={i} value={month.name}>
-                    <em> {month.name} </em>
-                  </MenuItem>
-                ))
-              : false}
-          </Select>
-        </FormControl>
+        <Controller
+          name="year"
+          control={control}
+          render={({ field }) => (
+            <FormControl className="w-full mt-8  mx-4" size="small">
+              <InputLabel id="year-select-label" required>
+                Year
+              </InputLabel>
+              <Select
+                {...field}
+                labelId="year-select-label"
+                id="year"
+                label="Year"
+                value={datosSS.year}
+                onChange={(event) => {
+                  field.onChange(event);
+                  handleYearPOState(event);
+                }}
+              >
+                {dataYears.length !== 0
+                  ? dataYears.map((year, i) => (
+                      <MenuItem key={i} value={year.name}>
+                        <em> {year.name} </em>
+                      </MenuItem>
+                    ))
+                  : false}
+              </Select>
+            </FormControl>
+          )}
+        />
+
+        <Controller
+          name="month"
+          control={control}
+          render={({ field }) => (
+            <FormControl className="w-full mt-8  mx-4" size="small">
+              <InputLabel id="month-select-label" required>
+                Month
+              </InputLabel>
+              <Select
+                {...field}
+                labelId="month-select-label"
+                id="month"
+                label="Month"
+                value={datosSS.month}
+                onChange={(event) => {
+                  field.onChange(event);
+                  handleMonthPOState(event);
+                }}
+              >
+                {months.length !== 0
+                  ? months.map((month, i) => (
+                      <MenuItem key={i} value={month.name}>
+                        <em> {month.name} </em>
+                      </MenuItem>
+                    ))
+                  : false}
+              </Select>
+            </FormControl>
+          )}
+        />
       </div>
       <div className="flex -mx-4">
-        <FormControl className="w-full mt-8  mx-4" size="small">
-          <InputLabel id="category-select-label">Type</InputLabel>
-          <Select
-            labelId="category-select-label"
-            id="category-select"
-            label="Category"
-            value={datosSS.productType}
-            onChange={handleProductTypePOState}
-          >
-            {datosProductTypes.length !== 0
-              ? datosProductTypes[0].data.map((productTypeData, i) => (
-                  <MenuItem
-                    key={productTypeData.id}
-                    value={productTypeData.name}
-                  >
-                    <em> {productTypeData.name} </em>
-                  </MenuItem>
-                ))
-              : false}
-          </Select>
-        </FormControl>
         <Controller
-          name="width"
+          name="type"
+          control={control}
+          render={({ field }) => (
+            <FormControl className="w-full mt-8  mx-4" size="small">
+              <InputLabel id="type-select-label" required>
+                Type
+              </InputLabel>
+              <Select
+                {...field}
+                labelId="type-select-label"
+                id="type"
+                label="Type"
+                value={datosSS.productType}
+                onChange={(event) => {
+                  field.onChange(event);
+                  handleProductTypePOState(event);
+                }}
+              >
+                {datosProductTypes.length !== 0
+                  ? datosProductTypes[0].data.map((productTypeData, i) => (
+                      <MenuItem
+                        key={productTypeData.id}
+                        value={productTypeData.name}
+                      >
+                        <em> {productTypeData.name} </em>
+                      </MenuItem>
+                    ))
+                  : false}
+              </Select>
+            </FormControl>
+          )}
+        />
+        <Controller
+          name="client"
           control={control}
           render={({ field }) => (
             <TextField
@@ -392,10 +500,11 @@ const NewPOTab = () => {
               className="mt-8  mx-4"
               label="Client"
               autoFocus
-              id="width"
+              id="client"
               size="small"
               variant="outlined"
               disabled={true}
+              required
               fullWidth
               value={dataClient.name}
             />
@@ -406,7 +515,6 @@ const NewPOTab = () => {
         <AcordionComponent
           key={"key:" + datosSS.name}
           dataPO={datosSS}
-          control={control}
           handleUpdate={handleUpdate}
           setFiles={setFiles}
           chooseFilesDataUpload={chooseFilesDataUpload}
@@ -416,6 +524,15 @@ const NewPOTab = () => {
           parentPOFolder={datosSS.name + "/"}
           filesGeneral={filesGeneral}
           chooseFilesProductFolder={chooseFilesProductFolder}
+          control={control}
+          defaultValues={defaultValues}
+          schema={schema}
+          formState={formState}
+          isValid={isValid}
+          dirtyFields={dirtyFields}
+          errors={errors}
+          messageDispatch={messageDispatch}
+          validationFolderName={validationFolderName}
         />
       ) : (
         ""
@@ -680,6 +797,7 @@ const NewPOTab = () => {
           color="success"
           onClick={handleSaveDataPO}
           startIcon={<Icon>save</Icon>}
+          //disabled={_.isEmpty(dirtyFields) || !isValid}
         >
           Save
         </Button>

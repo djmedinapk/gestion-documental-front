@@ -64,38 +64,82 @@ const poGeneralTemplateSlice = createSlice({
   initialState: poGeneralTemplateAdapter.getInitialState({
     searchText: "",
     datosPOs: {
-      name: "TEK-20221202-adaf",
+      name: "",
       pediment: "",
       year: "",
       month: "",
       productType: "",
       client: { id: 0, name: "" },
       statePO: "old",
-      accordionState: "TEK-20221202-adaf",
+      accordionState: "",
       addSourceState: { state: "", nameFolder: "" },
-      files: [
+      files: [],
+      folders: [
         {
-          name: "DODA",
+          name: "Aduanas",
           statePO: "old",
-          documentType: {
-            id: 0,
-            name: "",
-            description: "",
-            regex: "",
-            code: "",
-            icon: "",
-            extensionAllowed: "",
-            lastUpdated: "",
-          },
-          contentFile: {
-            name: "",
-            lastModified: 0,
-            lastModifiedDate: null,
-            size: 0,
-            type: "",
-          },
+          accordionState: "Aduanas",
+          addSourceState: { state: "", nameFolder: "" },
+          files: [
+            {
+              name: "DODA",
+              statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: ".pdf",
+                lastUpdated: "",
+              },
+              contentFile: {
+                name: "",
+                lastModified: 0,
+                lastModifiedDate: null,
+                size: 0,
+                type: "",
+              },
+            },
+            {
+              name: "Pedimento",
+              statePO: "old",
+              documentType: {
+                id: 0,
+                name: "",
+                description: "",
+                regex: "",
+                code: "",
+                icon: "",
+                extensionAllowed: ".txt",
+                lastUpdated: "",
+              },
+              contentFile: {
+                name: "",
+                lastModified: 0,
+                lastModifiedDate: null,
+                size: 0,
+                type: "",
+              },
+            },
+          ],
+          folders: [],
         },
+        
       ],
+    },
+    /*datosPOs: {
+      name: "",
+      pediment: "",
+      year: "",
+      month: "",
+      productType: "",
+      client: { id: 0, name: "" },
+      statePO: "old",
+      accordionState: "",
+      addSourceState: { state: "", nameFolder: "" },
+      files: [],
       folders: [
         {
           name: "Aduanas",
@@ -707,7 +751,7 @@ const poGeneralTemplateSlice = createSlice({
           folders: [],
         },
       ],
-    },
+    },*/
   }),
   reducers: {
     changeDatosPOs: (state, action) => {
