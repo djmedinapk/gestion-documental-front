@@ -177,12 +177,14 @@ const AcordionComponent = (props) => {
     ) {
       props.dataPO.folders[indexFolder].products.push({
         name: "",
+        tempName:"",
         model: "",
         statePO: "new",
         files: [],
       });
       props.filesGeneral.folders[indexFolder].products.push({
         name: "",
+        tempName:"",
         model: "",
         statePO: "new",
         files: [],
@@ -712,7 +714,7 @@ const AcordionComponent = (props) => {
                               label="Evidences"
                               value={productPO.files.map(
                                 (fileProductMap) =>
-                                  fileProductMap.contentFile.name
+                                  " "+fileProductMap.contentFile.name
                               )}
                               id={
                                 props.parentPOFolder +

@@ -339,12 +339,41 @@ const NewPOTab = () => {
     return validationReturn;
   };
 
+  var validationFolderEvidencesUVAReturn = true;
+
+  const validationFolderEvidencesUVA = (dataVDTFS, mainFolder, route) => {
+    
+    dataVDTFS.folders.forEach((folderElement) => {
+      validationFolderEvidencesUVA(
+        folderElement,
+        mainFolder,
+        route + folderElement.name + "/"
+      );
+
+      if (route + folderElement.name === mainFolder + "/UVA/Evidencias") {
+        folderElement.products.forEach((productElement) => {
+          if (productElement.tempName === "") {
+            validationFolderEvidencesUVAReturn = false;
+            messageDispatch("You must enter a Product Name", "error");
+          } else if (productElement.model === "") {
+            validationFolderEvidencesUVAReturn = false;
+            messageDispatch("You must enter a Product Model", "error");
+          } else if (productElement.files.length === 0) {
+            validationFolderEvidencesUVAReturn = false;
+            messageDispatch("You must select the Product files", "error");
+          }
+        });
+      } 
+    });
+  };
+
   const handleSaveDataPO = () => {
     //console.log("este",filesGeneral);
     //dispatch(fileUp({ files: filesGeneral, data: datosSS }));
 
-
     var validationSave = true;
+
+    validationFolderEvidencesUVA(datosSS, datosSS.name, datosSS.name + "/");
 
     if (datosSS.name === "") {
       validationSave = false;
@@ -367,7 +396,11 @@ const NewPOTab = () => {
     } else if (!validationFilesStorage(datosSS)) {
       validationSave = false;
       messageDispatch("You must select all files", "error");
+    }else if(!validationFolderEvidencesUVAReturn){
+      validationSave = false;
     }
+    
+    
 
     if (validationSave === true) {
       messageDispatch("The PO was save!!", "success");
