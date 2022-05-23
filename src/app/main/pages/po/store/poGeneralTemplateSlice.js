@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios from "./../../../../services/Axios/HttpClient";
 
 export const fileUp = createAsyncThunk(
   "poGeneralTemplateApp/poGeneralTemplateData/fileUp",
@@ -30,22 +30,8 @@ export const fileUp = createAsyncThunk(
 
 export const folderUp = createAsyncThunk(
   "poGeneralTemplateApp/poGeneralTemplateData/folderUp",
-  async (dataPO, { dispatch, getState }) => {
-    const formData = new FormData();
-    const dataPe = JSON.stringify(dataPO.data);
-    var filesToBack = extractFiles(
-      dataPO.files,
-      dataPO.files.name,
-      dataPO.files.name + "/"
-    );
-    console.log(filesToBack);
-    var fr = new File(filesToBack[1]);
-    /*for (var i = 0; i < filesToBack.length; i++) {
-      formData.append(i + "", new File(filesToBack[i]));
-    }*/
-    console.log(fr);
-    formData.append("dataJson", dataPe);
-    const response = await axios.post("/api/DocumentType/file", formData);
+  async (folder, { dispatch, getState }) => {
+    const response = await axios.post("api/Folder", folder);
     const data = await response.data;
     return data;
   }

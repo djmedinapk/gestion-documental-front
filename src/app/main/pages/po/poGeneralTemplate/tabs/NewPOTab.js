@@ -28,7 +28,11 @@ import { useDeepCompareEffect } from "@fuse/hooks";
 
 import { hideMessage, showMessage } from "app/store/fuse/messageSlice";
 
-import { changeDatosPOs, fileUp } from "./../../store/poGeneralTemplateSlice";
+import {
+  changeDatosPOs,
+  fileUp,
+  folderUp,
+} from "./../../store/poGeneralTemplateSlice";
 import { selectProductTypes } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
 import { months, currentYear } from "./../../store/Params";
@@ -342,7 +346,6 @@ const NewPOTab = () => {
   var validationFolderEvidencesUVAReturn = true;
 
   const validationFolderEvidencesUVA = (dataVDTFS, mainFolder, route) => {
-    
     dataVDTFS.folders.forEach((folderElement) => {
       validationFolderEvidencesUVA(
         folderElement,
@@ -363,7 +366,65 @@ const NewPOTab = () => {
             messageDispatch("You must select the Product files", "error");
           }
         });
-      } 
+      }
+    });
+  };
+
+  const uploadSubFolders = (dataUF, idParentFolder) => {
+    dataUF.folders.forEach((folderElement) => {
+      var folderObj = {
+        name: folderElement.name,
+        description: folderElement.name,
+        isPO: false,
+        FolderId: idParentFolder,
+        UserId: dataClient.userId,
+      };
+      dispatch(folderUp(folderObj)).then((result) => {
+        if (folderElement.folders.length !== 0) {
+          uploadSubFolders(folderElement, result.payload.id);
+        }
+      });
+    });
+  };
+
+  const uploadMainFolders = (dataUMF, idParentFolder) => {
+    var folderObjYear = {
+      name: dataUMF.year,
+      description: dataUMF.year,
+      isPO: false,
+      ProjectId: dataClient.id,
+      UserId: dataClient.userId,
+    };
+    dispatch(folderUp(folderObjYear)).then((resultYear) => {
+      var folderObjProductType = {
+        name: dataUMF.productType,
+        description: dataUMF.productType,
+        isPO: false,
+        FolderId: resultYear.payload.id,
+        UserId: dataClient.userId,
+      };
+      dispatch(folderUp(folderObjProductType)).then((resultProductType) => {
+        var folderObjMonth = {
+          name: dataUMF.month,
+          description: dataUMF.month,
+          isPO: false,
+          FolderId: resultProductType.payload.id,
+          UserId: dataClient.userId,
+        };
+        dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
+          var folderObjBNamePO = {
+            name: dataUMF.name,
+            description: dataUMF.name,
+            isPO: true,
+            FolderId: resultMonth.payload.id,
+            ProductTypeId: 2,
+            UserId: dataClient.userId,
+          };
+          dispatch(folderUp(folderObjBNamePO)).then((resultNamePO) => {
+            uploadSubFolders(dataUMF, resultNamePO.payload.id);
+          });
+        });
+      });
     });
   };
 
@@ -396,14 +457,13 @@ const NewPOTab = () => {
     } else if (!validationFilesStorage(datosSS)) {
       validationSave = false;
       messageDispatch("You must select all files", "error");
-    }else if(!validationFolderEvidencesUVAReturn){
+    } else if (!validationFolderEvidencesUVAReturn) {
       validationSave = false;
     }
-    
-    
 
     if (validationSave === true) {
       messageDispatch("The PO was save!!", "success");
+      uploadMainFolders(datosSS);
     }
   };
 
