@@ -86,8 +86,6 @@ const AcordionComponent = (props) => {
     props.handleUpdate();
   };
 
-  
-
   const handleAdd = (indexFolder) => {
     if (props.dataPO.folders[indexFolder].addSourceState.state === "folder") {
       if (props.dataPO.folders[indexFolder].addSourceState.nameFolder !== "") {
@@ -121,11 +119,9 @@ const AcordionComponent = (props) => {
 
           props.handleUpdate();
         } else {
-          console.log(props.dataPO.folders[indexFolder].folders);
           props.messageDispatch("The folder name already exists", "error");
         }
       } else {
-        console.log(props.dataPO.folders[indexFolder].folders);
         props.messageDispatch("You must enter a folder name", "error");
       }
     } else if (
@@ -258,8 +254,37 @@ const AcordionComponent = (props) => {
 
   const handleDocumentTypeState = (ev) => {
     var arrayIndex = ev.target.name.split(".");
-    props.dataPO.folders[arrayIndex[0]].files[arrayIndex[1]].documentType.name =
-      ev.target.value;
+    var documentsTypes = props.datosDocumentTypes[0].data;
+
+    documentsTypes.forEach((documentTypeElement) => {
+      if (documentTypeElement.name === ev.target.value) {
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.id = documentTypeElement.id;
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.name = documentTypeElement.name;
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.description = documentTypeElement.description;
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.regex = documentTypeElement.regex;
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.code = documentTypeElement.code;
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.icon = documentTypeElement.icon;
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.extensionAllowed = documentTypeElement.extensionAllowed;
+        props.dataPO.folders[arrayIndex[0]].files[
+          arrayIndex[1]
+        ].documentType.lastUpdated = documentTypeElement.lastUpdated;
+      }
+    });
+
     props.handleUpdate();
   };
 
@@ -276,7 +301,6 @@ const AcordionComponent = (props) => {
     props.handleUpdate();
   };
   const handleValidationYup = (index) => {
-    console.log(index);
     //props.setValidationYup(index);
   };
 
@@ -1168,7 +1192,13 @@ const AcordionComponent = (props) => {
                                 "/...AcordionDetailsFolderFileDivNewControllerTextField"
                               }
                               className="mt-8  mx-4"
-                              label={filePO.name}
+                              label={
+                                filePO.name +
+                                " (" +
+                                filePO.documentType.name +
+                                filePO.documentType.extensionAllowed +
+                                ")"
+                              }
                               value={filePO.contentFile.name}
                               variant="outlined"
                               size="small"
@@ -1180,7 +1210,7 @@ const AcordionComponent = (props) => {
                         />
 
                         <input
-                          accept="image/*"
+                          accept={filePO.documentType.extensionAllowed}
                           style={{ display: "none" }}
                           id={
                             props.parentPOFolder +
@@ -1193,6 +1223,9 @@ const AcordionComponent = (props) => {
                             "/...AcordionDetailsFolderFileDivNewInput"
                           }
                           type="file"
+                          disabled={
+                            filePO.documentType.name === "" ? true : false
+                          }
                           onChange={(event) => {
                             chooseFile(
                               event.target.files[0],
@@ -1236,6 +1269,9 @@ const AcordionComponent = (props) => {
                             style={{ height: "100%" }}
                             fullWidth
                             component="span"
+                            disabled={
+                              filePO.documentType.name === "" ? true : false
+                            }
                           >
                             Choose File
                           </Button>
@@ -1342,17 +1378,22 @@ const AcordionComponent = (props) => {
               ) : (
                 false
               )}
-              <div
-                key={
-                  props.parentPOFolder +
-                  "/" +
-                  folderPO.name +
-                  "/...AcordionDivHr"
-                }
-                className="pt-20"
-              >
-                <hr style={{ borderTop: "2px solid #bbb" }} />
-              </div>
+              {props.parentPOFolder + folderPO.name !==
+              props.folderRouteEvidenciasUVA ? (
+                <div
+                  key={
+                    props.parentPOFolder +
+                    "/" +
+                    folderPO.name +
+                    "/...AcordionDivHr"
+                  }
+                  className="pt-20"
+                >
+                  <hr style={{ borderTop: "2px solid #bbb" }} />
+                </div>
+              ) : (
+                false
+              )}
               <div
                 key={
                   props.parentPOFolder +
@@ -1428,28 +1469,38 @@ const AcordionComponent = (props) => {
                     ) : (
                       false
                     )}
-                    <MenuItem
-                      key={
-                        props.parentPOFolder +
-                        "/" +
-                        folderPO.name +
-                        "/...AcordionDetailsFolderDivSourceFormControlSelectMenuItemFolder"
-                      }
-                      value="folder"
-                    >
-                      <em> Folder </em>
-                    </MenuItem>
-                    <MenuItem
-                      key={
-                        props.parentPOFolder +
-                        "/" +
-                        folderPO.name +
-                        "/...AcordionDetailsFolderDivSourceFormControlSelectMenuItemFile"
-                      }
-                      value="file"
-                    >
-                      <em> File </em>
-                    </MenuItem>
+                    {props.parentPOFolder + folderPO.name !==
+                    props.folderRouteEvidenciasUVA ? (
+                      <MenuItem
+                        key={
+                          props.parentPOFolder +
+                          "/" +
+                          folderPO.name +
+                          "/...AcordionDetailsFolderDivSourceFormControlSelectMenuItemFolder"
+                        }
+                        value="folder"
+                      >
+                        <em> Folder </em>
+                      </MenuItem>
+                    ) : (
+                      false
+                    )}
+                    {props.parentPOFolder + folderPO.name !==
+                    props.folderRouteEvidenciasUVA ? (
+                      <MenuItem
+                        key={
+                          props.parentPOFolder +
+                          "/" +
+                          folderPO.name +
+                          "/...AcordionDetailsFolderDivSourceFormControlSelectMenuItemFile"
+                        }
+                        value="file"
+                      >
+                        <em> File </em>
+                      </MenuItem>
+                    ) : (
+                      false
+                    )}
                   </Select>
                 </FormControl>
                 {folderPO.addSourceState.state === "folder" ? (

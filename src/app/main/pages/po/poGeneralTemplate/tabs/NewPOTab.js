@@ -241,7 +241,30 @@ const NewPOTab = () => {
   };
 
   const handleDocumentTypeState = (ev) => {
+    var documentsTypes = datosDocumentTypes[0].data;
+
     datosSS.files[ev.target.name].documentType.name = ev.target.value;
+
+    documentsTypes.forEach((documentTypeElement) => {
+      if (documentTypeElement.name === ev.target.value) {
+        datosSS.files[ev.target.name].documentType.id = documentTypeElement.id;
+        datosSS.files[ev.target.name].documentType.name =
+          documentTypeElement.name;
+        datosSS.files[ev.target.name].documentType.description =
+          documentTypeElement.description;
+        datosSS.files[ev.target.name].documentType.regex =
+          documentTypeElement.regex;
+        datosSS.files[ev.target.name].documentType.code =
+          documentTypeElement.code;
+        datosSS.files[ev.target.name].documentType.icon =
+          documentTypeElement.icon;
+        datosSS.files[ev.target.name].documentType.extensionAllowed =
+          documentTypeElement.extensionAllowed;
+        datosSS.files[ev.target.name].documentType.lastUpdated =
+          documentTypeElement.lastUpdated;
+      }
+    });
+
     handleUpdate();
   };
 
@@ -284,7 +307,6 @@ const NewPOTab = () => {
   const validationFilesStorage = (dataVFS) => {
     var validationReturn = true;
 
-    console.log(dataVFS);
     dataVFS.files.forEach((fileElement) => {
       if (fileElement.contentFile.name === "") {
         validationReturn = false;
@@ -300,9 +322,27 @@ const NewPOTab = () => {
     return validationReturn;
   };
 
+  const validationDocumentTypeFilesStorage = (dataVDTFS) => {
+    var validationReturn = true;
+    dataVDTFS.files.forEach((fileElement) => {
+      if (fileElement.documentType.name === "") {
+        validationReturn = false;
+      }
+    });
+
+    dataVDTFS.folders.forEach((folderElement) => {
+      if (validationReturn) {
+        validationReturn = validationDocumentTypeFilesStorage(folderElement);
+      }
+    });
+
+    return validationReturn;
+  };
+
   const handleSaveDataPO = () => {
     //console.log("este",filesGeneral);
     //dispatch(fileUp({ files: filesGeneral, data: datosSS }));
+
 
     var validationSave = true;
 
@@ -318,6 +358,12 @@ const NewPOTab = () => {
     } else if (datosSS.productType === "") {
       validationSave = false;
       messageDispatch("You must select a Product Type", "error");
+    } else if (!validationDocumentTypeFilesStorage(datosSS)) {
+      validationSave = false;
+      messageDispatch(
+        "You must select the document type of all files",
+        "error"
+      );
     } else if (!validationFilesStorage(datosSS)) {
       validationSave = false;
       messageDispatch("You must select all files", "error");
@@ -561,7 +607,7 @@ const NewPOTab = () => {
                   )}
                 />
                 <input
-                  accept="image/*"
+                  accept={file.documentType.extensionAllowed}
                   style={{ display: "none" }}
                   id={file.name + i + "fuGeneral"}
                   type="file"
@@ -639,7 +685,12 @@ const NewPOTab = () => {
                     <TextField
                       {...field}
                       className="mt-8  mx-4"
-                      label={file.name}
+                      label={
+                        file.name +
+                        " (" +
+                        file.documentType.extensionAllowed +
+                        ")"
+                      }
                       value={file.contentFile.name}
                       variant="outlined"
                       size="small"
@@ -651,10 +702,11 @@ const NewPOTab = () => {
                 />
 
                 <input
-                  accept="image/*"
+                  accept={file.documentType.extensionAllowed}
                   style={{ display: "none" }}
                   id={file.name + i + "fu"}
                   type="file"
+                  disabled={file.documentType.name === "" ? true : false}
                   onChange={(event) => {
                     chooseFile(event.target.files[0], i);
                   }}
@@ -675,6 +727,7 @@ const NewPOTab = () => {
                     style={{ height: "100%" }}
                     fullWidth
                     component="span"
+                    disabled={file.documentType.name === "" ? true : false}
                   >
                     Choose File
                   </Button>

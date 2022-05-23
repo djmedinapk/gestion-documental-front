@@ -5,13 +5,39 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
 export const fileUp = createAsyncThunk(
   "poGeneralTemplateApp/poGeneralTemplateData/fileUp",
   async (dataPO, { dispatch, getState }) => {
     const formData = new FormData();
     const dataPe = JSON.stringify(dataPO.data);
-    var filesToBack = extractFiles(dataPO.files, dataPO.files.name, dataPO.files.name + "/");
+    var filesToBack = extractFiles(
+      dataPO.files,
+      dataPO.files.name,
+      dataPO.files.name + "/"
+    );
+    console.log(filesToBack);
+    var fr = new File(filesToBack[1]);
+    /*for (var i = 0; i < filesToBack.length; i++) {
+      formData.append(i + "", new File(filesToBack[i]));
+    }*/
+    console.log(fr);
+    formData.append("dataJson", dataPe);
+    const response = await axios.post("/api/DocumentType/file", formData);
+    const data = await response.data;
+    return data;
+  }
+);
+
+export const folderUp = createAsyncThunk(
+  "poGeneralTemplateApp/poGeneralTemplateData/folderUp",
+  async (dataPO, { dispatch, getState }) => {
+    const formData = new FormData();
+    const dataPe = JSON.stringify(dataPO.data);
+    var filesToBack = extractFiles(
+      dataPO.files,
+      dataPO.files.name,
+      dataPO.files.name + "/"
+    );
     console.log(filesToBack);
     var fr = new File(filesToBack[1]);
     /*for (var i = 0; i < filesToBack.length; i++) {
@@ -43,7 +69,7 @@ const extractFiles = (data, mainFolder, route) => {
     });
   }
 
-  if ((route === mainFolder + "/UVA/Evidencias/")) {
+  if (route === mainFolder + "/UVA/Evidencias/") {
     data.products.forEach((element) => {
       element.files.forEach((element2) => {
         arrayFiles.push(element2);
@@ -57,7 +83,9 @@ const extractFiles = (data, mainFolder, route) => {
 const poGeneralTemplateAdapter = createEntityAdapter({});
 
 export const { selectAll: selectProducts, selectById: selectProductById } =
-  poGeneralTemplateAdapter.getSelectors((state) => state.poGeneralTemplateApp.poGeneralTemplateData);
+  poGeneralTemplateAdapter.getSelectors(
+    (state) => state.poGeneralTemplateApp.poGeneralTemplateData
+  );
 
 const poGeneralTemplateSlice = createSlice({
   name: "poGeneralTemplateApp/poGeneralTemplateData",
@@ -75,18 +103,19 @@ const poGeneralTemplateSlice = createSlice({
       addSourceState: { state: "", nameFolder: "" },
       files: [],
       folders: [
+       
         {
-          name: "Aduanas",
+          name: "UVA",
           statePO: "old",
-          accordionState: "Aduanas",
+          accordionState: "UVA",
           addSourceState: { state: "", nameFolder: "" },
           files: [
             {
-              name: "DODA",
+              name: "Dictamen",
               statePO: "old",
               documentType: {
-                id: 0,
-                name: "",
+                id: 3,
+                name: "Pedimento",
                 description: "",
                 regex: "",
                 code: "",
@@ -103,16 +132,16 @@ const poGeneralTemplateSlice = createSlice({
               },
             },
             {
-              name: "Pedimento",
+              name: "Solicitud de la UVA",
               statePO: "old",
               documentType: {
-                id: 0,
-                name: "",
+                id: 3,
+                name: "Pedimento",
                 description: "",
                 regex: "",
                 code: "",
                 icon: "",
-                extensionAllowed: ".txt",
+                extensionAllowed: ".pdf",
                 lastUpdated: "",
               },
               contentFile: {
@@ -124,9 +153,18 @@ const poGeneralTemplateSlice = createSlice({
               },
             },
           ],
-          folders: [],
+          folders: [
+            {
+              name: "Evidencias",
+              statePO: "old",
+              accordionState: "Evidencias",
+              addSourceState: { state: "", nameFolder: "" },
+              products: [],
+              files: [],
+              folders: [],
+            },
+          ],
         },
-        
       ],
     },
     /*datosPOs: {
@@ -758,10 +796,10 @@ const poGeneralTemplateSlice = createSlice({
       state.datosPOs = action.payload;
     },
   },
-  extraReducers: {
-  },
+  extraReducers: {},
 });
 
-export const { setProductsSearchText, changeDatosPOs } = poGeneralTemplateSlice.actions;
+export const { setProductsSearchText, changeDatosPOs } =
+  poGeneralTemplateSlice.actions;
 
 export default poGeneralTemplateSlice.reducer;
