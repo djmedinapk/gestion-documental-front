@@ -37,6 +37,17 @@ export const folderUp = createAsyncThunk(
   }
 );
 
+export const getFoldersValidateUp = createAsyncThunk(
+  "poGeneralTemplateApp/foldersValidateUp/getFoldersValidateUp",
+  async (routeParams, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/Folder/WithParams", {
+      params: routeParams,
+    });
+    const data = await response.data;
+    return { data, routeParams };
+  }
+);
+
 const extractFiles = (data, mainFolder, route) => {
   var arrayFiles = [];
 

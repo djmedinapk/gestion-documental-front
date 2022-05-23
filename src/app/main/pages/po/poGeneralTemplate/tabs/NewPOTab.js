@@ -32,13 +32,16 @@ import {
   changeDatosPOs,
   fileUp,
   folderUp,
+  getFoldersValidateUp,
 } from "./../../store/poGeneralTemplateSlice";
 import { selectProductTypes } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
 import { months, currentYear } from "./../../store/Params";
+import { Done } from "@mui/icons-material";
 
 const NewPOTab = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const datosSS = JSON.parse(
     JSON.stringify(
@@ -94,13 +97,13 @@ const NewPOTab = () => {
   //--------------------------------
 
   useDeepCompareEffect(() => {
-    /*if (dataClient.id === 0 && dataClient.name === "") {
+    if (dataClient.id === 0 && dataClient.name === "") {
       navigate("/projects");
     } else {
       datosSS.client.id = dataClient.id;
       datosSS.client.name = dataClient.name;
       handleUpdate();
-    }*/
+    }
     setDataYears(getYearsData());
   }, [dispatch, datosProductTypes, datosDocumentTypes]);
 
@@ -387,6 +390,7 @@ const NewPOTab = () => {
     });
   };
 
+
   const uploadMainFolders = (dataUMF, idParentFolder) => {
     var folderObjYear = {
       name: dataUMF.year,
@@ -395,43 +399,366 @@ const NewPOTab = () => {
       ProjectId: dataClient.id,
       UserId: dataClient.userId,
     };
-    dispatch(folderUp(folderObjYear)).then((resultYear) => {
-      var folderObjProductType = {
-        name: dataUMF.productType,
-        description: dataUMF.productType,
-        isPO: false,
-        FolderId: resultYear.payload.id,
-        UserId: dataClient.userId,
-      };
-      dispatch(folderUp(folderObjProductType)).then((resultProductType) => {
-        var folderObjMonth = {
-          name: dataUMF.month,
-          description: dataUMF.month,
-          isPO: false,
-          FolderId: resultProductType.payload.id,
-          UserId: dataClient.userId,
-        };
-        dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
-          var folderObjBNamePO = {
-            name: dataUMF.name,
-            description: dataUMF.name,
-            isPO: true,
-            FolderId: resultMonth.payload.id,
-            ProductTypeId: 2,
+
+    //validation Year
+    dispatch(
+      getFoldersValidateUp({
+        Name: folderObjYear.name,
+        ProjectId: folderObjYear.ProjectId,
+      })
+    ).then((resultValidateYear) => {
+      if (resultValidateYear.payload.data.data.length === 0) {
+        dispatch(folderUp(folderObjYear)).then((resultYear) => {
+          var folderObjProductType = {
+            name: dataUMF.productType,
+            description: dataUMF.productType,
+            isPO: false,
+            FolderId: resultYear.payload.id,
             UserId: dataClient.userId,
           };
-          dispatch(folderUp(folderObjBNamePO)).then((resultNamePO) => {
-            uploadSubFolders(dataUMF, resultNamePO.payload.id);
+
+          //validation ProductType
+          dispatch(
+            getFoldersValidateUp({
+              Name: folderObjProductType.name,
+              FolderId: folderObjProductType.FolderId,
+            })
+          ).then((resultValidateProductType) => {
+            if (resultValidateProductType.payload.data.data.length === 0) {
+              dispatch(folderUp(folderObjProductType)).then(
+                (resultProductType) => {
+                  var folderObjMonth = {
+                    name: dataUMF.month,
+                    description: dataUMF.month,
+                    isPO: false,
+                    FolderId: resultProductType.payload.id,
+                    UserId: dataClient.userId,
+                  };
+                  //validation month
+                  dispatch(
+                    getFoldersValidateUp({
+                      Name: folderObjMonth.name,
+                      FolderId: folderObjMonth.FolderId,
+                    })
+                  ).then((resultValidateMonth) => {
+                    if (resultValidateMonth.payload.data.data.length === 0) {
+                      dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
+                        var folderObjBNamePO = {
+                          name: dataUMF.name,
+                          description: dataUMF.name,
+                          isPO: true,
+                          FolderId: resultMonth.payload.id,
+                          ProductTypeId: 2,
+                          UserId: dataClient.userId,
+                        };
+                        //validacion
+                        dispatch(
+                          getFoldersValidateUp({
+                            Name: folderObjBNamePO.name,
+                            FolderId: folderObjBNamePO.FolderId,
+                          })
+                        ).then((resultValidateNamePO) => {
+                          if (
+                            resultValidateNamePO.payload.data.data.length === 0
+                          ) {
+                            dispatch(folderUp(folderObjBNamePO)).then(
+                              (resultNamePO) => {
+                                uploadSubFolders(
+                                  dataUMF,
+                                  resultNamePO.payload.id
+                                );
+                              }
+                            );
+                          } else{
+                            messageDispatch("The PO already exists", "error");
+                          }
+                        });
+                      });
+                    } else {
+                      var folderObjBNamePO = {
+                        name: dataUMF.name,
+                        description: dataUMF.name,
+                        isPO: true,
+                        FolderId: resultValidateMonth.payload.data.data[0].id,
+                        ProductTypeId: 2,
+                        UserId: dataClient.userId,
+                      };
+                      //validacion NamePO
+                      dispatch(
+                        getFoldersValidateUp({
+                          Name: folderObjBNamePO.name,
+                          FolderId: folderObjBNamePO.FolderId,
+                        })
+                      ).then((resultValidateNamePO) => {
+                        if (
+                          resultValidateNamePO.payload.data.data.length === 0
+                        ) {
+                          dispatch(folderUp(folderObjBNamePO)).then(
+                            (resultNamePO) => {
+                              uploadSubFolders(
+                                dataUMF,
+                                resultNamePO.payload.id
+                              );
+                            }
+                          );
+                        } else{
+                          messageDispatch("The PO already exists", "error");
+                        }
+                      });
+                    }
+                  });
+                }
+              );
+            } else {
+              var folderObjMonth = {
+                name: dataUMF.month,
+                description: dataUMF.month,
+                isPO: false,
+                FolderId: resultValidateProductType.payload.data.data[0].id,
+                UserId: dataClient.userId,
+              };
+              //validation month
+              dispatch(
+                getFoldersValidateUp({
+                  Name: folderObjMonth.name,
+                  FolderId: folderObjMonth.FolderId,
+                })
+              ).then((resultValidateMonth) => {
+                if (resultValidateMonth.payload.data.data.length === 0) {
+                  dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
+                    var folderObjBNamePO = {
+                      name: dataUMF.name,
+                      description: dataUMF.name,
+                      isPO: true,
+                      FolderId: resultMonth.payload.id,
+                      ProductTypeId: 2,
+                      UserId: dataClient.userId,
+                    };
+                    //validacion
+                    dispatch(
+                      getFoldersValidateUp({
+                        Name: folderObjBNamePO.name,
+                        FolderId: folderObjBNamePO.FolderId,
+                      })
+                    ).then((resultValidateNamePO) => {
+                      if (resultValidateNamePO.payload.data.data.length === 0) {
+                        dispatch(folderUp(folderObjBNamePO)).then(
+                          (resultNamePO) => {
+                            uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                          }
+                        );
+                      } else{
+                        messageDispatch("The PO already exists", "error");
+                      }
+                    });
+                  });
+                } else {
+                  var folderObjBNamePO = {
+                    name: dataUMF.name,
+                    description: dataUMF.name,
+                    isPO: true,
+                    FolderId: resultValidateMonth.payload.data.data[0].id,
+                    ProductTypeId: 2,
+                    UserId: dataClient.userId,
+                  };
+                  //validacion NamePO
+                  dispatch(
+                    getFoldersValidateUp({
+                      Name: folderObjBNamePO.name,
+                      FolderId: folderObjBNamePO.FolderId,
+                    })
+                  ).then((resultValidateNamePO) => {
+                    if (resultValidateNamePO.payload.data.data.length === 0) {
+                      dispatch(folderUp(folderObjBNamePO)).then(
+                        (resultNamePO) => {
+                          uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                        }
+                      );
+                    } else{
+                      messageDispatch("The PO already exists", "error");
+                    }
+                  });
+                }
+              });
+            }
           });
         });
-      });
+      } else {
+        var folderObjProductType = {
+          name: dataUMF.productType,
+          description: dataUMF.productType,
+          isPO: false,
+          FolderId: resultValidateYear.payload.data.data[0].id,
+          UserId: dataClient.userId,
+        };
+
+        //validation ProductType
+        dispatch(
+          getFoldersValidateUp({
+            Name: folderObjProductType.name,
+            FolderId: folderObjProductType.FolderId,
+          })
+        ).then((resultValidateProductType) => {
+          if (resultValidateProductType.payload.data.data.length === 0) {
+            dispatch(folderUp(folderObjProductType)).then(
+              (resultProductType) => {
+                var folderObjMonth = {
+                  name: dataUMF.month,
+                  description: dataUMF.month,
+                  isPO: false,
+                  FolderId: resultProductType.payload.id,
+                  UserId: dataClient.userId,
+                };
+                //validation month
+                dispatch(
+                  getFoldersValidateUp({
+                    Name: folderObjMonth.name,
+                    FolderId: folderObjMonth.FolderId,
+                  })
+                ).then((resultValidateMonth) => {
+                  if (resultValidateMonth.payload.data.data.length === 0) {
+                    dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
+                      var folderObjBNamePO = {
+                        name: dataUMF.name,
+                        description: dataUMF.name,
+                        isPO: true,
+                        FolderId: resultMonth.payload.id,
+                        ProductTypeId: 2,
+                        UserId: dataClient.userId,
+                      };
+                      //validacion
+                      dispatch(
+                        getFoldersValidateUp({
+                          Name: folderObjBNamePO.name,
+                          FolderId: folderObjBNamePO.FolderId,
+                        })
+                      ).then((resultValidateNamePO) => {
+                        if (
+                          resultValidateNamePO.payload.data.data.length === 0
+                        ) {
+                          dispatch(folderUp(folderObjBNamePO)).then(
+                            (resultNamePO) => {
+                              uploadSubFolders(
+                                dataUMF,
+                                resultNamePO.payload.id
+                              );
+                            }
+                          );
+                        } else{
+                          messageDispatch("The PO already exists", "error");
+                        }
+                      });
+                    });
+                  } else {
+                    var folderObjBNamePO = {
+                      name: dataUMF.name,
+                      description: dataUMF.name,
+                      isPO: true,
+                      FolderId: resultValidateMonth.payload.data.data[0].id,
+                      ProductTypeId: 2,
+                      UserId: dataClient.userId,
+                    };
+                    //validacion NamePO
+                    dispatch(
+                      getFoldersValidateUp({
+                        Name: folderObjBNamePO.name,
+                        FolderId: folderObjBNamePO.FolderId,
+                      })
+                    ).then((resultValidateNamePO) => {
+                      if (resultValidateNamePO.payload.data.data.length === 0) {
+                        dispatch(folderUp(folderObjBNamePO)).then(
+                          (resultNamePO) => {
+                            uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                          }
+                        );
+                      } else{
+                        messageDispatch("The PO already exists", "error");
+                      }
+                    });
+                  }
+                });
+              }
+            );
+          } else {
+            var folderObjMonth = {
+              name: dataUMF.month,
+              description: dataUMF.month,
+              isPO: false,
+              FolderId: resultValidateProductType.payload.data.data[0].id,
+              UserId: dataClient.userId,
+            };
+            //validation month
+            dispatch(
+              getFoldersValidateUp({
+                Name: folderObjMonth.name,
+                FolderId: folderObjMonth.FolderId,
+              })
+            ).then((resultValidateMonth) => {
+              if (resultValidateMonth.payload.data.data.length === 0) {
+                dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
+                  var folderObjBNamePO = {
+                    name: dataUMF.name,
+                    description: dataUMF.name,
+                    isPO: true,
+                    FolderId: resultMonth.payload.id,
+                    ProductTypeId: 2,
+                    UserId: dataClient.userId,
+                  };
+                  //validacion
+                  dispatch(
+                    getFoldersValidateUp({
+                      Name: folderObjBNamePO.name,
+                      FolderId: folderObjBNamePO.FolderId,
+                    })
+                  ).then((resultValidateNamePO) => {
+                    if (resultValidateNamePO.payload.data.data.length === 0) {
+                      dispatch(folderUp(folderObjBNamePO)).then(
+                        (resultNamePO) => {
+                          uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                        }
+                      );
+                    } else{
+                      messageDispatch("The PO already exists", "error");
+                    }
+                  });
+                });
+              } else {
+                var folderObjBNamePO = {
+                  name: dataUMF.name,
+                  description: dataUMF.name,
+                  isPO: true,
+                  FolderId: resultValidateMonth.payload.data.data[0].id,
+                  ProductTypeId: 2,
+                  UserId: dataClient.userId,
+                };
+                //validacion NamePO
+                dispatch(
+                  getFoldersValidateUp({
+                    Name: folderObjBNamePO.name,
+                    FolderId: folderObjBNamePO.FolderId,
+                  })
+                ).then((resultValidateNamePO) => {
+                  if (resultValidateNamePO.payload.data.data.length === 0) {
+                    dispatch(folderUp(folderObjBNamePO)).then(
+                      (resultNamePO) => {
+                        uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                      }
+                    );
+                  } else{
+                    messageDispatch("The PO already exists", "error");
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
     });
   };
 
   const handleSaveDataPO = () => {
     //console.log("este",filesGeneral);
     //dispatch(fileUp({ files: filesGeneral, data: datosSS }));
-
     var validationSave = true;
 
     validationFolderEvidencesUVA(datosSS, datosSS.name, datosSS.name + "/");
