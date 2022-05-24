@@ -32,18 +32,19 @@ import {
   changeDatosPOs,
   fileUp,
   folderUp,
+  folderCreateSystemUp,
   getFoldersValidateUp,
 } from "./../../store/poGeneralTemplateSlice";
 import { selectProductTypes } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
-import { months, currentYear } from "./../../store/Params";
+import { months, currentYear, dataPO } from "./../../store/Params";
 import { Done } from "@mui/icons-material";
 
 const NewPOTab = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const datosSS = JSON.parse(
+  var datosSS = JSON.parse(
     JSON.stringify(
       useSelector(
         ({ poGeneralTemplateApp }) =>
@@ -107,7 +108,32 @@ const NewPOTab = () => {
     setDataYears(getYearsData());
   }, [dispatch, datosProductTypes, datosDocumentTypes]);
 
-  useEffect(() => {}, [datosProductTypes]);
+  useEffect(() => {
+    if (datosDocumentTypes.length !== 0) {
+      datosSS = documentTypesAsingJsonDatosSS(
+        JSON.parse(JSON.stringify(datosSS))
+      );
+      handleUpdate();
+    }
+  }, [datosDocumentTypes]);
+
+  const documentTypesAsingJsonDatosSS = (dataE) => {
+    dataE.folders.forEach((folder, iFolder) => {
+      folder.files.forEach((file, iFile) => {
+        if (datosDocumentTypes.length !== 0) {
+          datosDocumentTypes[0].data.forEach((documentTypeTemp) => {
+            if (file.documentType.name === documentTypeTemp.name) {
+              file.documentType = documentTypeTemp;
+            }
+          });
+        }
+      });
+      if (folder.folders.length !== 0) {
+        dataE.folders[iFolder] = documentTypesAsingJsonDatosSS(folder);
+      }
+    });
+    return dataE;
+  };
 
   const [filesGeneral, setFilesGeneral] = useState(null);
 
@@ -144,6 +170,7 @@ const NewPOTab = () => {
       event.lastModifiedDate;
     datosSS.files[indexFile].contentFile.size = event.size;
     datosSS.files[indexFile].contentFile.type = event.type;
+    filesGeneral.files[indexFile].contentFile = event;
     handleUpdate();
   };
 
@@ -167,6 +194,15 @@ const NewPOTab = () => {
           datosSS.addSourceState.state = "";
           datosSS.addSourceState.nameFolder = "";
 
+          filesGeneral.folders.push({
+            name: datosSS.addSourceState.nameFolder,
+            statePO: "new",
+            accordionState: datosSS.addSourceState.nameFolder,
+            addSourceState: { state: "", nameFolder: "" },
+            files: [],
+            folders: [],
+          });
+
           handleUpdate();
         } else {
           messageDispatch("The folder name already exists", "error");
@@ -179,7 +215,7 @@ const NewPOTab = () => {
         name: "New File",
         statePO: "new",
         documentType: {
-          id: 0,
+          id: 3,
           name: "",
           description: "",
           regex: "",
@@ -196,6 +232,29 @@ const NewPOTab = () => {
           type: "",
         },
       });
+
+      filesGeneral.files.push({
+        name: "New File",
+        statePO: "new",
+        documentType: {
+          id: 3,
+          name: "",
+          description: "",
+          regex: "",
+          code: "",
+          icon: "",
+          extensionAllowed: "",
+          lastUpdated: "",
+        },
+        contentFile: {
+          name: "",
+          lastModified: 0,
+          lastModifiedDate: null,
+          size: 0,
+          type: "",
+        },
+      });
+
       datosSS.addSourceState.state = "";
 
       handleUpdate();
@@ -219,7 +278,8 @@ const NewPOTab = () => {
 
   const handleNamePOState = (ev) => {
     datosSS.name = ev.target.value;
-    handleUpdate();
+    filesGeneral.name = ev.target.value;
+    //handleUpdate();
   };
 
   const handlePedimentPOState = (ev) => {
@@ -373,8 +433,53 @@ const NewPOTab = () => {
     });
   };
 
-  const uploadSubFolders = (dataUF, idParentFolder) => {
-    dataUF.folders.forEach((folderElement) => {
+  const uploadSubFolders = (
+    dataUF,
+    dataUFTemp,
+    idParentFolder,
+    routeFolder,
+    dataGeneral
+  ) => {
+    if (
+      routeFolder ===
+      dataClient.name +
+        "/" +
+        dataGeneral.year +
+        "/" +
+        dataGeneral.productType +
+        "/" +
+        dataGeneral.month +
+        "/" +
+        dataGeneral.name +
+        "/"
+    ) {
+      var datosGeneralF = new FormData();
+      dataUFTemp.files.forEach((fileElement, iFileElement) => {
+        datosGeneralF.append(
+          `data[${iFileElement}].name`,
+          fileElement.contentFile.name
+        );
+        datosGeneralF.append(
+          `data[${iFileElement}].description`,
+          fileElement.contentFile.name
+        );
+        datosGeneralF.append(
+          `data[${iFileElement}].documentTypeId`,
+          fileElement.documentType.id
+        );
+        datosGeneralF.append(`data[${iFileElement}].Url`, routeFolder);
+        datosGeneralF.append(`data[${iFileElement}].FolderId`, idParentFolder);
+        datosGeneralF.append(
+          `data[${iFileElement}].file`,
+          fileElement.contentFile
+        );
+      });
+      if (dataUFTemp.files.length !== 0) {
+        dispatch(fileUp(datosGeneralF));
+      }
+    }
+
+    dataUF.folders.forEach((folderElement, iFolderElement) => {
       var folderObj = {
         name: folderElement.name,
         description: folderElement.name,
@@ -382,16 +487,109 @@ const NewPOTab = () => {
         FolderId: idParentFolder,
         UserId: dataClient.userId,
       };
+
       dispatch(folderUp(folderObj)).then((result) => {
-        if (folderElement.folders.length !== 0) {
-          uploadSubFolders(folderElement, result.payload.id);
+        var datos = new FormData();
+        if (
+          routeFolder + folderElement.name !==
+          dataClient.name +
+            "/" +
+            dataGeneral.year +
+            "/" +
+            dataGeneral.productType +
+            "/" +
+            dataGeneral.month +
+            "/" +
+            dataGeneral.name +
+            "/UVA/Evidencias"
+        ) {
+          dataUFTemp.folders[iFolderElement].files.forEach(
+            (fileElement, iFileElement) => {
+              datos.append(
+                `data[${iFileElement}].name`,
+                fileElement.contentFile.name
+              );
+              datos.append(
+                `data[${iFileElement}].description`,
+                fileElement.contentFile.name
+              );
+              datos.append(
+                `data[${iFileElement}].documentTypeId`,
+                fileElement.documentType.id
+              );
+              datos.append(
+                `data[${iFileElement}].Url`,
+                routeFolder + folderElement.name
+              );
+              datos.append(`data[${iFileElement}].FolderId`, result.payload.id);
+              datos.append(
+                `data[${iFileElement}].file`,
+                fileElement.contentFile
+              );
+            }
+          );
+          if (dataUFTemp.folders[iFolderElement].files.length !== 0) {
+            dispatch(fileUp(datos));
+          }
+          if (folderElement.folders.length !== 0) {
+            uploadSubFolders(
+              folderElement,
+              dataUFTemp.folders[iFolderElement],
+              result.payload.id,
+              routeFolder + folderElement.name + "/",
+              dataGeneral
+            );
+          }
+        } else {
+          dataUFTemp.folders[iFolderElement].products.forEach(
+            (productElement, iProductElement) => {
+              datos = new FormData();
+              productElement.files.forEach((fileElement, iFileElement) => {
+                datos.append(
+                  `data[${iFileElement}].name`,
+                  fileElement.contentFile.name
+                );
+                datos.append(
+                  `data[${iFileElement}].description`,
+                  fileElement.contentFile.name
+                );
+                datos.append(
+                  `data[${iFileElement}].documentTypeId`,
+                  fileElement.documentType.id
+                );
+                datos.append(
+                  `data[${iFileElement}].Url`,
+                  routeFolder +
+                    folderElement.name +
+                    "/" +
+                    productElement.tempName +
+                    "-" +
+                    productElement.model
+                );
+                datos.append(
+                  `data[${iFileElement}].file`,
+                  fileElement.contentFile
+                );
+              });
+              if (productElement.files.length !== 0) {
+                dispatch(fileUp(datos));
+              }
+            }
+          );
         }
       });
+
+      if (folderElement.files.length === 0) {
+        dispatch(
+          folderCreateSystemUp({
+            FolderRoute: routeFolder + folderElement.name,
+          })
+        );
+      }
     });
   };
 
-
-  const uploadMainFolders = (dataUMF, idParentFolder) => {
+  const uploadMainFolders = (dataUMF, filesGeneralData) => {
     var folderObjYear = {
       name: dataUMF.year,
       description: dataUMF.year,
@@ -448,9 +646,19 @@ const NewPOTab = () => {
                           description: dataUMF.name,
                           isPO: true,
                           FolderId: resultMonth.payload.id,
-                          ProductTypeId: 2,
+                          ProductTypeId: 0,
                           UserId: dataClient.userId,
                         };
+                        datosProductTypes[0].data.forEach(
+                          (productTypeElement) => {
+                            if (
+                              dataUMF.productType === productTypeElement.name
+                            ) {
+                              folderObjBNamePO.ProductTypeId =
+                                productTypeElement.id;
+                            }
+                          }
+                        );
                         //validacion
                         dispatch(
                           getFoldersValidateUp({
@@ -465,11 +673,23 @@ const NewPOTab = () => {
                               (resultNamePO) => {
                                 uploadSubFolders(
                                   dataUMF,
-                                  resultNamePO.payload.id
+                                  filesGeneralData,
+                                  resultNamePO.payload.id,
+                                  dataClient.name +
+                                    "/" +
+                                    datosSS.year +
+                                    "/" +
+                                    datosSS.productType +
+                                    "/" +
+                                    datosSS.month +
+                                    "/" +
+                                    datosSS.name +
+                                    "/",
+                                  dataUMF
                                 );
                               }
                             );
-                          } else{
+                          } else {
                             messageDispatch("The PO already exists", "error");
                           }
                         });
@@ -480,9 +700,18 @@ const NewPOTab = () => {
                         description: dataUMF.name,
                         isPO: true,
                         FolderId: resultValidateMonth.payload.data.data[0].id,
-                        ProductTypeId: 2,
+                        ProductTypeId: 0,
                         UserId: dataClient.userId,
                       };
+
+                      datosProductTypes[0].data.forEach(
+                        (productTypeElement) => {
+                          if (dataUMF.productType === productTypeElement.name) {
+                            folderObjBNamePO.ProductTypeId =
+                              productTypeElement.id;
+                          }
+                        }
+                      );
                       //validacion NamePO
                       dispatch(
                         getFoldersValidateUp({
@@ -497,11 +726,23 @@ const NewPOTab = () => {
                             (resultNamePO) => {
                               uploadSubFolders(
                                 dataUMF,
-                                resultNamePO.payload.id
+                                filesGeneralData,
+                                resultNamePO.payload.id,
+                                dataClient.name +
+                                  "/" +
+                                  datosSS.year +
+                                  "/" +
+                                  datosSS.productType +
+                                  "/" +
+                                  datosSS.month +
+                                  "/" +
+                                  datosSS.name +
+                                  "/",
+                                dataUMF
                               );
                             }
                           );
-                        } else{
+                        } else {
                           messageDispatch("The PO already exists", "error");
                         }
                       });
@@ -531,9 +772,14 @@ const NewPOTab = () => {
                       description: dataUMF.name,
                       isPO: true,
                       FolderId: resultMonth.payload.id,
-                      ProductTypeId: 2,
+                      ProductTypeId: 0,
                       UserId: dataClient.userId,
                     };
+                    datosProductTypes[0].data.forEach((productTypeElement) => {
+                      if (dataUMF.productType === productTypeElement.name) {
+                        folderObjBNamePO.ProductTypeId = productTypeElement.id;
+                      }
+                    });
                     //validacion
                     dispatch(
                       getFoldersValidateUp({
@@ -544,10 +790,25 @@ const NewPOTab = () => {
                       if (resultValidateNamePO.payload.data.data.length === 0) {
                         dispatch(folderUp(folderObjBNamePO)).then(
                           (resultNamePO) => {
-                            uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                            uploadSubFolders(
+                              dataUMF,
+                              filesGeneralData,
+                              resultNamePO.payload.id,
+                              dataClient.name +
+                                "/" +
+                                datosSS.year +
+                                "/" +
+                                datosSS.productType +
+                                "/" +
+                                datosSS.month +
+                                "/" +
+                                datosSS.name +
+                                "/",
+                              dataUMF
+                            );
                           }
                         );
-                      } else{
+                      } else {
                         messageDispatch("The PO already exists", "error");
                       }
                     });
@@ -558,9 +819,14 @@ const NewPOTab = () => {
                     description: dataUMF.name,
                     isPO: true,
                     FolderId: resultValidateMonth.payload.data.data[0].id,
-                    ProductTypeId: 2,
+                    ProductTypeId: 0,
                     UserId: dataClient.userId,
                   };
+                  datosProductTypes[0].data.forEach((productTypeElement) => {
+                    if (dataUMF.productType === productTypeElement.name) {
+                      folderObjBNamePO.ProductTypeId = productTypeElement.id;
+                    }
+                  });
                   //validacion NamePO
                   dispatch(
                     getFoldersValidateUp({
@@ -571,10 +837,25 @@ const NewPOTab = () => {
                     if (resultValidateNamePO.payload.data.data.length === 0) {
                       dispatch(folderUp(folderObjBNamePO)).then(
                         (resultNamePO) => {
-                          uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                          uploadSubFolders(
+                            dataUMF,
+                            filesGeneralData,
+                            resultNamePO.payload.id,
+                            dataClient.name +
+                              "/" +
+                              datosSS.year +
+                              "/" +
+                              datosSS.productType +
+                              "/" +
+                              datosSS.month +
+                              "/" +
+                              datosSS.name +
+                              "/",
+                            dataUMF
+                          );
                         }
                       );
-                    } else{
+                    } else {
                       messageDispatch("The PO already exists", "error");
                     }
                   });
@@ -623,9 +904,17 @@ const NewPOTab = () => {
                         description: dataUMF.name,
                         isPO: true,
                         FolderId: resultMonth.payload.id,
-                        ProductTypeId: 2,
+                        ProductTypeId: 0,
                         UserId: dataClient.userId,
                       };
+                      datosProductTypes[0].data.forEach(
+                        (productTypeElement) => {
+                          if (dataUMF.productType === productTypeElement.name) {
+                            folderObjBNamePO.ProductTypeId =
+                              productTypeElement.id;
+                          }
+                        }
+                      );
                       //validacion
                       dispatch(
                         getFoldersValidateUp({
@@ -640,11 +929,23 @@ const NewPOTab = () => {
                             (resultNamePO) => {
                               uploadSubFolders(
                                 dataUMF,
-                                resultNamePO.payload.id
+                                filesGeneralData,
+                                resultNamePO.payload.id,
+                                dataClient.name +
+                                  "/" +
+                                  datosSS.year +
+                                  "/" +
+                                  datosSS.productType +
+                                  "/" +
+                                  datosSS.month +
+                                  "/" +
+                                  datosSS.name +
+                                  "/",
+                                dataUMF
                               );
                             }
                           );
-                        } else{
+                        } else {
                           messageDispatch("The PO already exists", "error");
                         }
                       });
@@ -655,9 +956,14 @@ const NewPOTab = () => {
                       description: dataUMF.name,
                       isPO: true,
                       FolderId: resultValidateMonth.payload.data.data[0].id,
-                      ProductTypeId: 2,
+                      ProductTypeId: 0,
                       UserId: dataClient.userId,
                     };
+                    datosProductTypes[0].data.forEach((productTypeElement) => {
+                      if (dataUMF.productType === productTypeElement.name) {
+                        folderObjBNamePO.ProductTypeId = productTypeElement.id;
+                      }
+                    });
                     //validacion NamePO
                     dispatch(
                       getFoldersValidateUp({
@@ -668,10 +974,25 @@ const NewPOTab = () => {
                       if (resultValidateNamePO.payload.data.data.length === 0) {
                         dispatch(folderUp(folderObjBNamePO)).then(
                           (resultNamePO) => {
-                            uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                            uploadSubFolders(
+                              dataUMF,
+                              filesGeneralData,
+                              resultNamePO.payload.id,
+                              dataClient.name +
+                                "/" +
+                                datosSS.year +
+                                "/" +
+                                datosSS.productType +
+                                "/" +
+                                datosSS.month +
+                                "/" +
+                                datosSS.name +
+                                "/",
+                              dataUMF
+                            );
                           }
                         );
-                      } else{
+                      } else {
                         messageDispatch("The PO already exists", "error");
                       }
                     });
@@ -701,9 +1022,14 @@ const NewPOTab = () => {
                     description: dataUMF.name,
                     isPO: true,
                     FolderId: resultMonth.payload.id,
-                    ProductTypeId: 2,
+                    ProductTypeId: 0,
                     UserId: dataClient.userId,
                   };
+                  datosProductTypes[0].data.forEach((productTypeElement) => {
+                    if (dataUMF.productType === productTypeElement.name) {
+                      folderObjBNamePO.ProductTypeId = productTypeElement.id;
+                    }
+                  });
                   //validacion
                   dispatch(
                     getFoldersValidateUp({
@@ -714,10 +1040,25 @@ const NewPOTab = () => {
                     if (resultValidateNamePO.payload.data.data.length === 0) {
                       dispatch(folderUp(folderObjBNamePO)).then(
                         (resultNamePO) => {
-                          uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                          uploadSubFolders(
+                            dataUMF,
+                            filesGeneralData,
+                            resultNamePO.payload.id,
+                            dataClient.name +
+                              "/" +
+                              datosSS.year +
+                              "/" +
+                              datosSS.productType +
+                              "/" +
+                              datosSS.month +
+                              "/" +
+                              datosSS.name +
+                              "/",
+                            dataUMF
+                          );
                         }
                       );
-                    } else{
+                    } else {
                       messageDispatch("The PO already exists", "error");
                     }
                   });
@@ -728,9 +1069,14 @@ const NewPOTab = () => {
                   description: dataUMF.name,
                   isPO: true,
                   FolderId: resultValidateMonth.payload.data.data[0].id,
-                  ProductTypeId: 2,
+                  ProductTypeId: 0,
                   UserId: dataClient.userId,
                 };
+                datosProductTypes[0].data.forEach((productTypeElement) => {
+                  if (dataUMF.productType === productTypeElement.name) {
+                    folderObjBNamePO.ProductTypeId = productTypeElement.id;
+                  }
+                });
                 //validacion NamePO
                 dispatch(
                   getFoldersValidateUp({
@@ -741,10 +1087,25 @@ const NewPOTab = () => {
                   if (resultValidateNamePO.payload.data.data.length === 0) {
                     dispatch(folderUp(folderObjBNamePO)).then(
                       (resultNamePO) => {
-                        uploadSubFolders(dataUMF, resultNamePO.payload.id);
+                        uploadSubFolders(
+                          dataUMF,
+                          filesGeneralData,
+                          resultNamePO.payload.id,
+                          dataClient.name +
+                            "/" +
+                            datosSS.year +
+                            "/" +
+                            datosSS.productType +
+                            "/" +
+                            datosSS.month +
+                            "/" +
+                            datosSS.name +
+                            "/",
+                          dataUMF
+                        );
                       }
                     );
-                  } else{
+                  } else {
                     messageDispatch("The PO already exists", "error");
                   }
                 });
@@ -757,8 +1118,9 @@ const NewPOTab = () => {
   };
 
   const handleSaveDataPO = () => {
-    //console.log("este",filesGeneral);
-    //dispatch(fileUp({ files: filesGeneral, data: datosSS }));
+    datosSS.name = filesGeneral.name;
+    handleUpdate();
+
     var validationSave = true;
 
     validationFolderEvidencesUVA(datosSS, datosSS.name, datosSS.name + "/");
@@ -789,8 +1151,8 @@ const NewPOTab = () => {
     }
 
     if (validationSave === true) {
+      uploadMainFolders(datosSS, filesGeneral);
       messageDispatch("The PO was save!!", "success");
-      uploadMainFolders(datosSS);
     }
   };
 
@@ -828,7 +1190,7 @@ const NewPOTab = () => {
               required
               error={!!errors.namePO}
               helperText={errors?.namePO?.message}
-              value={datosSS.name}
+              value={filesGeneral ? filesGeneral.name : ""}
               onChange={(event) => {
                 field.onChange(event);
                 handleNamePOState(event);

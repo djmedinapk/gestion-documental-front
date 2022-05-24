@@ -37,6 +37,9 @@ import { useNavigate } from "react-router-dom";
 import { changeGeneralParamsNewPOClient } from "./../../../store/globalParamsSlice";
 import { getDocumentTypes } from "./store/documentTypeSlice";
 
+import { dataPO } from "./../po/store/Params";
+import { changeDatosPOs } from "./../po/store/poGeneralTemplateSlice";
+
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
     minHeight: 96,
@@ -116,10 +119,11 @@ const ExplorerApp = () => {
   const handleAddNewFile = () => {
     dispatch(handleNewFileDialog());
     setOpen(!open);
-  };  
+  };
 
   const handleRedirectNewPO = () => {
     dispatch(changeGeneralParamsNewPOClient(project));
+    dispatch(changeDatosPOs(dataPO));
     navigate("/apps/po/po-general-template");
   };
 
@@ -227,7 +231,7 @@ const ExplorerApp = () => {
         innerScroll
       />
       <NewFolderDialog />
-      <NewFileDialog/>
+      <NewFileDialog />
     </>
   );
 };

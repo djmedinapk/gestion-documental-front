@@ -64,12 +64,10 @@ const NewFileDialog = () => {
   const [fileSelected, setFileSelected] = useState(null);
   
   useEffect(() => {
-    console.log("doc",documentsType)
   },[documentsType])
 
 
   function onSubmit(data) {
-    console.log("data",data);
     const datos = new FormData(); 
     datos.append('name', data.name);
     datos.append('description', data.description);
@@ -237,7 +235,6 @@ const NewFileDialog = () => {
               name="file"
               render={({ field }) => (
                 <>
-                {console.log("field", field)}
                   <input
                     accept="*"
                     style={{ display: "none" }}

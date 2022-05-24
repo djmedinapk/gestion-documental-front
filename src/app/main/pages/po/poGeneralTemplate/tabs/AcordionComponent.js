@@ -177,14 +177,14 @@ const AcordionComponent = (props) => {
     ) {
       props.dataPO.folders[indexFolder].products.push({
         name: "",
-        tempName:"",
+        tempName: "",
         model: "",
         statePO: "new",
         files: [],
       });
       props.filesGeneral.folders[indexFolder].products.push({
         name: "",
-        tempName:"",
+        tempName: "",
         model: "",
         statePO: "new",
         files: [],
@@ -293,12 +293,16 @@ const AcordionComponent = (props) => {
   const onChangeTextNameProductEvidenciasUVA = (iFolderPO, iProductPO) => {
     props.dataPO.folders[iFolderPO].products[iProductPO].tempName =
       event.target.value;
+    props.filesGeneral.folders[iFolderPO].products[iProductPO].tempName =
+      event.target.value;
     props.handleUpdate();
   };
 
   const onChangeTextModelProductEvidenciasUVA = (ev) => {
     var arrayIndex = ev.target.name.split(".");
     props.dataPO.folders[arrayIndex[0]].products[arrayIndex[1]].model =
+      ev.target.value;
+    props.filesGeneral.folders[arrayIndex[0]].products[arrayIndex[1]].model =
       ev.target.value;
     props.handleUpdate();
   };
@@ -313,7 +317,7 @@ const AcordionComponent = (props) => {
         name: "New File",
         statePO: "new",
         documentType: {
-          id: 0,
+          id: 3,
           name: "",
           description: "",
           regex: "",
@@ -358,7 +362,7 @@ const AcordionComponent = (props) => {
           name: "New File",
           statePO: "new",
           documentType: {
-            id: 0,
+            id: 3,
             name: "",
             description: "",
             regex: "",
@@ -714,7 +718,7 @@ const AcordionComponent = (props) => {
                               label="Evidences"
                               value={productPO.files.map(
                                 (fileProductMap) =>
-                                  " "+fileProductMap.contentFile.name
+                                  " " + fileProductMap.contentFile.name
                               )}
                               id={
                                 props.parentPOFolder +
