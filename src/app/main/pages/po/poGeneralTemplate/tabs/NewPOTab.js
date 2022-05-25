@@ -459,30 +459,16 @@ const NewPOTab = () => {
         dataGeneral.name +
         "/"
     ) {
-      var datosGeneralF = new FormData();
       dataUFTemp.files.forEach((fileElement, iFileElement) => {
-        datosGeneralF.append(
-          `data[${iFileElement}].name`,
-          fileElement.contentFile.name
-        );
-        datosGeneralF.append(
-          `data[${iFileElement}].description`,
-          fileElement.contentFile.name
-        );
-        datosGeneralF.append(
-          `data[${iFileElement}].documentTypeId`,
-          fileElement.documentType.id
-        );
-        datosGeneralF.append(`data[${iFileElement}].Url`, routeFolder);
-        datosGeneralF.append(`data[${iFileElement}].FolderId`, idParentFolder);
-        datosGeneralF.append(
-          `data[${iFileElement}].file`,
-          fileElement.contentFile
-        );
-      });
-      if (dataUFTemp.files.length !== 0) {
+        var datosGeneralF = new FormData();
+        datosGeneralF.append(`name`, fileElement.contentFile.name);
+        datosGeneralF.append(`description`, fileElement.contentFile.name);
+        datosGeneralF.append(`documentTypeId`, fileElement.documentType.id);
+        datosGeneralF.append(`Url`, routeFolder);
+        datosGeneralF.append(`FolderId`, idParentFolder);
+        datosGeneralF.append(`file`, fileElement.contentFile);
         dispatch(fileUp(datosGeneralF));
-      }
+      });
     }
 
     dataUF.folders.forEach((folderElement, iFolderElement) => {
@@ -495,7 +481,6 @@ const NewPOTab = () => {
       };
 
       dispatch(folderUp(folderObj)).then((result) => {
-        var datos = new FormData();
         if (
           routeFolder + folderElement.name !==
           dataClient.name +
@@ -511,32 +496,17 @@ const NewPOTab = () => {
         ) {
           dataUFTemp.folders[iFolderElement].files.forEach(
             (fileElement, iFileElement) => {
-              datos.append(
-                `data[${iFileElement}].name`,
-                fileElement.contentFile.name
-              );
-              datos.append(
-                `data[${iFileElement}].description`,
-                fileElement.contentFile.name
-              );
-              datos.append(
-                `data[${iFileElement}].documentTypeId`,
-                fileElement.documentType.id
-              );
-              datos.append(
-                `data[${iFileElement}].Url`,
-                routeFolder + folderElement.name
-              );
-              datos.append(`data[${iFileElement}].FolderId`, result.payload.id);
-              datos.append(
-                `data[${iFileElement}].file`,
-                fileElement.contentFile
-              );
+              var datos = new FormData();
+              datos.append(`name`, fileElement.contentFile.name);
+              datos.append(`description`, fileElement.contentFile.name);
+              datos.append(`documentTypeId`, fileElement.documentType.id);
+              datos.append(`Url`, routeFolder + folderElement.name);
+              datos.append(`FolderId`, result.payload.id);
+              datos.append(`file`, fileElement.contentFile);
+              dispatch(fileUp(datos));
             }
           );
-          if (dataUFTemp.folders[iFolderElement].files.length !== 0) {
-            dispatch(fileUp(datos));
-          }
+          
           if (folderElement.folders.length !== 0) {
             uploadSubFolders(
               folderElement,
@@ -549,41 +519,37 @@ const NewPOTab = () => {
         } else {
           dataUFTemp.folders[iFolderElement].products.forEach(
             (productElement, iProductElement) => {
-              datos = new FormData();
-              productElement.files.forEach((fileElement, iFileElement) => {
-                datos.append(
-                  `data[${iFileElement}].name`,
-                  fileElement.contentFile.name
-                );
-                datos.append(
-                  `data[${iFileElement}].description`,
-                  fileElement.contentFile.name
-                );
-                datos.append(
-                  `data[${iFileElement}].documentTypeId`,
-                  fileElement.documentType.id
-                );
-                datos.append(
-                  `data[${iFileElement}].Url`,
-                  routeFolder +
-                    folderElement.name +
-                    "/" +
-                    productElement.tempName +
-                    "-" +
-                    productElement.model
-                );
-                datos.append(
-                  `data[${iFileElement}].FolderId`,
-                  result.payload.id
-                );
-                datos.append(
-                  `data[${iFileElement}].file`,
-                  fileElement.contentFile
-                );
-              });
-              if (productElement.files.length !== 0) {
-                dispatch(fileUp(datos));
-              }
+              var folderProductObj = {
+                name: productElement.tempName + "-" + productElement.model,
+                description:
+                  productElement.tempName + "-" + productElement.model,
+                isPO: false,
+                FolderId: result.payload.id,
+                UserId: dataClient.userId,
+              };
+              dispatch(folderUp(folderProductObj)).then(
+                (resultFolderProductObj) => {
+                  productElement.files.forEach((fileElement, iFileElement) => {
+                    var datos = new FormData();
+                    datos.append(`name`, fileElement.contentFile.name);
+                    datos.append(`description`, fileElement.contentFile.name);
+                    datos.append(`documentTypeId`, fileElement.documentType.id);
+                    datos.append(
+                      `Url`,
+                      routeFolder +
+                        folderElement.name +
+                        "/" +
+                        productElement.tempName +
+                        "-" +
+                        productElement.model
+                    );
+                    datos.append(`FolderId`, resultFolderProductObj.payload.id);
+                    datos.append(`file`, fileElement.contentFile);
+
+                    dispatch(fileUp(datos));
+                  });
+                }
+              );
             }
           );
         }

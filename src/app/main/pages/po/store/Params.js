@@ -15,7 +15,7 @@ export const months = [
 
 export const currentYear = new Date().getFullYear();
 
-/*export const dataPO = {
+export const dataPO = {
     name: "",
     pediment: "",
     year: "",
@@ -37,8 +37,8 @@ export const currentYear = new Date().getFullYear();
             name: "Dictamen",
             statePO: "old",
             documentType: {
-              id: 3,
-              name: "Pedimento",
+              id: 7,
+              name: "Dictamen",
               description: "",
               regex: "",
               code: "",
@@ -55,11 +55,11 @@ export const currentYear = new Date().getFullYear();
             },
           },
           {
-            name: "Solicitud de la UVA",
+            name: "Folio de UVA",
             statePO: "old",
             documentType: {
-              id: 3,
-              name: "Pedimento",
+              id: 7,
+              name: "Folio de UVA",
               description: "",
               regex: "",
               code: "",
@@ -89,9 +89,9 @@ export const currentYear = new Date().getFullYear();
         ],
       },
     ],
-  };*/
+  };
 
-export const dataPO = {
+/*export const dataPO = {
   name: "",
   pediment: "",
   year: "",
@@ -1343,6 +1343,6 @@ export const dataPO = {
       folders: [],
     },
   ],
-};
+};*/
 
 

@@ -293,7 +293,7 @@ const AcordionComponent = (props) => {
   const chooseFilesProductFolderInput = (event, indexFolder, indexProduct) => {
     var documentsTypes = props.datosDocumentTypes[0].data;
     var documentSigleTypeImage = {
-      id: 0,
+      id: 7,
       name: "",
       description: "",
       regex: "",
@@ -354,8 +354,6 @@ const AcordionComponent = (props) => {
           contentFile: null,
         }
       );
-      const pepe = new FormData();
-      pepe.append("archivo", event[index]);
       props.filesGeneral.folders[indexFolder].products[indexProduct].files[
         index
       ].contentFile = event[index];
