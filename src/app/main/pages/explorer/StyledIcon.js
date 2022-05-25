@@ -6,14 +6,34 @@ const StyledIcon = styled(Icon)(({ theme, type }) => ({
     ...(type === 'folder' && {
       content: "'folder'",
       color: '#FFB300',
-    }),
-    ...(type === 'document' && {
-      content: "'insert_drive_file'",
-      color: '#1565C0',
-    }),
-    ...(type === 'spreadsheet' && {
+    }),    
+    ...(type === 'excel' && {
       content: "'insert_chart'",
       color: '#4CAF50',
+    }),
+    ...(type === 'pdf' && {
+      content: "'picture_as_pdf'",
+      color: '#1565C0',
+    }),
+    ...(type === 'image' && {
+      content: "'photo'",
+      color: '#1565C0',
+    }),
+    ...(type === 'word' && {
+      content: "'description'",
+      color: '#1565C0',
+    }),
+    ...(type === 'texto' && {
+      content: "'description'",
+      color: '#FFB300',
+    }),
+    ...(type === 'xml' && {
+      content: "'text_snippet'",
+      color: '#FFB300',
+    }),
+    ...(type === 'generic' && {
+      content: "'insert_drive_file'",
+      color: '#1565C0',
     }),
   },
 }));

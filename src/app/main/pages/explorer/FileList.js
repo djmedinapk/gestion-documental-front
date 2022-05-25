@@ -10,16 +10,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import StyledIcon from './StyledIcon';
 import { useEffect, useState } from 'react';
+import withRouter from '@fuse/core/withRouter';
+import { useParams } from 'react-router';
 
 function FileList(props) {
   const dispatch = useDispatch();
+  const routeParams = useParams();
+  const isFolder = useSelector(({ explorerApp }) => explorerApp.explorer.isFolder);
   const files = useSelector(({ explorerApp }) => explorerApp.explorer.projectData);
+  const filesFolder = useSelector(({ explorerApp }) => explorerApp.explorer.folderData);
   const selectedItemId = useSelector(({ explorerApp }) => explorerApp.explorer.selectedItemId);
 
   const [filesList, setFilesList] = useState([]);
 
-  useEffect(() => {
-    let fiForm = files?.folders?.map(folder =>{
+  useEffect(() => {    
+    let totalFiles = [];
+    let data = isFolder ? filesFolder : files;  
+    let fiForm = data?.folders?.map(folder =>{
       return {
         id: folder.id,
         name: folder.name,
@@ -28,8 +35,61 @@ function FileList(props) {
         type: 'folder',
       }
     })
-    setFilesList(fiForm);
-  },[files])
+    let filesDocs = data?.files?.map(file =>{
+      return {
+        id: file.id,
+        name: file.name,
+        description: file.description,
+        modified: new Date(file.lastUpdated).toDateString(),
+        type: file.documentType.icon
+      }
+    });
+
+    if (isFolder && data.folderId) {
+      console.log("cas", data)
+      totalFiles.push({
+        id: data.folderId,
+        name: '..',
+        description: "",
+        modified: "",
+        type: 'folder'
+      });
+    }
+    if (isFolder && data.projectId) {
+      console.log("cas", data)
+      totalFiles.push({
+        id: data.projectId,
+        name: '..',
+        description: "",
+        modified: "",
+        type: 'folder',
+        defaultUrl: 'project'
+      });
+    }
+
+    totalFiles = fiForm ? totalFiles.concat(fiForm): totalFiles ;
+    totalFiles = filesDocs ? totalFiles.concat(filesDocs): totalFiles ;
+    setFilesList(totalFiles);
+    console.log("files",totalFiles);
+  },[files,filesFolder, routeParams])
+
+
+  const handleClick = (event, item) => {
+    switch (event.detail) {
+      case 1:
+        break;
+      case 2:
+        if (item.type == 'folder' && !item.defaultUrl) {
+          props.navigate(`/explorer/folder/${item.id}`);          
+        }
+        if (item.type == 'folder' && item.defaultUrl == 'project') {
+          props.navigate(`/explorer/project/${item.id}`);          
+        }        
+        break;      
+      default:
+        return;
+    }
+  }
 
   return (
     <motion.div
@@ -54,7 +114,9 @@ function FileList(props) {
               <TableRow
                 key={item.id}
                 hover
-                onClick={(event) => dispatch(setSelectedItem(item.id))}
+                onClick={(event) => {
+                  handleClick(event, item);
+                }}
                 selected={item.id === selectedItemId}
                 className="cursor-pointer h-64"
               >
@@ -88,4 +150,4 @@ function FileList(props) {
   );
 }
 
-export default FileList;
+export default withRouter(FileList);

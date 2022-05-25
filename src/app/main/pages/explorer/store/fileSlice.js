@@ -12,7 +12,10 @@ export const addFile = createAsyncThunk(
   'fileApp/file/addFile',
   async (file, { dispatch, getState }) => {
     const response = await axios.post('/api/File/uploadfile',  file );
-    const {data, status} = await response;    
+    const {data, status} = await response;
+    const routeParams = getState().explorerApp.explorer.routeParams;
+    const isFolder = getState().explorerApp.explorer.isFolder;
+    dispatch(getCurrentFolder({ routeParams, isFolder }))
     return {data, status};
   }
 );

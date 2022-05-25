@@ -27,7 +27,7 @@ export const getCurrentFolder = createAsyncThunk(
       routeParams = routeParams || getState().explorerApp.explorer.routeParams;
       let response = null;
       if (isFolder) {
-        response = await axios.getWithParams("/api/File/getCurrentFolder", {
+        response = await axios.getWithParams("/api/Folder/getCurrentFolder", {
           params: routeParams,
         });
       } else {

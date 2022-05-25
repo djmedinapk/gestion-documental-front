@@ -94,7 +94,7 @@ const ExplorerApp = () => {
       dispatch(getCurrentFolder({ routeParams, isFolder: false }));
     }
     dispatch(getDocumentTypes());
-  }, [dispatch]);
+  }, [dispatch, routeParams]);
 
   useEffect(() => {
     if (project && project.name) {
