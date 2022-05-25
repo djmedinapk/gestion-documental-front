@@ -69,6 +69,10 @@ const NewPOTab = () => {
 
   const [dataYears, setDataYears] = useState([]);
 
+  const [validateButtonSave, setValidateButtonSave] = useState(false);
+
+  const [validateReturn, setValidateReturn] = useState(false);
+
   //validation
 
   const defaultValues = {
@@ -113,9 +117,21 @@ const NewPOTab = () => {
       datosSS = documentTypesAsingJsonDatosSS(
         JSON.parse(JSON.stringify(datosSS))
       );
+      setFilesGeneral(
+        documentTypesAsingJsonDatosSS(JSON.parse(JSON.stringify(datosSS)))
+      );
       handleUpdate();
     }
   }, [datosDocumentTypes]);
+
+  useEffect(() => {
+    if (validateReturn === true) {
+      setTimeout(function () {
+        messageDispatch("The PO was save!!", "success");
+        navigate("/explorer/project/" + dataClient.id);
+      }, 5000);
+    }
+  }, [validateReturn]);
 
   const documentTypesAsingJsonDatosSS = (dataE) => {
     dataE.folders.forEach((folder, iFolder) => {
@@ -506,7 +522,7 @@ const NewPOTab = () => {
               dispatch(fileUp(datos));
             }
           );
-          
+
           if (folderElement.folders.length !== 0) {
             uploadSubFolders(
               folderElement,
@@ -1091,6 +1107,7 @@ const NewPOTab = () => {
         });
       }
     });
+    setValidateReturn(true);
   };
 
   const handleSaveDataPO = () => {
@@ -1127,8 +1144,8 @@ const NewPOTab = () => {
     }
 
     if (validationSave === true) {
+      setValidateButtonSave(true);
       uploadMainFolders(datosSS, filesGeneral);
-      messageDispatch("The PO was save!!", "success");
     }
   };
 
@@ -1144,7 +1161,7 @@ const NewPOTab = () => {
           color="success"
           onClick={handleSaveDataPO}
           startIcon={<Icon>save</Icon>}
-          //disabled={_.isEmpty(dirtyFields) || !isValid}
+          disabled={validateButtonSave}
         >
           Save
         </Button>
@@ -1610,7 +1627,7 @@ const NewPOTab = () => {
           color="success"
           onClick={handleSaveDataPO}
           startIcon={<Icon>save</Icon>}
-          //disabled={_.isEmpty(dirtyFields) || !isValid}
+          disabled={validateButtonSave}
         >
           Save
         </Button>
