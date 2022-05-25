@@ -101,7 +101,8 @@ const explorerSlice = createSlice({
     newFileDialog: {
       open: false,
       data: null,
-    }
+    },
+    selectedItem: null,
   }),
   reducers: {
     handleNewFolderDialog: (state, action) => {
@@ -113,7 +114,10 @@ const explorerSlice = createSlice({
       state.newFileDialog = {
         open: !state.newFileDialog.open
       }
-    }
+    },
+    setSelectedItem: (state, action) => {
+      state.selectedItem = action.payload;
+    },
   },
   extraReducers: {
     [getFiles.fulfilled]: (state, action) => {
@@ -137,7 +141,8 @@ const explorerSlice = createSlice({
 
 export const {
   handleNewFolderDialog,
-  handleNewFileDialog
+  handleNewFileDialog,
+  setSelectedItem
 } = explorerSlice.actions;
 
 export default explorerSlice.reducer;

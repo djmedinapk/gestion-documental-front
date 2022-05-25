@@ -15,6 +15,7 @@ import StyledIcon from "./StyledIcon";
 import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import withRouter from "@fuse/core/withRouter";
 
 const SearchList = (props) => {
   const dispatch = useDispatch();
@@ -34,6 +35,21 @@ const SearchList = (props) => {
       setDataFiles(files[0].files);
     }
   }, [files, selectedItemId]);
+
+
+  const handleClick = (event, item, i) => {
+    switch (event.detail) {
+      case 1:
+        dispatch(setSelectedItem(item));
+        dispatch(setSelectedItemId(i));
+        break;
+      case 2:
+        props.navigate(`/explorer/folder/${item.id}`);
+        break;      
+      default:
+        return;
+    }
+  }
 
   return (
     <motion.div
@@ -63,8 +79,7 @@ const SearchList = (props) => {
                 key={i}
                 hover
                 onClick={(event) => {
-                  dispatch(setSelectedItem(item));
-                  dispatch(setSelectedItemId(i));
+                  handleClick(event, item, i);
                 }}
                 selected={i === selectedItemId}
                 className="cursor-pointer h-64"
@@ -145,4 +160,4 @@ const SearchList = (props) => {
   );
 };
 
-export default SearchList;
+export default withRouter(SearchList);

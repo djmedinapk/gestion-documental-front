@@ -12,6 +12,7 @@ import StyledIcon from './StyledIcon';
 import { useEffect, useState } from 'react';
 import withRouter from '@fuse/core/withRouter';
 import { useParams } from 'react-router';
+import { setSelectedItem } from './store/explorerSlice';
 
 function FileList(props) {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function FileList(props) {
         description: folder.description,
         modified: new Date(folder.lastUpdated).toDateString(),
         type: 'folder',
+        metadata: folder,
       }
     })
     let filesDocs = data?.files?.map(file =>{
@@ -41,7 +43,8 @@ function FileList(props) {
         name: file.name,
         description: file.description,
         modified: new Date(file.lastUpdated).toDateString(),
-        type: file.documentType.icon
+        type: file.documentType.icon,
+        metadata: file,
       }
     });
 
@@ -77,6 +80,7 @@ function FileList(props) {
   const handleClick = (event, item) => {
     switch (event.detail) {
       case 1:
+        dispatch(setSelectedItem(item));
         break;
       case 2:
         if (item.type == 'folder' && !item.defaultUrl) {

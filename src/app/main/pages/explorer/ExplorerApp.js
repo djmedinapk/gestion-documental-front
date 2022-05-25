@@ -39,6 +39,7 @@ import { getDocumentTypes } from "./store/documentTypeSlice";
 
 import { dataPO } from "./../po/store/Params";
 import { changeDatosPOs } from "./../po/store/poGeneralTemplateSlice";
+import RightSideBarContent from "./RightSideBarContent";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -146,7 +147,7 @@ const ExplorerApp = () => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1, transition: { delay: 0.2 } }}
               >
-                <IconButton aria-label="search" size="large">
+                <IconButton aria-label="search" size="large" onClick={(ev) => {navigate("/apps/search");}}>
                   <Icon>search</Icon>
                 </IconButton>
               </motion.div>
@@ -226,7 +227,7 @@ const ExplorerApp = () => {
         leftSidebarHeader={<MainSidebarHeader />}
         leftSidebarContent={<MainSidebarContent />}
         rightSidebarHeader={<></>}
-        rightSidebarContent={<></>}
+        rightSidebarContent={<RightSideBarContent/>}
         ref={pageLayout}
         innerScroll
       />
