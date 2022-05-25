@@ -91,7 +91,7 @@ const documentTypesAdminSlice = createSlice({
     routeParams: {},
     paramsData: {
       PageIndex: 1,
-      PageSize: 10,
+      PageSize: 100,
       Count: 0,
     },
     files: {},

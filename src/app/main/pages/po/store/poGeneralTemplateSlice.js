@@ -9,7 +9,7 @@ import { dataPO } from "./Params";
 export const fileUp = createAsyncThunk(
   "poGeneralTemplateApp/poGeneralTemplateData/fileUp",
   async (dataPO, { dispatch, getState }) => {
-    const response = await axios.post("/api/File/uploadfiles", dataPO);
+    const response = await axios.post("/api/File/uploadfile", dataPO);
     const data = await response.data;
     return data;
   }
