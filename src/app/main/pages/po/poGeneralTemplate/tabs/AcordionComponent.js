@@ -36,10 +36,6 @@ const AcordionComponent = (props) => {
   const chooseFile = (event, indexFolder, indexFile) => {
     props.filesGeneral.folders[indexFolder].files[indexFile].contentFile =
       event;
-    /*props.setChooseFilesDataUpload({
-      ...props.chooseFilesDataUpload,
-      [Object.keys(props.chooseFilesDataUpload).length + ""]: event,
-    });*/
     props.dataPO.folders[indexFolder].files[indexFile].contentFile.name =
       event.name;
     props.dataPO.folders[indexFolder].files[
@@ -223,16 +219,19 @@ const AcordionComponent = (props) => {
 
   const handleRemoveFolder = (index) => {
     props.dataPO.folders.splice(index, 1);
+    props.filesGeneral.folders.splice(index, 1);
     props.handleUpdate();
   };
 
   const handleRemoveFile = (indexFolder, indexFile) => {
     props.dataPO.folders[indexFolder].files.splice(indexFile, 1);
+    props.filesGeneral.folders[indexFolder].files.splice(indexFile, 1);
     props.handleUpdate();
   };
 
   const handleRemoveProduct = (indexFolder, indexProduct) => {
     props.dataPO.folders[indexFolder].products.splice(indexProduct, 1);
+    props.filesGeneral.folders[indexFolder].products.splice(indexProduct, 1);
     props.handleUpdate();
   };
   const handleRemoveFileProduct = (indexFolder, indexProduct, indexFile) => {
@@ -260,30 +259,11 @@ const AcordionComponent = (props) => {
 
     documentsTypes.forEach((documentTypeElement) => {
       if (documentTypeElement.name === ev.target.value) {
-        props.dataPO.folders[arrayIndex[0]].files[
+        props.dataPO.folders[arrayIndex[0]].files[arrayIndex[1]].documentType =
+          documentTypeElement;
+        props.filesGeneral.folders[arrayIndex[0]].files[
           arrayIndex[1]
-        ].documentType.id = documentTypeElement.id;
-        props.dataPO.folders[arrayIndex[0]].files[
-          arrayIndex[1]
-        ].documentType.name = documentTypeElement.name;
-        props.dataPO.folders[arrayIndex[0]].files[
-          arrayIndex[1]
-        ].documentType.description = documentTypeElement.description;
-        props.dataPO.folders[arrayIndex[0]].files[
-          arrayIndex[1]
-        ].documentType.regex = documentTypeElement.regex;
-        props.dataPO.folders[arrayIndex[0]].files[
-          arrayIndex[1]
-        ].documentType.code = documentTypeElement.code;
-        props.dataPO.folders[arrayIndex[0]].files[
-          arrayIndex[1]
-        ].documentType.icon = documentTypeElement.icon;
-        props.dataPO.folders[arrayIndex[0]].files[
-          arrayIndex[1]
-        ].documentType.extensionAllowed = documentTypeElement.extensionAllowed;
-        props.dataPO.folders[arrayIndex[0]].files[
-          arrayIndex[1]
-        ].documentType.lastUpdated = documentTypeElement.lastUpdated;
+        ].documentType = documentTypeElement;
       }
     });
 
@@ -311,21 +291,30 @@ const AcordionComponent = (props) => {
   };
 
   const chooseFilesProductFolderInput = (event, indexFolder, indexProduct) => {
+    var documentsTypes = props.datosDocumentTypes[0].data;
+    var documentSigleTypeImage = {
+      id: 0,
+      name: "",
+      description: "",
+      regex: "",
+      code: "",
+      icon: "",
+      extensionAllowed: "",
+      lastUpdated: "",
+    };
+
+    documentsTypes.forEach((documentTypeElement) => {
+      if (documentTypeElement.name === "Image Evidences") {
+        documentSigleTypeImage = documentTypeElement;
+      }
+    });
+
     props.dataPO.folders[indexFolder].products[indexProduct].files = [];
     for (let index = 0; index < event.length; index++) {
       props.dataPO.folders[indexFolder].products[indexProduct].files.push({
         name: "New File",
         statePO: "new",
-        documentType: {
-          id: 3,
-          name: "",
-          description: "",
-          regex: "",
-          code: "",
-          icon: "",
-          extensionAllowed: "",
-          lastUpdated: "",
-        },
+        documentType: documentSigleTypeImage,
         contentFile: {
           name: "",
           lastModified: 0,
@@ -361,16 +350,7 @@ const AcordionComponent = (props) => {
         {
           name: "New File",
           statePO: "new",
-          documentType: {
-            id: 3,
-            name: "",
-            description: "",
-            regex: "",
-            code: "",
-            icon: "",
-            extensionAllowed: "",
-            lastUpdated: "",
-          },
+          documentType: documentSigleTypeImage,
           contentFile: null,
         }
       );
@@ -715,7 +695,7 @@ const AcordionComponent = (props) => {
                               }
                               {...field}
                               className="mt-8  mx-4"
-                              label="Evidences"
+                              label="Evidences (image/*)"
                               value={productPO.files.map(
                                 (fileProductMap) =>
                                   " " + fileProductMap.contentFile.name
@@ -1202,6 +1182,7 @@ const AcordionComponent = (props) => {
                                 filePO.name +
                                 " (" +
                                 filePO.documentType.name +
+                                " - " +
                                 filePO.documentType.extensionAllowed +
                                 ")"
                               }

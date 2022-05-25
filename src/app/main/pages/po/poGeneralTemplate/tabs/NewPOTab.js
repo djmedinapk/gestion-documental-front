@@ -263,6 +263,7 @@ const NewPOTab = () => {
 
   const handleRemoveFile = (indexFile) => {
     datosSS.files.splice(indexFile, 1);
+    filesGeneral.files.splice(indexFile, 1);
     handleUpdate();
   };
 
@@ -314,21 +315,8 @@ const NewPOTab = () => {
 
     documentsTypes.forEach((documentTypeElement) => {
       if (documentTypeElement.name === ev.target.value) {
-        datosSS.files[ev.target.name].documentType.id = documentTypeElement.id;
-        datosSS.files[ev.target.name].documentType.name =
-          documentTypeElement.name;
-        datosSS.files[ev.target.name].documentType.description =
-          documentTypeElement.description;
-        datosSS.files[ev.target.name].documentType.regex =
-          documentTypeElement.regex;
-        datosSS.files[ev.target.name].documentType.code =
-          documentTypeElement.code;
-        datosSS.files[ev.target.name].documentType.icon =
-          documentTypeElement.icon;
-        datosSS.files[ev.target.name].documentType.extensionAllowed =
-          documentTypeElement.extensionAllowed;
-        datosSS.files[ev.target.name].documentType.lastUpdated =
-          documentTypeElement.lastUpdated;
+        datosSS.files[ev.target.name].documentType = documentTypeElement;
+        filesGeneral.files[ev.target.name].documentType = documentTypeElement;
       }
     });
 
@@ -349,7 +337,7 @@ const NewPOTab = () => {
     dispatch(
       showMessage({
         message: messageD,
-        autoHideDuration: 2000, //ms
+        autoHideDuration: 2500, //ms
         anchorOrigin: {
           vertical: "top",
           horizontal: "center",
@@ -417,7 +405,7 @@ const NewPOTab = () => {
       );
 
       if (route + folderElement.name === mainFolder + "/UVA/Evidencias") {
-        folderElement.products.forEach((productElement) => {
+        folderElement.products.forEach((productElement, iProductElement) => {
           if (productElement.tempName === "") {
             validationFolderEvidencesUVAReturn = false;
             messageDispatch("You must enter a Product Name", "error");
@@ -428,6 +416,24 @@ const NewPOTab = () => {
             validationFolderEvidencesUVAReturn = false;
             messageDispatch("You must select the Product files", "error");
           }
+
+          folderElement.products.forEach(
+            (productValidationElement, iProductValidationElement) => {
+              if (
+                productValidationElement.tempName +
+                  "-" +
+                  productValidationElement.model ===
+                  productElement.tempName + "-" + productElement.model &&
+                iProductValidationElement !== iProductElement
+              ) {
+                validationFolderEvidencesUVAReturn = false;
+                messageDispatch(
+                  "The product in the Evidence folder already exists",
+                  "error"
+                );
+              }
+            }
+          );
         });
       }
     });
@@ -565,6 +571,10 @@ const NewPOTab = () => {
                     productElement.tempName +
                     "-" +
                     productElement.model
+                );
+                datos.append(
+                  `data[${iFileElement}].FolderId`,
+                  result.payload.id
                 );
                 datos.append(
                   `data[${iFileElement}].file`,
@@ -1470,6 +1480,8 @@ const NewPOTab = () => {
                       label={
                         file.name +
                         " (" +
+                        file.documentType.name +
+                        " - " +
                         file.documentType.extensionAllowed +
                         ")"
                       }
