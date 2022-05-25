@@ -15,7 +15,7 @@ export const months = [
 
 export const currentYear = new Date().getFullYear();
 
-export const dataPO = {
+/*export const dataPO = {
     name: "",
     pediment: "",
     year: "",
@@ -89,9 +89,9 @@ export const dataPO = {
         ],
       },
     ],
-  };
+  };*/
 
-/*export const dataPO = {
+export const dataPO = {
   name: "",
   pediment: "",
   year: "",
@@ -1084,7 +1084,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "Factura Agente Aduanal (excel)",
+            name: "Factura Agente Aduanal (xml)",
             description: "",
             regex: "",
             code: "",
@@ -1147,7 +1147,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "Factura Revalidación (excel)",
+            name: "Factura Revalidación (xml)",
             description: "",
             regex: "",
             code: "",
@@ -1189,7 +1189,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "Factura Maniobras (excel)",
+            name: "Factura Maniobras (xml)",
             description: "",
             regex: "",
             code: "",
@@ -1231,7 +1231,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "Factura Almacenaje (excel)",
+            name: "Factura Almacenaje (xml)",
             description: "",
             regex: "",
             code: "",
@@ -1273,7 +1273,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "Factura Transporte (excel)",
+            name: "Factura Transporte (xml)",
             description: "",
             regex: "",
             code: "",
@@ -1315,7 +1315,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "Factura Custodia (excel)",
+            name: "Factura Custodia (xml)",
             description: "",
             regex: "",
             code: "",
@@ -1343,6 +1343,6 @@ export const dataPO = {
       folders: [],
     },
   ],
-};*/
+};
 
 
