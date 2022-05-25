@@ -15,7 +15,7 @@ export const months = [
 
 export const currentYear = new Date().getFullYear();
 
-export const dataPO = {
+/*export const dataPO = {
     name: "",
     pediment: "",
     year: "",
@@ -89,9 +89,9 @@ export const dataPO = {
         ],
       },
     ],
-  };
+  };*/
 
-/*export const dataPO = {
+export const dataPO = {
   name: "",
   pediment: "",
   year: "",
@@ -114,7 +114,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "DODA",
             description: "",
             regex: "",
             code: "",
@@ -135,7 +135,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Pedimento Pagado",
             description: "",
             regex: "",
             code: "",
@@ -156,7 +156,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Pedimento Simplificado",
             description: "",
             regex: "",
             code: "",
@@ -177,7 +177,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Pedimento Rectificado",
             description: "",
             regex: "",
             code: "",
@@ -198,7 +198,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura de Importación",
             description: "",
             regex: "",
             code: "",
@@ -219,7 +219,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Carta UVA",
             description: "",
             regex: "",
             code: "",
@@ -240,7 +240,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Folio de UVA",
             description: "",
             regex: "",
             code: "",
@@ -261,12 +261,12 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Series",
             description: "",
             regex: "",
             code: "",
             icon: "",
-            extensionAllowed: ".excel",
+            extensionAllowed: ".xsml",
             lastUpdated: "",
           },
           contentFile: {
@@ -282,7 +282,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Packing List",
             description: "",
             regex: "",
             code: "",
@@ -303,7 +303,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Hojas de Calculo",
             description: "",
             regex: "",
             code: "",
@@ -324,7 +324,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Manifestacion de Valor",
             description: "",
             regex: "",
             code: "",
@@ -345,7 +345,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Archivo M con numeros de Pedimento",
             description: "",
             regex: "",
             code: "",
@@ -366,7 +366,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Actas",
             description: "",
             regex: "",
             code: "",
@@ -396,7 +396,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Orden de Compra",
             description: "",
             regex: "",
             code: "",
@@ -417,7 +417,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Shipping Notice",
             description: "",
             regex: "",
             code: "",
@@ -438,7 +438,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: 'Guia Aerea NO Revalidada "rated"',
             description: "",
             regex: "",
             code: "",
@@ -459,7 +459,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: 'Guia Aerea NO Revalidada "unrated"',
             description: "",
             regex: "",
             code: "",
@@ -480,7 +480,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Fabricante",
             description: "",
             regex: "",
             code: "",
@@ -501,7 +501,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Packing List Fabricante",
             description: "",
             regex: "",
             code: "",
@@ -522,7 +522,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: 'Poliza de Seguro "Insurance Policy"',
             description: "",
             regex: "",
             code: "",
@@ -543,7 +543,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Listado de IMEI",
             description: "",
             regex: "",
             code: "",
@@ -573,7 +573,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Pedimento Pagado",
             description: "",
             regex: "",
             code: "",
@@ -594,7 +594,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Pedimento Rectificado",
             description: "",
             regex: "",
             code: "",
@@ -615,7 +615,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura de Importación",
             description: "",
             regex: "",
             code: "",
@@ -636,7 +636,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Carta UVA",
             description: "",
             regex: "",
             code: "",
@@ -657,7 +657,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Folio de UVA",
             description: "",
             regex: "",
             code: "",
@@ -678,7 +678,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Dictamen",
             description: "",
             regex: "",
             code: "",
@@ -718,7 +718,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "COVE",
             description: "",
             regex: "",
             code: "",
@@ -739,7 +739,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "ACUSE COVE",
             description: "",
             regex: "",
             code: "",
@@ -760,7 +760,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Guia Aerea",
             description: "",
             regex: "",
             code: "",
@@ -781,7 +781,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Acuse Guia Aerea",
             description: "",
             regex: "",
             code: "",
@@ -802,7 +802,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Carta 3.1.8",
             description: "",
             regex: "",
             code: "",
@@ -823,7 +823,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Acuse Carta 3.1.8",
             description: "",
             regex: "",
             code: "",
@@ -844,7 +844,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Folio UVA",
             description: "",
             regex: "",
             code: "",
@@ -865,7 +865,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Acuse Folio UVA",
             description: "",
             regex: "",
             code: "",
@@ -886,7 +886,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Carta UVA",
             description: "",
             regex: "",
             code: "",
@@ -907,7 +907,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Acuse Carta UVA",
             description: "",
             regex: "",
             code: "",
@@ -928,7 +928,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Contrato UVA",
             description: "",
             regex: "",
             code: "",
@@ -949,7 +949,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Acuse Contrato UVA",
             description: "",
             regex: "",
             code: "",
@@ -970,7 +970,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Numeros de Serie",
             description: "",
             regex: "",
             code: "",
@@ -991,7 +991,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Acuse Numeros de Serie",
             description: "",
             regex: "",
             code: "",
@@ -1012,7 +1012,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Certificado NOM",
             description: "",
             regex: "",
             code: "",
@@ -1033,7 +1033,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "E DOC - Acuse Certificado NOM",
             description: "",
             regex: "",
             code: "",
@@ -1063,7 +1063,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Agente Aduanal (pdf)",
             description: "",
             regex: "",
             code: "",
@@ -1084,12 +1084,12 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Agente Aduanal (excel)",
             description: "",
             regex: "",
             code: "",
             icon: "",
-            extensionAllowed: ".xml",
+            extensionAllowed: ".xlsx",
             lastUpdated: "",
           },
           contentFile: {
@@ -1105,7 +1105,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Depositos a Agente Aduanal",
             description: "",
             regex: "",
             code: "",
@@ -1126,7 +1126,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Revalidación (pdf)",
             description: "",
             regex: "",
             code: "",
@@ -1147,12 +1147,12 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Revalidación (excel)",
             description: "",
             regex: "",
             code: "",
             icon: "",
-            extensionAllowed: ".xml",
+            extensionAllowed: ".xlsx",
             lastUpdated: "",
           },
           contentFile: {
@@ -1168,7 +1168,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Maniobras (pdf)",
             description: "",
             regex: "",
             code: "",
@@ -1189,12 +1189,12 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Maniobras (excel)",
             description: "",
             regex: "",
             code: "",
             icon: "",
-            extensionAllowed: ".xml",
+            extensionAllowed: ".xlsx",
             lastUpdated: "",
           },
           contentFile: {
@@ -1210,7 +1210,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Almacenaje (pdf)",
             description: "",
             regex: "",
             code: "",
@@ -1231,12 +1231,12 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Almacenaje (excel)",
             description: "",
             regex: "",
             code: "",
             icon: "",
-            extensionAllowed: ".xml",
+            extensionAllowed: ".xlsx",
             lastUpdated: "",
           },
           contentFile: {
@@ -1252,7 +1252,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Transporte (pdf)",
             description: "",
             regex: "",
             code: "",
@@ -1273,12 +1273,12 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Transporte (excel)",
             description: "",
             regex: "",
             code: "",
             icon: "",
-            extensionAllowed: ".xml",
+            extensionAllowed: ".xlsx",
             lastUpdated: "",
           },
           contentFile: {
@@ -1294,7 +1294,7 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Custodia (pdf)",
             description: "",
             regex: "",
             code: "",
@@ -1315,12 +1315,12 @@ export const dataPO = {
           statePO: "old",
           documentType: {
             id: 0,
-            name: "",
+            name: "Factura Custodia (excel)",
             description: "",
             regex: "",
             code: "",
             icon: "",
-            extensionAllowed: ".xml",
+            extensionAllowed: ".xlsx",
             lastUpdated: "",
           },
           contentFile: {
@@ -1343,6 +1343,6 @@ export const dataPO = {
       folders: [],
     },
   ],
-};*/
+};
 
 
