@@ -62,10 +62,10 @@ const SearchList = (props) => {
             <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
             <TableCell>{t("NAME")}</TableCell>
             <TableCell className="hidden sm:table-cell">{t("TYPE")}</TableCell>
-            <TableCell className="hidden sm:table-cell">{t("OWNER")}</TableCell>
+            {/* <TableCell className="hidden sm:table-cell">{t("OWNER")}</TableCell>
             <TableCell className="text-center hidden sm:table-cell">
               {t("SIZE")}
-            </TableCell>
+            </TableCell> */}
             <TableCell className="hidden sm:table-cell">
               {t("MODIFIED")}
             </TableCell>
@@ -89,12 +89,12 @@ const SearchList = (props) => {
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
                 <TableCell className="hidden sm:table-cell">{t('FOLDER')}</TableCell>
-                <TableCell className="hidden sm:table-cell">{i}</TableCell>
+                {/* <TableCell className="hidden sm:table-cell">{i}</TableCell>
                 <TableCell className="text-center hidden sm:table-cell">
                   -{item.size === "" ? "-" : item.size}
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="hidden sm:table-cell">
-                  -{item.modified}
+                  {new Date(item.lastUpdated).toDateString()}
                 </TableCell>
                 <Hidden lgUp>
                   <TableCell>
@@ -129,14 +129,14 @@ const SearchList = (props) => {
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
                 <TableCell className="hidden sm:table-cell">{t('FILE')}</TableCell>
-                <TableCell className="hidden sm:table-cell">
+                {/* <TableCell className="hidden sm:table-cell">
                   {dataFolders.length + i}
                 </TableCell>
                 <TableCell className="text-center hidden sm:table-cell">
                   -{item.size === "" ? "-" : item.size}
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="hidden sm:table-cell">
-                  -{item.modified}
+                  {new Date(item.lastUpdated).toDateString()}
                 </TableCell>
                 <Hidden lgUp>
                   <TableCell>

@@ -19,28 +19,6 @@ function DetailSidebarHeader(props) {
 
   return (
     <div className="flex flex-col justify-between h-full p-4 sm:p-12">
-      <div className="toolbar flex align-center justify-end">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1, transition: { delay: 0.2 } }}
-        >
-          <IconButton size="large">
-            <Icon>delete</Icon>
-          </IconButton>
-        </motion.div>
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1, transition: { delay: 0.2 } }}
-        >
-          <IconButton size="large">
-            <Icon>cloud_download</Icon>
-          </IconButton>
-        </motion.div>
-        <IconButton size="large">
-          <Icon>more_vert</Icon>
-        </IconButton>
-      </div>
-
       <div className="p-12">
         <motion.div
           initial={{ scale: 0 }}
@@ -55,8 +33,8 @@ function DetailSidebarHeader(props) {
           animate={{ opacity: 1, transition: { delay: 0.3 } }}
         >
           <Typography variant="caption" className="font-medium">
-            <span>{t('EDITED')}</span>
-            <span>: -{selectedItem.modified}</span>
+            <span>{t("EDITED")}</span>
+            <span>: {new Date(selectedItem.lastUpdated).toDateString()}</span>
           </Typography>
         </motion.div>
       </div>

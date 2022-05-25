@@ -54,36 +54,6 @@ const DetailSidebarContent = (props) => {
             <th className="font-semibold">{t('TYPE')}</th>
             <td>{t((""+icon).toUpperCase())}</td>
           </tr>
-
-          <tr className="size h-52">
-            <th className="font-semibold">{t('SIZE')}</th>
-            <td>-{selectedItem.size === "" ? "-" : selectedItem.size}</td>
-          </tr>
-
-          <tr className="location h-52 text-left">
-            <th className="font-semibold">{t('LOCATION')}</th>
-            <td>-{selectedItem.location}</td>
-          </tr>
-
-          <tr className="owner h-52">
-            <th className="font-semibold">{t('OWNER')}</th>
-            <td>-{selectedItem.owner}</td>
-          </tr>
-
-          <tr className="modified h-52">
-            <th className="font-semibold">{t('MODIFIED')}</th>
-            <td>-{selectedItem.modified}</td>
-          </tr>
-
-          <tr className="opened h-52">
-            <th className="font-semibold">{t('OPENED')}</th>
-            <td>-{selectedItem.opened}</td>
-          </tr>
-
-          <tr className="created h-52">
-            <th className="font-semibold">{t('CREATED')}</th>
-            <td>-{selectedItem.created}</td>
-          </tr>
         </tbody>
       </table>
     </motion.div>

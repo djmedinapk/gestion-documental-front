@@ -19,7 +19,7 @@ const RightSideBarContent = () => {
       }
 
       if (selectedItem) {
-        console.log("metadata", selectedItem)
+        //console.log("metadata", selectedItem)
       }
     
       return (

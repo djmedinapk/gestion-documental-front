@@ -49,7 +49,7 @@ function FileList(props) {
     });
 
     if (isFolder && data.folderId) {
-      console.log("cas", data)
+      //console.log("cas", data)
       totalFiles.push({
         id: data.folderId,
         name: '..',
@@ -59,7 +59,7 @@ function FileList(props) {
       });
     }
     if (isFolder && data.projectId) {
-      console.log("cas", data)
+      //console.log("cas", data)
       totalFiles.push({
         id: data.projectId,
         name: '..',
@@ -73,7 +73,7 @@ function FileList(props) {
     totalFiles = fiForm ? totalFiles.concat(fiForm): totalFiles ;
     totalFiles = filesDocs ? totalFiles.concat(filesDocs): totalFiles ;
     setFilesList(totalFiles);
-    console.log("files",totalFiles);
+    //console.log("files",totalFiles);
   },[files,filesFolder, routeParams])
 
 
