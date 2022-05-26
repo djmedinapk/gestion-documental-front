@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 
-function DetailSidebarHeader(props) {
+function RightSideBarHeader(props) {
   const selectedItem = useSelector(
-    ({ searchApp }) => searchApp.searchs.selectedItem
+    ({ explorerApp }) => explorerApp.explorer.selectedItem
   );
 
   const { t } = useTranslation("searchPage");
@@ -43,18 +43,10 @@ function DetailSidebarHeader(props) {
             {selectedItem.name}
           </Typography>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { delay: 0.3 } }}
-        >
-          <Typography variant="caption" className="font-medium">
-            <span>{t("EDITED")}</span>
-            <span>: {new Date(selectedItem.lastUpdated).toDateString()}</span>
-          </Typography>
-        </motion.div>
+       
       </div>
     </div>
   );
 }
 
-export default DetailSidebarHeader;
+export default RightSideBarHeader;

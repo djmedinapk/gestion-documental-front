@@ -40,6 +40,7 @@ import { getDocumentTypes } from "./store/documentTypeSlice";
 import { dataPO } from "./../po/store/Params";
 import { changeDatosPOs } from "./../po/store/poGeneralTemplateSlice";
 import RightSideBarContent from "./RightSideBarContent";
+import RightSideBarHeader from "./RightSideBarHeader";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -226,7 +227,7 @@ const ExplorerApp = () => {
         leftSidebarVariant="temporary"
         leftSidebarHeader={<MainSidebarHeader />}
         leftSidebarContent={<MainSidebarContent />}
-        rightSidebarHeader={<></>}
+        rightSidebarHeader={<RightSideBarHeader/>}
         rightSidebarContent={<RightSideBarContent/>}
         ref={pageLayout}
         innerScroll

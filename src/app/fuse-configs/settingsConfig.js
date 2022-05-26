@@ -11,7 +11,7 @@ const settingsConfig = {
     toolbar: 'mainThemeLight',
     footer: 'mainThemeDark',
   },
-  loginRedirectUrl: '/', // Default redirect url for the logged-in user
+  loginRedirectUrl: '/projects', // Default redirect url for the logged-in user
 };
 
 export default settingsConfig;
