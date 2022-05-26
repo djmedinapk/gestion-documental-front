@@ -54,29 +54,33 @@ const NewFileDialog = () => {
   const documentsType = useSelector(selectDocumentTypes);
   const routeParams = useParams();
 
-  const { control, reset, handleSubmit, formState, getValues, setValue } = useForm({
-    mode: "onChange",
-    defaultValues,
-    resolver: yupResolver(schema),
-  });
+  const { control, reset, handleSubmit, formState, getValues, setValue } =
+    useForm({
+      mode: "onChange",
+      defaultValues,
+      resolver: yupResolver(schema),
+    });
 
   const { isValid, dirtyFields, errors } = formState;
   const [fileSelected, setFileSelected] = useState(null);
-  
-  useEffect(() => {
-  },[documentsType])
+  const [typeFileSelected, setTypeFileSelected] = useState("*");
 
+  useEffect(() => {
+    if (getValues("documentTypeId") === 0) {
+      setValue("documentTypeId", "");
+    }
+  }, [documentsType]);
 
   function onSubmit(data) {
-    const datos = new FormData(); 
-    datos.append('name', data.name);
-    datos.append('description', data.description);
-    datos.append('documentTypeId', data.documentTypeId);
-    datos.append('file',fileSelected);
+    const datos = new FormData();
+    datos.append("name", data.name);
+    datos.append("description", data.description);
+    datos.append("documentTypeId", data.documentTypeId);
+    datos.append("file", fileSelected);
     if (isFolder && routeParams.id) {
-      datos.append('folderId', parseInt(routeParams.id,10));
-    }else {
-      datos.append('projectId', parseInt(routeParams.id,10));
+      datos.append("folderId", parseInt(routeParams.id, 10));
+    } else {
+      datos.append("projectId", parseInt(routeParams.id, 10));
     }
     dispatch(addFile(datos)).then(({ payload }) => {
       if (payload.status === 200) {
@@ -111,16 +115,28 @@ const NewFileDialog = () => {
   const onChangeFileSelected = (file) => {
     if (file) {
       setFileSelected(file);
-      setValue('name',file.name)
+      setValue("name", file.name);
+    } else {
+      setFileSelected(null);
+      setValue("name", "");
+      setTypeFileSelected("*");
     }
-    else {
-      setFileSelected(null)
-      setValue('name','')
-    }
-  }
+  };
 
   const closeDialog = () => {
     dispatch(handleNewFileDialog());
+    setValue("name", "");
+    setValue("documentTypeId", "");
+    setValue("description", "");
+    setFileSelected(null);
+  };
+
+  const handleSelectDocumentType = (ev) => {
+    documentsType.forEach((documentTypeElement) => {
+      if (documentTypeElement.id === ev.target.value) {
+        setTypeFileSelected(documentTypeElement.extensionAllowed);
+      }
+    });
   };
 
   return (
@@ -190,14 +206,18 @@ const NewFileDialog = () => {
                       name="documentTypeId"
                       error={!!errors.documentTypeId}
                       fullWidth
+                      onChange={(event) => {
+                        field.onChange(event);
+                        handleSelectDocumentType(event);
+                      }}
                     >
-                      {documentsType && documentsType.length > 0 ?  (
-                        documentsType.map(doc => (
-                          <MenuItem key={doc.id} value={doc.id}>
-                          <em> {doc.name} </em>
-                        </MenuItem>
-                        ))
-                      ):''}
+                      {documentsType && documentsType.length > 0
+                        ? documentsType.map((doc) => (
+                            <MenuItem key={doc.id} value={doc.id}>
+                              <em> {doc.name} </em>
+                            </MenuItem>
+                          ))
+                        : ""}
                     </Select>
                   </FormControl>
                 </>
@@ -209,22 +229,22 @@ const NewFileDialog = () => {
               <Icon color="action">note</Icon>
             </div>
             <Controller
-                control={control}
-                name="description"
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    className="mb-24"
-                    label={t('DESCRIPTION')}
-                    id="description"
-                    error={!!errors.description}
-                    helperText={errors?.description?.message}
-                    variant="outlined"
-                    required
-                    fullWidth
-                  />
-                )}
-              />
+              control={control}
+              name="description"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t("DESCRIPTION")}
+                  id="description"
+                  error={!!errors.description}
+                  helperText={errors?.description?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
           </div>
           <div className="flex">
             <div className="min-w-48 pt-20">
@@ -236,7 +256,7 @@ const NewFileDialog = () => {
               render={({ field }) => (
                 <>
                   <input
-                    accept="*"
+                    accept={typeFileSelected}
                     style={{ display: "none" }}
                     id={"file-upload"}
                     name="file"
@@ -249,7 +269,7 @@ const NewFileDialog = () => {
                       event.target.value = null;
                     }}
                   />
-                  <label htmlFor={"file-upload"} className="mt-8  mx-4 w-full">                      
+                  <label htmlFor={"file-upload"} className="mt-8  mx-4 w-full">
                     <Button
                       variant="contained"
                       color="secondary"
@@ -258,12 +278,13 @@ const NewFileDialog = () => {
                       component="span"
                     >
                       Choose File
-                    </Button><br/>
+                    </Button>
+                    <br />
                     <span>{field.value}</span>
                   </label>
                 </>
               )}
-            />            
+            />
           </div>
         </DialogContent>
         <DialogActions className="justify-between p-4 pb-16">
