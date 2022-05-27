@@ -7,14 +7,12 @@ import axios from "./../../../../../services/Axios/HttpClient";
 
 export const getDocumentTypes = createAsyncThunk(
   "documentTypesAdminApp/documentTypes/getDocumentTypes",
-  async (routeParams, { getState }) => {
-    routeParams =
-      routeParams || getState().documentTypesAdminApp.documentTypes.routeParams;
-    const response = await axios.getWithParams("/api/DocumentType", {
-      params: routeParams,
+  async (routeParams, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/DocumentType/WithParams", {
+      params: getState().documentTypesAdminApp.documentTypes.paramsData,
     });
     const data = await response.data;
-
+    dispatch(changeParamsDataCount(data.count));
     return { data, routeParams };
   }
 );
@@ -57,28 +55,6 @@ export const removeDocumentType = createAsyncThunk(
   }
 );
 
-export const fileUp = createAsyncThunk(
-  "documentTypesApp/documentTypes/addDocumentType",
-  async (selectedFile, { dispatch, getState }) => {
-    const formData = new FormData();
-    const dataPe = JSON.stringify({
-      name: "eme",
-      description: "description",
-    });
-
-    for (var i = 0; i < Object.keys(selectedFile).length+1; i++) {
-      formData.append(i + "", selectedFile[i])
-    } 
-    formData.append("datos", dataPe);
-    const response = await axios.post("/api/DocumentType/file", formData);
-    const data = await response.data;
-
-    dispatch(getDocumentTypes());
-
-    return data;
-  }
-);
-
 const documentTypesAdminAdapter = createEntityAdapter({});
 
 export const { selectAll: selectDocumentTypes } =
@@ -91,7 +67,11 @@ const documentTypesAdminSlice = createSlice({
   initialState: documentTypesAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
-    files: {},
+    paramsData: {
+      PageIndex: 1,
+      PageSize: 10,
+      Count: 0,
+    },
     documentTypesAdminDialog: {
       type: "new",
       props: {
@@ -147,14 +127,20 @@ const documentTypesAdminSlice = createSlice({
         data: null,
       };
     },
-    changeFiles: (state, action) => {
-      state.files = action.payload;
+    changeParamsDataPageIndex: (state, action) => {
+      state.paramsData.PageIndex = action.payload;
+    },
+    changeParamsDataPageSize: (state, action) => {
+      state.paramsData.PageSize = action.payload;
+    },
+    changeParamsDataCount: (state, action) => {
+      state.paramsData.Count = action.payload;
     },
   },
   extraReducers: {
     [getDocumentTypes.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
-      documentTypesAdminAdapter.setAll(state, data);
+      documentTypesAdminAdapter.setAll(state, { data });
       state.routeParams = routeParams;
     },
   },
@@ -165,7 +151,9 @@ export const {
   closeNewDocumentTypesAdminDialog,
   openEditDocumentTypesAdminDialog,
   closeEditDocumentTypesAdminDialog,
-  changeFiles,
+  changeParamsDataPageIndex,
+  changeParamsDataPageSize,
+  changeParamsDataCount,
 } = documentTypesAdminSlice.actions;
 
 export default documentTypesAdminSlice.reducer;

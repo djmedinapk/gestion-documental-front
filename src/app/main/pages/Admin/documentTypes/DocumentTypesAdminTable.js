@@ -18,33 +18,16 @@ import {
 } from "react-table";
 import clsx from "clsx";
 import DocumentTypesAdminTablePaginationActions from "./DocumentTypesAdminTablePaginationActions";
-import format from 'date-fns/format';
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = useRef();
-  const resolvedRef = ref || defaultRef;
-
-  useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
-
-  return (
-    <>
-      <Checkbox ref={resolvedRef} {...rest} />
-    </>
-  );
-});
+import {
+  changeParamsDataPageIndex,
+  getDocumentTypes,
+} from "./store/documentTypesAdminSlice";
 
 const EnhancedTable = ({ columns, data, onRowClick }) => {
-  const {
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    page,
-    gotoPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-  } = useTable(
+  const { getTableProps, headerGroups, prepareRow, page } = useTable(
     {
       columns,
       data,
@@ -63,12 +46,24 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
     }
   );
 
-  const handleChangePage = (event, newPage) => {
-    gotoPage(newPage);
-  };
+  const dispatch = useDispatch();
+  const { t } = useTranslation("documentTypeAdminPage");
+  const paramsDataPageIndex = useSelector(
+    ({ documentTypesAdminApp }) =>
+      documentTypesAdminApp.documentTypes.paramsData.PageIndex
+  );
+  const paramsDataPageSize = useSelector(
+    ({ documentTypesAdminApp }) =>
+      documentTypesAdminApp.documentTypes.paramsData.PageSize
+  );
+  const paramsDataCount = useSelector(
+    ({ documentTypesAdminApp }) =>
+      documentTypesAdminApp.documentTypes.paramsData.Count
+  );
 
-  const handleChangeRowsPerPage = (event) => {
-    setPageSize(Number(event.target.value));
+  const handleChangePage = (event, newPage) => {
+    dispatch(changeParamsDataPageIndex(newPage + 1));
+    dispatch(getDocumentTypes());
   };
 
   useEffect(() => {}, []);
@@ -81,14 +76,19 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
           <TableHead>
             {headerGroups.map((headerGroup) => (
               <TableRow {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map((column, i) => (
                   <TableCell
                     className="whitespace-nowrap p-4 md:p-12"
                     {...(!column.sortable
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
                   >
-                    {column.render("Header")}
+                    {headerGroup.headers.length !== i + 1 ? (
+                      t(column.Header.toUpperCase())
+                    ) : (
+                      <></>
+                    )}
+
                     {column.sortable ? (
                       <TableSortLabel
                         active={column.isSorted}
@@ -102,7 +102,7 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
             ))}
           </TableHead>
           <TableBody>
-            {page.map((row, i) => {
+            {page.map((row) => {
               prepareRow(row);
               return (
                 <TableRow
@@ -116,12 +116,7 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
                         {...cell.getCellProps()}
                         className={clsx("p-4 md:p-12", cell.column.className)}
                       >
-                        {cell.column.Header === "LastUpdated"
-                          ? format(
-                              new Date(cell.value),
-                              "PP"
-                            )
-                          : cell.render("Cell")}
+                        {cell.render("Cell")}
                       </TableCell>
                     );
                   })}
@@ -136,22 +131,23 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
         classes={{
           root: "shrink-0 border-t-1",
         }}
-        rowsPerPageOptions={[
-          1,
-          10,
-          25,
-          { label: "All", value: data.length + 1 },
-        ]}
+        rowsPerPageOptions={[paramsDataPageSize]}
         colSpan={5}
-        count={data.length}
-        rowsPerPage={pageSize}
-        page={pageIndex}
+        count={paramsDataCount}
+        rowsPerPage={paramsDataPageSize}
+        page={paramsDataPageIndex - 1}
         SelectProps={{
           inputProps: { "aria-label": "rows per page" },
           native: false,
         }}
+        labelDisplayedRows={({ from, to, count }) =>
+          t("SHOWING_DATA_OF") +
+          ` ${from}-${to} ` +
+          t("OF") +
+          ` ${count} ` +
+          t("TOTAL_DATA")
+        }
         onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
         ActionsComponent={DocumentTypesAdminTablePaginationActions}
       />
     </div>
