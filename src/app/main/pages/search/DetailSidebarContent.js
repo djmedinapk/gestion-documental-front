@@ -40,19 +40,30 @@ const DetailSidebarContent = (props) => {
           initial={{ scale: 0 }}
           animate={{ scale: 1, transition: { delay: 0.3 } }}
         >
-          <StyledIcon className="text-48" type={icon} />
+          {selectedItem.documentType ? (
+            <StyledIcon
+              className="text-48"
+              type={selectedItem.documentType.icon}
+            />
+          ) : (
+            <StyledIcon className="text-48" type="folder" />
+          )}
         </motion.div>
       </div>
 
       <Typography variant="subtitle1" className="py-16">
-        {t('INFO')}
+        {t("INFO")}
       </Typography>
 
       <table className="w-full text-justify">
         <tbody>
           <tr className="type h-52">
-            <th className="font-semibold">{t('TYPE')}</th>
-            <td>{t((""+icon).toUpperCase())}</td>
+            <th className="font-semibold">{t("TYPE")}</th>
+            {selectedItem.documentType ? (
+              <td>{t(selectedItem.documentType.icon.toUpperCase())}</td>
+            ) : (
+              <td>{t("FOLDER")}</td>
+            )}
           </tr>
         </tbody>
       </table>

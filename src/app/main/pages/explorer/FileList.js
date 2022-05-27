@@ -1,43 +1,51 @@
-import Hidden from '@mui/material/Hidden';
-import Icon from '@mui/material/Icon';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import { useDispatch, useSelector } from 'react-redux';
-import { motion } from 'framer-motion';
-import StyledIcon from './StyledIcon';
-import { useEffect, useState } from 'react';
-import withRouter from '@fuse/core/withRouter';
-import { useParams } from 'react-router';
-import { setSelectedItem } from './store/explorerSlice';
+import Hidden from "@mui/material/Hidden";
+import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
+import StyledIcon from "./StyledIcon";
+import { useEffect, useState } from "react";
+import withRouter from "@fuse/core/withRouter";
+import { useParams } from "react-router";
+import { setSelectedItem } from "./store/explorerSlice";
 
 function FileList(props) {
   const dispatch = useDispatch();
   const routeParams = useParams();
-  const isFolder = useSelector(({ explorerApp }) => explorerApp.explorer.isFolder);
-  const files = useSelector(({ explorerApp }) => explorerApp.explorer.projectData);
-  const filesFolder = useSelector(({ explorerApp }) => explorerApp.explorer.folderData);
-  const selectedItemId = useSelector(({ explorerApp }) => explorerApp.explorer.selectedItemId);
+  const isFolder = useSelector(
+    ({ explorerApp }) => explorerApp.explorer.isFolder
+  );
+  const files = useSelector(
+    ({ explorerApp }) => explorerApp.explorer.projectData
+  );
+  const filesFolder = useSelector(
+    ({ explorerApp }) => explorerApp.explorer.folderData
+  );
+  const selectedItemId = useSelector(
+    ({ explorerApp }) => explorerApp.explorer.selectedItemId
+  );
 
   const [filesList, setFilesList] = useState([]);
 
-  useEffect(() => {    
+  useEffect(() => {
     let totalFiles = [];
-    let data = isFolder ? filesFolder : files;  
-    let fiForm = data?.folders?.map(folder =>{
+    let data = isFolder ? filesFolder : files;
+    let fiForm = data?.folders?.map((folder) => {
       return {
         id: folder.id,
         name: folder.name,
         description: folder.description,
         modified: new Date(folder.lastUpdated).toDateString(),
-        type: 'folder',
+        type: "folder",
         metadata: folder,
-      }
-    })
-    let filesDocs = data?.files?.map(file =>{
+      };
+    });
+    let filesDocs = data?.files?.map((file) => {
       return {
         id: file.id,
         name: file.name,
@@ -45,37 +53,37 @@ function FileList(props) {
         modified: new Date(file.lastUpdated).toDateString(),
         type: file.documentType.icon,
         metadata: file,
-      }
+      };
     });
 
     if (isFolder && data.folderId) {
       //console.log("cas", data)
       totalFiles.push({
         id: data.folderId,
-        name: '..',
+        name: "..",
         description: "",
         modified: "",
-        type: 'folder'
+        type: "folder",
       });
     }
     if (isFolder && data.projectId) {
       //console.log("cas", data)
       totalFiles.push({
         id: data.projectId,
-        name: '..',
+        name: "..",
         description: "",
         modified: "",
-        type: 'folder',
-        defaultUrl: 'project'
+        type: "folder",
+        defaultUrl: "project",
       });
     }
 
-    totalFiles = fiForm ? totalFiles.concat(fiForm): totalFiles ;
-    totalFiles = filesDocs ? totalFiles.concat(filesDocs): totalFiles ;
+    totalFiles = fiForm ? totalFiles.concat(fiForm) : totalFiles;
+    totalFiles = filesDocs ? totalFiles.concat(filesDocs) : totalFiles;
     setFilesList(totalFiles);
     //console.log("files",totalFiles);
-  },[files,filesFolder, routeParams])
-
+    dispatch(setSelectedItem(null));
+  }, [files, filesFolder, routeParams]);
 
   const handleClick = (event, item) => {
     switch (event.detail) {
@@ -83,17 +91,19 @@ function FileList(props) {
         dispatch(setSelectedItem(item));
         break;
       case 2:
-        if (item.type == 'folder' && !item.defaultUrl) {
-          props.navigate(`/explorer/folder/${item.id}`);          
+        if (item.type == "folder" && !item.defaultUrl) {
+          dispatch(setSelectedItem(null));
+          props.navigate(`/explorer/folder/${item.id}`);
         }
-        if (item.type == 'folder' && item.defaultUrl == 'project') {
-          props.navigate(`/explorer/project/${item.id}`);          
-        }        
-        break;      
+        if (item.type == "folder" && item.defaultUrl == "project") {
+          dispatch(setSelectedItem(null));
+          props.navigate(`/explorer/project/${item.id}`);
+        }
+        break;
       default:
         return;
     }
-  }
+  };
 
   return (
     <motion.div
@@ -107,7 +117,7 @@ function FileList(props) {
             <TableCell>Name</TableCell>
             <TableCell className="hidden sm:table-cell">Type</TableCell>
             <TableCell className="hidden sm:table-cell">Owner</TableCell>
-            <TableCell className="text-center hidden sm:table-cell">Size</TableCell>
+            {/* <TableCell className="text-center hidden sm:table-cell">Size</TableCell> */}
             <TableCell className="hidden sm:table-cell">Modified</TableCell>
           </TableRow>
         </TableHead>
@@ -128,16 +138,24 @@ function FileList(props) {
                   <StyledIcon type={item.type} />
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
-                <TableCell className="hidden sm:table-cell">{item.type}</TableCell>
-                <TableCell className="hidden sm:table-cell">{item.owner}</TableCell>
-                <TableCell className="text-center hidden sm:table-cell">
-                  {item.size === '' ? '-' : item.size}
+                <TableCell className="hidden sm:table-cell">
+                  {item.type}
                 </TableCell>
-                <TableCell className="hidden sm:table-cell">{item.modified}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {item.owner}
+                </TableCell>
+                {/* <TableCell className="text-center hidden sm:table-cell">
+                  {item.size === '' ? '-' : item.size}
+                </TableCell> */}
+                <TableCell className="hidden sm:table-cell">
+                  {item.modified}
+                </TableCell>
                 <Hidden lgUp>
                   <TableCell>
                     <IconButton
-                      onClick={(ev) => props.pageLayout.current.toggleRightSidebar()}
+                      onClick={(ev) =>
+                        props.pageLayout.current.toggleRightSidebar()
+                      }
                       aria-label="open right sidebar"
                       size="large"
                     >

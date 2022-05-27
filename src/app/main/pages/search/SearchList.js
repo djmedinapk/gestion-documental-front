@@ -36,7 +36,6 @@ const SearchList = (props) => {
     }
   }, [files, selectedItemId]);
 
-
   const handleClick = (event, item, i) => {
     switch (event.detail) {
       case 1:
@@ -44,12 +43,17 @@ const SearchList = (props) => {
         dispatch(setSelectedItemId(i));
         break;
       case 2:
-        props.navigate(`/explorer/folder/${item.id}`);
-        break;      
+        dispatch(setSelectedItem(null));
+        if (item.projectId !== 0) {
+          props.navigate(`/explorer/project/${item.projectId}`);
+        } else if (item.folderId !== 0) {
+          props.navigate(`/explorer/folder/${item.id}`);
+        }
+        break;
       default:
         return;
     }
-  }
+  };
 
   return (
     <motion.div
@@ -88,7 +92,9 @@ const SearchList = (props) => {
                   <StyledIcon type="folder" />
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
-                <TableCell className="hidden sm:table-cell">{t('FOLDER')}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {t("FOLDER")}
+                </TableCell>
                 {/* <TableCell className="hidden sm:table-cell">{i}</TableCell>
                 <TableCell className="text-center hidden sm:table-cell">
                   -{item.size === "" ? "-" : item.size}
@@ -125,10 +131,12 @@ const SearchList = (props) => {
                 className="cursor-pointer h-64"
               >
                 <TableCell className="max-w-64 w-64 p-0 text-center">
-                  <StyledIcon type="document" />
+                  <StyledIcon type={item.documentType.icon} />
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
-                <TableCell className="hidden sm:table-cell">{t('FILE')}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {t(item.documentType.icon.toUpperCase())}
+                </TableCell>
                 {/* <TableCell className="hidden sm:table-cell">
                   {dataFolders.length + i}
                 </TableCell>

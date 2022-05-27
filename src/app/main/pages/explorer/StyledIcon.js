@@ -13,7 +13,7 @@ const StyledIcon = styled(Icon)(({ theme, type }) => ({
     }),
     ...(type === 'pdf' && {
       content: "'picture_as_pdf'",
-      color: '#1565C0',
+      color: '#FF0000',
     }),
     ...(type === 'image' && {
       content: "'photo'",
