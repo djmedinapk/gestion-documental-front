@@ -38,6 +38,30 @@ const DocumentTypesAdminList = () => {
         sortable: false,
       },
       {
+        Header: t("REGEX"),
+        accessor: "regex",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: t("CODE"),
+        accessor: "code",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: t("ICON"),
+        accessor: "icon",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: t("EXTENSION_ALLOWED"),
+        accessor: "extensionAllowed",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
         id: "action",
         width: 128,
         sortable: false,

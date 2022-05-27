@@ -37,8 +37,7 @@ const defaultValues = {
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  name: yup.string().required('You must enter a name'),
-  description: yup.string().required('You must enter a description'),
+  name: yup.string().required('You must enter a Name'),
 });
 
 function ProductTypesAdminDialog(props) {
@@ -150,7 +149,7 @@ function ProductTypesAdminDialog(props) {
         <DialogContent classes={{ root: 'p-24' }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -173,7 +172,7 @@ function ProductTypesAdminDialog(props) {
 
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -184,10 +183,7 @@ function ProductTypesAdminDialog(props) {
                   className="mb-24"
                   label={t('DESCRIPTION')}
                   id="description"
-                  error={!!errors.description}
-                  helperText={errors?.description?.message}
                   variant="outlined"
-                  required
                   fullWidth
                 />
               )}

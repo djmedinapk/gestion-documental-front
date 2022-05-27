@@ -84,7 +84,7 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
                       : column.getHeaderProps(column.getSortByToggleProps()))}
                   >
                     {headerGroup.headers.length !== i + 1 ? (
-                      t(column.Header.toUpperCase())
+                      t(column.Header.toUpperCase().replace(" ", "_"))
                     ) : (
                       <></>
                     )}

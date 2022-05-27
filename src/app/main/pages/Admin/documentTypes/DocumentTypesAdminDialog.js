@@ -31,14 +31,19 @@ const defaultValues = {
   id: 0,
   name: '',
   description: '',
+  regex: '',
+  code: '',
+  icon: '',
+  extensionAllowed: '',
 };
 
 /**
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  name: yup.string().required('You must enter a name'),
-  description: yup.string().required('You must enter a description'),
+  name: yup.string().required('You must enter a Name'),
+  icon: yup.string().required('You must enter a Icon'),
+  extensionAllowed: yup.string().required('You must enter a Extension Allowed'),
 });
 
 function DocumentTypesAdminDialog(props) {
@@ -150,7 +155,7 @@ function DocumentTypesAdminDialog(props) {
         <DialogContent classes={{ root: 'p-24' }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -173,7 +178,7 @@ function DocumentTypesAdminDialog(props) {
 
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -184,8 +189,87 @@ function DocumentTypesAdminDialog(props) {
                   className="mb-24"
                   label={t('DESCRIPTION')}
                   id="description"
-                  error={!!errors.description}
-                  helperText={errors?.description?.message}
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="regex"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t('REGEX')}
+                  id="regex"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="code"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t('CODE')}
+                  id="code"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="icon"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t('ICON')}
+                  id="icon"
+                  error={!!errors.icon}
+                  helperText={errors?.icon?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="extensionAllowed"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t('EXTENSION_ALLOWED')}
+                  id="extensionAllowed"
+                  error={!!errors.extensionAllowed}
+                  helperText={errors?.extensionAllowed?.message}
                   variant="outlined"
                   required
                   fullWidth
