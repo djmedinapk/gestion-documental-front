@@ -14,6 +14,9 @@ import {
   handleNewFileDialog,
   handleNewFolderDialog,
   selectFiles,
+  getFindFolder,
+  getFindProject,
+  handleProjectDataFind
 } from "./store/explorerSlice";
 import { useParams } from "react-router";
 import Breadcrumb from "./Breadcrumb";
@@ -87,10 +90,28 @@ const ExplorerApp = () => {
     )
   );
 
+  const findMainProject = (params) => {
+    if (params.folder === "folder") {
+      dispatch(getFindFolder(params)).then((result) => {
+        if (result.payload.projectId === null) {
+          findMainProject({ id: result.payload.folderId, folder: "folder" });
+        } else {
+          dispatch(
+            getFindProject({ id: result.payload.projectId, folder: "project" })
+          ).then((resultFP) => {
+            dispatch(handleProjectDataFind(resultFP.payload));
+          });
+        }
+      });
+    }
+  };
+
   useEffect(() => {
+
     if (routeParams && routeParams.folder == "folder") {
       setIsFolder(true);
       dispatch(getCurrentFolder({ routeParams, isFolder: true }));
+      findMainProject(routeParams);
     } else {
       setIsFolder(false);
       dispatch(getCurrentFolder({ routeParams, isFolder: false }));
@@ -148,7 +169,13 @@ const ExplorerApp = () => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1, transition: { delay: 0.2 } }}
               >
-                <IconButton aria-label="search" size="large" onClick={(ev) => {navigate("/apps/search");}}>
+                <IconButton
+                  aria-label="search"
+                  size="large"
+                  onClick={(ev) => {
+                    navigate("/apps/search");
+                  }}
+                >
                   <Icon>search</Icon>
                 </IconButton>
               </motion.div>
@@ -227,8 +254,8 @@ const ExplorerApp = () => {
         leftSidebarVariant="temporary"
         leftSidebarHeader={<MainSidebarHeader />}
         leftSidebarContent={<MainSidebarContent />}
-        rightSidebarHeader={<RightSideBarHeader/>}
-        rightSidebarContent={<RightSideBarContent/>}
+        rightSidebarHeader={<RightSideBarHeader />}
+        rightSidebarContent={<RightSideBarContent />}
         ref={pageLayout}
         innerScroll
       />

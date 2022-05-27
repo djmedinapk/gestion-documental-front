@@ -20,6 +20,30 @@ export const getFiles = createAsyncThunk(
   }
 );
 
+export const getFindFolder = createAsyncThunk(
+  "explorerApp/files/getFindFolder",
+  async (routeParams, { getState }) => {
+    const response = await axios.getWithParams("/api/Folder/getCurrentFolder", {
+      params: routeParams,
+    });
+    const data = await response.data;
+
+    return data ;
+  }
+);
+
+export const getFindProject = createAsyncThunk(
+  "explorerApp/files/getFindProject",
+  async (routeParams, { getState }) => {
+    const response = await axios.getWithParams("/api/Project/getCurrentProject", {
+      params: routeParams,
+    });
+    const data = await response.data;
+
+    return { data, routeParams };
+  }
+);
+
 export const getCurrentFolder = createAsyncThunk(
   "explorerApp/files/getCurrentFolder",
   async ({ routeParams, isFolder }, { dispatch, getState }) => {
@@ -118,6 +142,9 @@ const explorerSlice = createSlice({
     setSelectedItem: (state, action) => {
       state.selectedItem = action.payload;
     },
+    handleProjectDataFind: (state, action) => {
+      state.projectData = action.payload.data;
+    },
   },
   extraReducers: {
     [getFiles.fulfilled]: (state, action) => {
@@ -142,7 +169,8 @@ const explorerSlice = createSlice({
 export const {
   handleNewFolderDialog,
   handleNewFileDialog,
-  setSelectedItem
+  setSelectedItem,
+  handleProjectDataFind
 } = explorerSlice.actions;
 
 export default explorerSlice.reducer;
