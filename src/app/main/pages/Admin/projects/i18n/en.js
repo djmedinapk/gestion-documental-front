@@ -1,7 +1,7 @@
 const locale = {
   ADD_NEW_PROJECT: "Add New Project",
   PROJECTS: "Projects",
-  NO_DATA_TO_SHOW: "There are no product types!",
+  NO_DATA_TO_SHOW: "There are no project!",
   NEW_PROJECT: "New Project",
   EDIT_PROJECT: "Edit Project",
   NAME: "Name",

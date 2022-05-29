@@ -1,23 +1,23 @@
-import FuseUtils from '@fuse/utils/FuseUtils';
-import { yupResolver } from '@hookform/resolvers/yup';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import Icon from '@mui/material/Icon';
-import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { useCallback, useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import FuseUtils from "@fuse/utils/FuseUtils";
+import { yupResolver } from "@hookform/resolvers/yup";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { useCallback, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-import _ from '@lodash';
-import * as yup from 'yup';
+import _ from "@lodash";
+import * as yup from "yup";
 
 import {
   removeProductType,
@@ -25,37 +25,41 @@ import {
   addProductType,
   closeNewProductTypesAdminDialog,
   closeEditProductTypesAdminDialog,
-} from './store/productTypesAdminSlice';
+} from "./store/productTypesAdminSlice";
 
 const defaultValues = {
   id: 0,
-  name: '',
-  description: '',
+  name: "",
+  description: "",
 };
 
-/**
- * Form Validation Schema
- */
-const schema = yup.object().shape({
-  name: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("NAME")),
-});
-
 function ProductTypesAdminDialog(props) {
-  const { t } = useTranslation('productTypeAdminPage');
-  const dispatch = useDispatch();
-  const productTypesAdminDialog = useSelector(({ productTypesAdminApp }) => productTypesAdminApp.productTypes.productTypesAdminDialog);
-
-  const { control, watch, reset, handleSubmit, formState, getValues } = useForm({
-    mode: 'onChange',
-    defaultValues,
-    resolver: yupResolver(schema),
+  const { t } = useTranslation("productTypeAdminPage");
+  /**
+   * Form Validation Schema
+   */
+  const schema = yup.object().shape({
+    name: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("NAME")),
   });
+  const dispatch = useDispatch();
+  const productTypesAdminDialog = useSelector(
+    ({ productTypesAdminApp }) =>
+      productTypesAdminApp.productTypes.productTypesAdminDialog
+  );
+
+  const { control, watch, reset, handleSubmit, formState, getValues } = useForm(
+    {
+      mode: "onChange",
+      defaultValues,
+      resolver: yupResolver(schema),
+    }
+  );
 
   const { isValid, dirtyFields, errors } = formState;
 
-  const id = watch('id');
-  const name = watch('name');
-  const description = watch('description');
+  const id = watch("id");
+  const name = watch("name");
+  const description = watch("description");
 
   /**
    * Initialize Dialog with Data
@@ -64,14 +68,17 @@ function ProductTypesAdminDialog(props) {
     /**
      * Dialog type: 'edit'
      */
-    if (productTypesAdminDialog.type === 'edit' && productTypesAdminDialog.data) {
+    if (
+      productTypesAdminDialog.type === "edit" &&
+      productTypesAdminDialog.data
+    ) {
       reset({ ...productTypesAdminDialog.data });
     }
 
     /**
      * Dialog type: 'new'
      */
-    if (productTypesAdminDialog.type === 'new') {
+    if (productTypesAdminDialog.type === "new") {
       reset({
         ...defaultValues,
         ...productTypesAdminDialog.data,
@@ -92,7 +99,7 @@ function ProductTypesAdminDialog(props) {
    * Close Dialog
    */
   function closeComposeDialog() {
-    return productTypesAdminDialog.type === 'edit'
+    return productTypesAdminDialog.type === "edit"
       ? dispatch(closeEditProductTypesAdminDialog())
       : dispatch(closeNewProductTypesAdminDialog());
   }
@@ -101,7 +108,7 @@ function ProductTypesAdminDialog(props) {
    * Form Submit
    */
   function onSubmit(data) {
-    if (productTypesAdminDialog.type === 'new') {
+    if (productTypesAdminDialog.type === "new") {
       dispatch(addProductType(data));
     } else {
       dispatch(updateProductType({ ...productTypesAdminDialog.data, ...data }));
@@ -120,7 +127,7 @@ function ProductTypesAdminDialog(props) {
   return (
     <Dialog
       classes={{
-        paper: 'm-24',
+        paper: "m-24",
       }}
       {...productTypesAdminDialog.props}
       onClose={closeComposeDialog}
@@ -130,11 +137,13 @@ function ProductTypesAdminDialog(props) {
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            {productTypesAdminDialog.type === 'new' ? t('NEW_PRODUCT_TYPE') : t('EDIT_PRODUCT_TYPE')}
+            {productTypesAdminDialog.type === "new"
+              ? t("NEW_PRODUCT_TYPE")
+              : t("EDIT_PRODUCT_TYPE")}
           </Typography>
         </Toolbar>
         <div className="flex flex-col items-center justify-center pb-24">
-          {productTypesAdminDialog.type === 'edit' && (
+          {productTypesAdminDialog.type === "edit" && (
             <Typography variant="h6" color="inherit" className="pt-8">
               {name}
             </Typography>
@@ -146,7 +155,7 @@ function ProductTypesAdminDialog(props) {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col md:overflow-hidden"
       >
-        <DialogContent classes={{ root: 'p-24' }}>
+        <DialogContent classes={{ root: "p-24" }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
               <Icon color="action">article</Icon>
@@ -158,7 +167,7 @@ function ProductTypesAdminDialog(props) {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label={t('NAME')}
+                  label={t("NAME")}
                   id="name"
                   error={!!errors.name}
                   helperText={errors?.name?.message}
@@ -181,7 +190,7 @@ function ProductTypesAdminDialog(props) {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label={t('DESCRIPTION')}
+                  label={t("DESCRIPTION")}
                   id="description"
                   variant="outlined"
                   fullWidth
@@ -191,7 +200,7 @@ function ProductTypesAdminDialog(props) {
           </div>
         </DialogContent>
 
-        {productTypesAdminDialog.type === 'new' ? (
+        {productTypesAdminDialog.type === "new" ? (
           <DialogActions className="justify-between p-4 pb-16">
             <div className="px-16">
               <Button
@@ -200,7 +209,7 @@ function ProductTypesAdminDialog(props) {
                 type="submit"
                 disabled={_.isEmpty(dirtyFields) || !isValid}
               >
-                {t('ADD')}
+                {t("ADD")}
               </Button>
             </div>
           </DialogActions>
@@ -213,7 +222,7 @@ function ProductTypesAdminDialog(props) {
                 type="submit"
                 disabled={_.isEmpty(dirtyFields) || !isValid}
               >
-                {t('SAVE')}
+                {t("SAVE")}
               </Button>
             </div>
             <IconButton onClick={handleRemove} size="large">

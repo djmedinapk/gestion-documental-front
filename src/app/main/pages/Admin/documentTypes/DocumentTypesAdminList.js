@@ -26,37 +26,37 @@ const DocumentTypesAdminList = () => {
   const columns = useMemo(
     () => [
       {
-        Header: t("NAME"),
+        Header: "Name",
         accessor: "name",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t("DESCRIPTION"),
+        Header: "Description",
         accessor: "description",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t("REGEX"),
+        Header: "Regex",
         accessor: "regex",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t("CODE"),
+        Header: "Code",
         accessor: "code",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t("ICON"),
+        Header: "Icon",
         accessor: "icon",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t("EXTENSION_ALLOWED"),
+        Header: "Extension Allowed",
         accessor: "extensionAllowed",
         className: "font-medium",
         sortable: false,

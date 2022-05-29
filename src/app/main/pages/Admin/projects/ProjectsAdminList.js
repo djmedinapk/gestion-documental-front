@@ -19,7 +19,6 @@ const ProjectsAdminList = () => {
 
   useEffect(() => {
     if (projects[0]) {
-      console.log(projects[0].data);
       setFilteredData(projects[0].data);
     }
   }, [projects]);
@@ -27,19 +26,19 @@ const ProjectsAdminList = () => {
   const columns = useMemo(
     () => [
       {
-        Header: t("NAME"),
+        Header: "Name",
         accessor: "name",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t("DESCRIPTION"),
+        Header: "Description",
         accessor: "description",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t("CODE"),
+        Header: "Code",
         accessor: "code",
         className: "font-medium",
         sortable: false,

@@ -7,22 +7,20 @@ import axios from "./../../../../../services/Axios/HttpClient";
 
 export const getVersions = createAsyncThunk(
   "versionsAdminApp/versions/getVersions",
-  async (routeParams, { getState }) => {
-    routeParams =
-      routeParams || getState().versionsAdminApp.versions.routeParams;
-    const response = await axios.getWithParams("/api/Version", {
-      params: routeParams,
+  async (routeParams, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/Version/WithParams", {
+      params: getState().versionsAdminApp.versions.paramsData,
     });
     const data = await response.data;
-
+    dispatch(changeParamsDataCount(data.count));
     return { data, routeParams };
   }
 );
 
 export const addVersion = createAsyncThunk(
-  'versionsApp/versions/addVersion',
+  "versionsApp/versions/addVersion",
   async (version, { dispatch, getState }) => {
-    const response = await axios.post('/api/Version', version );
+    const response = await axios.post("/api/Version", version);
     const data = await response.data;
 
     dispatch(getVersions());
@@ -32,9 +30,12 @@ export const addVersion = createAsyncThunk(
 );
 
 export const updateVersion = createAsyncThunk(
-  'versionsAdminApp/versions/updateVersions',
+  "versionsAdminApp/versions/updateVersions",
   async (versionData, { dispatch, getState }) => {
-    const response = await axios.put('/api/Version/'+versionData.id, versionData);
+    const response = await axios.put(
+      "/api/Version/" + versionData.id,
+      versionData
+    );
     const data = await response.data;
 
     dispatch(getVersions());
@@ -44,9 +45,9 @@ export const updateVersion = createAsyncThunk(
 );
 
 export const removeVersion = createAsyncThunk(
-  'versionsApp/versions/removeVersion',
+  "versionsApp/versions/removeVersion",
   async (versionId, { dispatch, getState }) => {
-    await axios.delete('/api/Version/'+versionId);
+    await axios.delete("/api/Version/" + versionId);
 
     dispatch(getVersions());
 
@@ -66,8 +67,13 @@ const versionsAdminSlice = createSlice({
   initialState: versionsAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
+    paramsData: {
+      PageIndex: 1,
+      PageSize: 10,
+      Count: 0,
+    },
     versionsAdminDialog: {
-      type: 'new',
+      type: "new",
       props: {
         open: false,
       },
@@ -121,11 +127,20 @@ const versionsAdminSlice = createSlice({
         data: null,
       };
     },
+    changeParamsDataPageIndex: (state, action) => {
+      state.paramsData.PageIndex = action.payload;
+    },
+    changeParamsDataPageSize: (state, action) => {
+      state.paramsData.PageSize = action.payload;
+    },
+    changeParamsDataCount: (state, action) => {
+      state.paramsData.Count = action.payload;
+    },
   },
   extraReducers: {
     [getVersions.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
-      versionsAdminAdapter.setAll(state, data);
+      versionsAdminAdapter.setAll(state, { data });
       state.routeParams = routeParams;
     },
   },
@@ -136,6 +151,9 @@ export const {
   closeNewVersionsAdminDialog,
   openEditVersionsAdminDialog,
   closeEditVersionsAdminDialog,
+  changeParamsDataPageIndex,
+  changeParamsDataPageSize,
+  changeParamsDataCount,
 } = versionsAdminSlice.actions;
 
 export default versionsAdminSlice.reducer;

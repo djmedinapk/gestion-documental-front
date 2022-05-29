@@ -31,10 +31,7 @@ const defaultValues = {
   id: 0,
   name: '',
   description: '',
-  regex: '',
   code: '',
-  icon: '',
-  extensionAllowed: '',
 };
 
 /**

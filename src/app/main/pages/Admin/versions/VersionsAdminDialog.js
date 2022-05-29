@@ -29,20 +29,26 @@ import {
 
 const defaultValues = {
   id: 0,
-  name: '',
-  description: '',
+  fileVersion: '',
+  url: '',
+  archivedDate: '',
+  fileId: '',
 };
 
 /**
  * Form Validation Schema
  */
-const schema = yup.object().shape({
-  name: yup.string().required('You must enter a name'),
-  description: yup.string().required('You must enter a description'),
-});
+
 
 function VersionsAdminDialog(props) {
+  
   const { t } = useTranslation('versionAdminPage');
+  const schema = yup.object().shape({
+    fileVersion: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("FILE_VERSION")),
+    url: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("URL")),
+    archivedDate: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("ARCHIVED_DATE")),
+    fileId: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("FILE_ID")),
+  });
   const dispatch = useDispatch();
   const versionsAdminDialog = useSelector(({ versionsAdminApp }) => versionsAdminApp.versions.versionsAdminDialog);
 
@@ -150,19 +156,19 @@ function VersionsAdminDialog(props) {
         <DialogContent classes={{ root: 'p-24' }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
-              name="name"
+              name="fileVersion"
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label={t('NAME')}
-                  id="name"
-                  error={!!errors.name}
-                  helperText={errors?.name?.message}
+                  label={t('FILE_VERSION')}
+                  id="fileVersion"
+                  error={!!errors.fileVersion}
+                  helperText={errors?.fileVersion?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -173,19 +179,63 @@ function VersionsAdminDialog(props) {
 
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
-              name="description"
+              name="url"
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label={t('DESCRIPTION')}
-                  id="description"
-                  error={!!errors.description}
-                  helperText={errors?.description?.message}
+                  label={t('URL')}
+                  id="url"
+                  error={!!errors.url}
+                  helperText={errors?.url?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="archivedDate"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t('ARCHIVED_DATE')}
+                  id="archivedDate"
+                  error={!!errors.archivedDate}
+                  helperText={errors?.archivedDate?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="fileId"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t('FILE_ID')}
+                  id="fileId"
+                  error={!!errors.fileId}
+                  helperText={errors?.fileId?.message}
                   variant="outlined"
                   required
                   fullWidth

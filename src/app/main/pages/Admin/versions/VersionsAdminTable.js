@@ -1,44 +1,33 @@
-import { forwardRef, useRef, useEffect } from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import Table from '@mui/material/Table';
-import PropTypes from 'prop-types';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable } from 'react-table';
-import clsx from 'clsx';
-import VersionsAdminTablePaginationActions from './VersionsAdminTablePaginationActions';
+import { forwardRef, useRef, useEffect } from "react";
+import Checkbox from "@mui/material/Checkbox";
+import Table from "@mui/material/Table";
+import PropTypes from "prop-types";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import {
+  useGlobalFilter,
+  usePagination,
+  useRowSelect,
+  useSortBy,
+  useTable,
+} from "react-table";
+import clsx from "clsx";
+import VersionsAdminTablePaginationActions from "./VersionsAdminTablePaginationActions";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = useRef();
-  const resolvedRef = ref || defaultRef;
-
-  useEffect(() => {
-    
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
-
-  return (
-    <>
-      <Checkbox ref={resolvedRef} {...rest} />
-    </>
-  );
-});
+import {
+  changeParamsDataPageIndex,
+  getVersions,
+} from "./store/versionsAdminSlice";
 
 const EnhancedTable = ({ columns, data, onRowClick }) => {
-  const {
-    getTableProps,
-    headerGroups,
-    prepareRow,
-    page,
-    gotoPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-  } = useTable(
+  const { getTableProps, headerGroups, prepareRow, page } = useTable(
     {
       columns,
       data,
@@ -51,45 +40,57 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
     (hooks) => {
       hooks.allColumns.push((_columns) => [
         // Let's make a column for selection
-        
+
         ..._columns,
       ]);
     }
   );
 
+  const dispatch = useDispatch();
+  const { t } = useTranslation("versionAdminPage");
+  const paramsDataPageIndex = useSelector(
+    ({ versionsAdminApp }) => versionsAdminApp.versions.paramsData.PageIndex
+  );
+  const paramsDataPageSize = useSelector(
+    ({ versionsAdminApp }) => versionsAdminApp.versions.paramsData.PageSize
+  );
+  const paramsDataCount = useSelector(
+    ({ versionsAdminApp }) => versionsAdminApp.versions.paramsData.Count
+  );
+
   const handleChangePage = (event, newPage) => {
-    gotoPage(newPage);
+    dispatch(changeParamsDataPageIndex(newPage + 1));
+    dispatch(getVersions());
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setPageSize(Number(event.target.value));
-  };
-
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
   // Render the UI for your table
   return (
     <div className="flex flex-col w-full min-h-full sm:border-1 sm:rounded-16 overflow-hidden">
       <TableContainer className="flex flex-1">
-        <Table {...getTableProps()} stickyHeader >
-          <TableHead >
+        <Table {...getTableProps()} stickyHeader>
+          <TableHead>
             {headerGroups.map((headerGroup) => (
               <TableRow {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map((column, i) => (
                   <TableCell
                     className="whitespace-nowrap p-4 md:p-12"
                     {...(!column.sortable
                       ? column.getHeaderProps()
                       : column.getHeaderProps(column.getSortByToggleProps()))}
                   >
-                    {column.render('Header')}
+                    {headerGroup.headers.length !== i + 1 ? (
+                      t(column.Header.toUpperCase().replace(" ", "_"))
+                    ) : (
+                      <></>
+                    )}
+
                     {column.sortable ? (
                       <TableSortLabel
                         active={column.isSorted}
                         // react-table has a unsorted state which is not treated here
-                        direction={column.isSortedDesc ? 'desc' : 'asc'}
+                        direction={column.isSortedDesc ? "desc" : "asc"}
                       />
                     ) : null}
                   </TableCell>
@@ -98,7 +99,7 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
             ))}
           </TableHead>
           <TableBody>
-            {page.map((row, i) => {
+            {page.map((row) => {
               prepareRow(row);
               return (
                 <TableRow
@@ -110,9 +111,11 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
                     return (
                       <TableCell
                         {...cell.getCellProps()}
-                        className={clsx('p-4 md:p-12', cell.column.className)}
+                        className={clsx("p-4 md:p-12", cell.column.className)}
                       >
-                        {cell.render('Cell')}
+                        {cell.column.Header === "Archived Date"
+                          ? new Date(cell.value).toDateString()
+                          : cell.render("Cell")}
                       </TableCell>
                     );
                   })}
@@ -125,19 +128,25 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
       <TablePagination
         component="div"
         classes={{
-          root: 'shrink-0 border-t-1',
+          root: "shrink-0 border-t-1",
         }}
-        rowsPerPageOptions={[1, 10, 25, { label: 'All', value: data.length + 1 }]}
+        rowsPerPageOptions={[paramsDataPageSize]}
         colSpan={5}
-        count={data.length}
-        rowsPerPage={pageSize}
-        page={pageIndex}
+        count={paramsDataCount}
+        rowsPerPage={paramsDataPageSize}
+        page={paramsDataPageIndex - 1}
         SelectProps={{
-          inputProps: { 'aria-label': 'rows per page' },
+          inputProps: { "aria-label": "rows per page" },
           native: false,
         }}
+        labelDisplayedRows={({ from, to, count }) =>
+          t("SHOWING_DATA_OF") +
+          ` ${from}-${to} ` +
+          t("OF") +
+          ` ${count} ` +
+          t("TOTAL_DATA")
+        }
         onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
         ActionsComponent={VersionsAdminTablePaginationActions}
       />
     </div>

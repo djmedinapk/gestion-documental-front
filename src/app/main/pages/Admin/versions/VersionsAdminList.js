@@ -18,22 +18,34 @@ const VersionsAdminList = () => {
   const versions = useSelector(selectVersions);
 
   useEffect(() => {
-    if (versions) {
-      setFilteredData(versions);
+    if (versions[0]) {
+      setFilteredData(versions[0].data);
     }
   }, [versions]);
 
   const columns = useMemo(
     () => [
       {
-        Header: t('NAME'),
-        accessor: "name",
+        Header: "File Version",
+        accessor: "fileVersion",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('DESCRIPTION'),
-        accessor: "description",
+        Header: "Url",
+        accessor: "url",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: "Archived Date",
+        accessor: "archivedDate",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: "File Id",
+        accessor: "fileId",
         className: "font-medium",
         sortable: false,
       },
