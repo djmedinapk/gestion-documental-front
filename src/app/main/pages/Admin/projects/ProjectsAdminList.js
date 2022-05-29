@@ -18,22 +18,29 @@ const ProjectsAdminList = () => {
   const projects = useSelector(selectProjects);
 
   useEffect(() => {
-    if (projects) {
-      setFilteredData(projects);
+    if (projects[0]) {
+      console.log(projects[0].data);
+      setFilteredData(projects[0].data);
     }
   }, [projects]);
 
   const columns = useMemo(
     () => [
       {
-        Header: t('NAME'),
+        Header: t("NAME"),
         accessor: "name",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('DESCRIPTION'),
+        Header: t("DESCRIPTION"),
         accessor: "description",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: t("CODE"),
+        accessor: "code",
         className: "font-medium",
         sortable: false,
       },

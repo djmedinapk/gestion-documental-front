@@ -37,7 +37,7 @@ const defaultValues = {
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  name: yup.string().required('You must enter a Name'),
+  name: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("NAME")),
 });
 
 function ProductTypesAdminDialog(props) {

@@ -31,18 +31,23 @@ const defaultValues = {
   id: 0,
   name: '',
   description: '',
+  regex: '',
+  code: '',
+  icon: '',
+  extensionAllowed: '',
 };
 
 /**
  * Form Validation Schema
  */
-const schema = yup.object().shape({
-  name: yup.string().required('You must enter a name'),
-  description: yup.string().required('You must enter a description'),
-});
+
 
 function ProjectsAdminDialog(props) {
+  
   const { t } = useTranslation('projectAdminPage');
+  const schema = yup.object().shape({
+    name: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("NAME")),
+  });
   const dispatch = useDispatch();
   const projectsAdminDialog = useSelector(({ projectsAdminApp }) => projectsAdminApp.projects.projectsAdminDialog);
 
@@ -150,7 +155,7 @@ function ProjectsAdminDialog(props) {
         <DialogContent classes={{ root: 'p-24' }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -173,7 +178,7 @@ function ProjectsAdminDialog(props) {
 
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -184,10 +189,26 @@ function ProjectsAdminDialog(props) {
                   className="mb-24"
                   label={t('DESCRIPTION')}
                   id="description"
-                  error={!!errors.description}
-                  helperText={errors?.description?.message}
                   variant="outlined"
-                  required
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="code"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t('CODE')}
+                  id="code"
+                  variant="outlined"
                   fullWidth
                 />
               )}

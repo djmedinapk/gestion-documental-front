@@ -7,22 +7,20 @@ import axios from "./../../../../../services/Axios/HttpClient";
 
 export const getProjects = createAsyncThunk(
   "projectsAdminApp/projects/getProjects",
-  async (routeParams, { getState }) => {
-    routeParams =
-      routeParams || getState().projectsAdminApp.projects.routeParams;
-    const response = await axios.getWithParams("/api/Project", {
-      params: routeParams,
+  async (routeParams, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/Project/WithParams", {
+      params: getState().projectsAdminApp.projects.paramsData,
     });
     const data = await response.data;
-
+    dispatch(changeParamsDataCount(data.count));
     return { data, routeParams };
   }
 );
 
 export const addProject = createAsyncThunk(
-  'projectsApp/projects/addProject',
+  "projectsApp/projects/addProject",
   async (project, { dispatch, getState }) => {
-    const response = await axios.post('/api/Project', project );
+    const response = await axios.post("/api/Project", project);
     const data = await response.data;
 
     dispatch(getProjects());
@@ -32,9 +30,12 @@ export const addProject = createAsyncThunk(
 );
 
 export const updateProject = createAsyncThunk(
-  'projectsAdminApp/projects/updateProjects',
+  "projectsAdminApp/projects/updateProjects",
   async (projectData, { dispatch, getState }) => {
-    const response = await axios.put('/api/Project/'+projectData.id, projectData);
+    const response = await axios.put(
+      "/api/Project/" + projectData.id,
+      projectData
+    );
     const data = await response.data;
 
     dispatch(getProjects());
@@ -44,9 +45,9 @@ export const updateProject = createAsyncThunk(
 );
 
 export const removeProject = createAsyncThunk(
-  'projectsApp/projects/removeProject',
+  "projectsApp/projects/removeProject",
   async (projectId, { dispatch, getState }) => {
-    await axios.delete('/api/Project/'+projectId);
+    await axios.delete("/api/Project/" + projectId);
 
     dispatch(getProjects());
 
@@ -66,8 +67,13 @@ const projectsAdminSlice = createSlice({
   initialState: projectsAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
+    paramsData: {
+      PageIndex: 1,
+      PageSize: 10,
+      Count: 0,
+    },
     projectsAdminDialog: {
-      type: 'new',
+      type: "new",
       props: {
         open: false,
       },
@@ -121,11 +127,20 @@ const projectsAdminSlice = createSlice({
         data: null,
       };
     },
+    changeParamsDataPageIndex: (state, action) => {
+      state.paramsData.PageIndex = action.payload;
+    },
+    changeParamsDataPageSize: (state, action) => {
+      state.paramsData.PageSize = action.payload;
+    },
+    changeParamsDataCount: (state, action) => {
+      state.paramsData.Count = action.payload;
+    },
   },
   extraReducers: {
     [getProjects.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
-      projectsAdminAdapter.setAll(state, data);
+      projectsAdminAdapter.setAll(state, { data });
       state.routeParams = routeParams;
     },
   },
@@ -136,6 +151,9 @@ export const {
   closeNewProjectsAdminDialog,
   openEditProjectsAdminDialog,
   closeEditProjectsAdminDialog,
+  changeParamsDataPageIndex,
+  changeParamsDataPageSize,
+  changeParamsDataCount,
 } = projectsAdminSlice.actions;
 
 export default projectsAdminSlice.reducer;

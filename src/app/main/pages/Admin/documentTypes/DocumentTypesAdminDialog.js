@@ -40,14 +40,16 @@ const defaultValues = {
 /**
  * Form Validation Schema
  */
-const schema = yup.object().shape({
-  name: yup.string().required('You must enter a Name'),
-  icon: yup.string().required('You must enter a Icon'),
-  extensionAllowed: yup.string().required('You must enter a Extension Allowed'),
-});
+
 
 function DocumentTypesAdminDialog(props) {
+  
   const { t } = useTranslation('documentTypeAdminPage');
+  const schema = yup.object().shape({
+    name: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("NAME")),
+    icon: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("ICON")),
+    extensionAllowed: yup.string().required(t("YOU_MUST_ENTER_A")+" "+t("EXTENSION_ALLOWED")),
+  });
   const dispatch = useDispatch();
   const documentTypesAdminDialog = useSelector(({ documentTypesAdminApp }) => documentTypesAdminApp.documentTypes.documentTypesAdminDialog);
 

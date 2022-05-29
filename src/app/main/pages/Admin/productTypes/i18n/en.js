@@ -11,6 +11,7 @@ const locale = {
   SHOWING_DATA_OF: 'Showing Data of',
   OF:'of',
   TOTAL_DATA: 'Total Data',
+  YOU_MUST_ENTER_A: "You must enter a",
 };
 
 export default locale;
