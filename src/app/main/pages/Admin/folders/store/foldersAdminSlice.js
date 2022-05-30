@@ -7,22 +7,28 @@ import axios from "./../../../../../services/Axios/HttpClient";
 
 export const getFolders = createAsyncThunk(
   "foldersAdminApp/folders/getFolders",
-  async (routeParams, { getState }) => {
-    routeParams =
-      routeParams || getState().foldersAdminApp.folders.routeParams;
-    const response = await axios.getWithParams("/api/Folder", {
-      params: routeParams,
+  async (routeParams, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/Folder/WithParams", {
+      params: getState().foldersAdminApp.folders.paramsData,
     });
     const data = await response.data;
-
+    dispatch(changeParamsDataCount(data.count));
     return { data, routeParams };
   }
 );
 
 export const addFolder = createAsyncThunk(
-  'foldersApp/folders/addFolder',
+  "foldersApp/folders/addFolder",
   async (folder, { dispatch, getState }) => {
-    const response = await axios.post('/api/Folder', folder );
+    if (folder.isPO === "1") {
+      folder.isPO = true;
+    } else {
+      folder.isPO = false;
+    }
+    if(folder.productType.id ===""){
+      folder.productType.id = 0;
+    }
+    const response = await axios.post("/api/Folder", folder);
     const data = await response.data;
 
     dispatch(getFolders());
@@ -32,9 +38,17 @@ export const addFolder = createAsyncThunk(
 );
 
 export const updateFolder = createAsyncThunk(
-  'foldersAdminApp/folders/updateFolders',
+  "foldersAdminApp/folders/updateFolders",
   async (folderData, { dispatch, getState }) => {
-    const response = await axios.put('/api/Folder/'+folderData.id, folderData);
+    if (folderData.isPO === "1") {
+      folderData.isPO = true;
+    } else {
+      folderData.isPO = false;
+    }
+    const response = await axios.put(
+      "/api/Folder/" + folderData.id,
+      folderData
+    );
     const data = await response.data;
 
     dispatch(getFolders());
@@ -44,9 +58,9 @@ export const updateFolder = createAsyncThunk(
 );
 
 export const removeFolder = createAsyncThunk(
-  'foldersApp/folders/removeFolder',
+  "foldersApp/folders/removeFolder",
   async (folderId, { dispatch, getState }) => {
-    await axios.delete('/api/Folder/'+folderId);
+    await axios.delete("/api/Folder/" + folderId);
 
     dispatch(getFolders());
 
@@ -56,18 +70,22 @@ export const removeFolder = createAsyncThunk(
 
 const foldersAdminAdapter = createEntityAdapter({});
 
-export const { selectAll: selectFolders } =
-  foldersAdminAdapter.getSelectors(
-    (state) => state.foldersAdminApp.folders
-  );
+export const { selectAll: selectFolders } = foldersAdminAdapter.getSelectors(
+  (state) => state.foldersAdminApp.folders
+);
 
 const foldersAdminSlice = createSlice({
   name: "foldersAdminApp/folders",
   initialState: foldersAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
+    paramsData: {
+      PageIndex: 1,
+      PageSize: 10,
+      Count: 0,
+    },
     foldersAdminDialog: {
-      type: 'new',
+      type: "new",
       props: {
         open: false,
       },
@@ -121,11 +139,20 @@ const foldersAdminSlice = createSlice({
         data: null,
       };
     },
+    changeParamsDataPageIndex: (state, action) => {
+      state.paramsData.PageIndex = action.payload;
+    },
+    changeParamsDataPageSize: (state, action) => {
+      state.paramsData.PageSize = action.payload;
+    },
+    changeParamsDataCount: (state, action) => {
+      state.paramsData.Count = action.payload;
+    },
   },
   extraReducers: {
     [getFolders.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
-      foldersAdminAdapter.setAll(state, data);
+      foldersAdminAdapter.setAll(state, { data });
       state.routeParams = routeParams;
     },
   },
@@ -136,6 +163,9 @@ export const {
   closeNewFoldersAdminDialog,
   openEditFoldersAdminDialog,
   closeEditFoldersAdminDialog,
+  changeParamsDataPageIndex,
+  changeParamsDataPageSize,
+  changeParamsDataCount,
 } = foldersAdminSlice.actions;
 
 export default foldersAdminSlice.reducer;

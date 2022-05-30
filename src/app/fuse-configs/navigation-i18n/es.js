@@ -8,6 +8,7 @@ const locale = {
   PRODUCTTYPEPAGE: "Tipos de Producto",
   PROJECTPAGE: "Proyectos",
   VERSIONPAGE: "Versiones",
+  SEARCHPAGE: 'Buscar',
 };
 
 export default locale;

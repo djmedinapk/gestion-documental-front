@@ -8,6 +8,7 @@ const locale = {
   PRODUCTTYPEPAGE: 'Product Types',
   PROJECTPAGE: 'Projects',
   VERSIONPAGE: 'Versions',
+  SEARCHPAGE: 'Search',
   
   
 };

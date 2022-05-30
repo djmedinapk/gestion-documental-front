@@ -1,23 +1,23 @@
-import FuseUtils from '@fuse/utils/FuseUtils';
-import { yupResolver } from '@hookform/resolvers/yup';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import Icon from '@mui/material/Icon';
-import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { useCallback, useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import FuseUtils from "@fuse/utils/FuseUtils";
+import { yupResolver } from "@hookform/resolvers/yup";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { useCallback, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-import _ from '@lodash';
-import * as yup from 'yup';
+import _ from "@lodash";
+import * as yup from "yup";
 
 import {
   removeFile,
@@ -25,38 +25,46 @@ import {
   addFile,
   closeNewFilesAdminDialog,
   closeEditFilesAdminDialog,
-} from './store/filesAdminSlice';
+} from "./store/filesAdminSlice";
 
 const defaultValues = {
   id: 0,
-  name: '',
-  description: '',
+  name: "",
+  description: "",
+  url: "",
+  folderId: "",
+  projectId: "",
+  documentType: { id: "" },
 };
 
 /**
  * Form Validation Schema
  */
-const schema = yup.object().shape({
-  name: yup.string().required('You must enter a name'),
-  description: yup.string().required('You must enter a description'),
-});
 
 function FilesAdminDialog(props) {
-  const { t } = useTranslation('fileAdminPage');
-  const dispatch = useDispatch();
-  const filesAdminDialog = useSelector(({ filesAdminApp }) => filesAdminApp.files.filesAdminDialog);
-
-  const { control, watch, reset, handleSubmit, formState, getValues } = useForm({
-    mode: 'onChange',
-    defaultValues,
-    resolver: yupResolver(schema),
+  const { t } = useTranslation("fileAdminPage");
+  const schema = yup.object().shape({
+    name: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("NAME")),
+    url: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("URL")),
   });
+  const dispatch = useDispatch();
+  const filesAdminDialog = useSelector(
+    ({ filesAdminApp }) => filesAdminApp.files.filesAdminDialog
+  );
+
+  const { control, watch, reset, handleSubmit, formState, getValues } = useForm(
+    {
+      mode: "onChange",
+      defaultValues,
+      resolver: yupResolver(schema),
+    }
+  );
 
   const { isValid, dirtyFields, errors } = formState;
 
-  const id = watch('id');
-  const name = watch('name');
-  const description = watch('description');
+  const id = watch("id");
+  const name = watch("name");
+  const description = watch("description");
 
   /**
    * Initialize Dialog with Data
@@ -65,14 +73,14 @@ function FilesAdminDialog(props) {
     /**
      * Dialog type: 'edit'
      */
-    if (filesAdminDialog.type === 'edit' && filesAdminDialog.data) {
+    if (filesAdminDialog.type === "edit" && filesAdminDialog.data) {
       reset({ ...filesAdminDialog.data });
     }
 
     /**
      * Dialog type: 'new'
      */
-    if (filesAdminDialog.type === 'new') {
+    if (filesAdminDialog.type === "new") {
       reset({
         ...defaultValues,
         ...filesAdminDialog.data,
@@ -93,7 +101,7 @@ function FilesAdminDialog(props) {
    * Close Dialog
    */
   function closeComposeDialog() {
-    return filesAdminDialog.type === 'edit'
+    return filesAdminDialog.type === "edit"
       ? dispatch(closeEditFilesAdminDialog())
       : dispatch(closeNewFilesAdminDialog());
   }
@@ -102,7 +110,7 @@ function FilesAdminDialog(props) {
    * Form Submit
    */
   function onSubmit(data) {
-    if (filesAdminDialog.type === 'new') {
+    if (filesAdminDialog.type === "new") {
       dispatch(addFile(data));
     } else {
       dispatch(updateFile({ ...filesAdminDialog.data, ...data }));
@@ -121,7 +129,7 @@ function FilesAdminDialog(props) {
   return (
     <Dialog
       classes={{
-        paper: 'm-24',
+        paper: "m-24",
       }}
       {...filesAdminDialog.props}
       onClose={closeComposeDialog}
@@ -131,11 +139,11 @@ function FilesAdminDialog(props) {
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            {filesAdminDialog.type === 'new' ? t('NEW_FILE') : t('EDIT_FILE')}
+            {filesAdminDialog.type === "new" ? t("NEW_FILE") : t("EDIT_FILE")}
           </Typography>
         </Toolbar>
         <div className="flex flex-col items-center justify-center pb-24">
-          {filesAdminDialog.type === 'edit' && (
+          {filesAdminDialog.type === "edit" && (
             <Typography variant="h6" color="inherit" className="pt-8">
               {name}
             </Typography>
@@ -147,10 +155,10 @@ function FilesAdminDialog(props) {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col md:overflow-hidden"
       >
-        <DialogContent classes={{ root: 'p-24' }}>
+        <DialogContent classes={{ root: "p-24" }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -159,7 +167,7 @@ function FilesAdminDialog(props) {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label={t('NAME')}
+                  label={t("NAME")}
                   id="name"
                   error={!!errors.name}
                   helperText={errors?.name?.message}
@@ -170,10 +178,9 @@ function FilesAdminDialog(props) {
               )}
             />
           </div>
-
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -182,10 +189,30 @@ function FilesAdminDialog(props) {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label={t('DESCRIPTION')}
+                  label={t("DESCRIPTION")}
                   id="description"
-                  error={!!errors.description}
-                  helperText={errors?.description?.message}
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="url"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t("URL")}
+                  id="url"
+                  error={!!errors.url}
+                  helperText={errors?.url?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -193,9 +220,66 @@ function FilesAdminDialog(props) {
               )}
             />
           </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="folderId"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t("FOLDER_ID")}
+                  id="folderId"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="projectId"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t("PROJECT_ID")}
+                  id="projectId"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <div className="min-w-48 pt-20">
+              <Icon color="action">article</Icon>
+            </div>
+            <Controller
+              control={control}
+              name="documentType.id"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label={t("DOCUMENT_TYPE_ID")}
+                  id="documentTypeId"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
         </DialogContent>
 
-        {filesAdminDialog.type === 'new' ? (
+        {filesAdminDialog.type === "new" ? (
           <DialogActions className="justify-between p-4 pb-16">
             <div className="px-16">
               <Button
@@ -204,7 +288,7 @@ function FilesAdminDialog(props) {
                 type="submit"
                 disabled={_.isEmpty(dirtyFields) || !isValid}
               >
-                {t('ADD')}
+                {t("ADD")}
               </Button>
             </div>
           </DialogActions>
@@ -217,7 +301,7 @@ function FilesAdminDialog(props) {
                 type="submit"
                 disabled={_.isEmpty(dirtyFields) || !isValid}
               >
-                {t('SAVE')}
+                {t("SAVE")}
               </Button>
             </div>
             <IconButton onClick={handleRemove} size="large">

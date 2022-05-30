@@ -25,7 +25,7 @@ const navigationConfig = [
       {
         id: 'search-component',
         title: 'Search',
-        translate: '',
+        translate: 'SEARCHPAGE',
         type: 'item',
         icon: 'search',
         url: 'apps/search',

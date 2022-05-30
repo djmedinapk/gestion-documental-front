@@ -7,22 +7,20 @@ import axios from "./../../../../../services/Axios/HttpClient";
 
 export const getFiles = createAsyncThunk(
   "filesAdminApp/files/getFiles",
-  async (routeParams, { getState }) => {
-    routeParams =
-      routeParams || getState().filesAdminApp.files.routeParams;
-    const response = await axios.getWithParams("/api/File", {
-      params: routeParams,
+  async (routeParams, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/File/WithParams", {
+      params: getState().filesAdminApp.files.paramsData,
     });
     const data = await response.data;
-
+    dispatch(changeParamsDataCount(data.count));
     return { data, routeParams };
   }
 );
 
 export const addFile = createAsyncThunk(
-  'filesApp/files/addFile',
+  "filesApp/files/addFile",
   async (file, { dispatch, getState }) => {
-    const response = await axios.post('/api/File', file );
+    const response = await axios.post("/api/File", file);
     const data = await response.data;
 
     dispatch(getFiles());
@@ -32,9 +30,12 @@ export const addFile = createAsyncThunk(
 );
 
 export const updateFile = createAsyncThunk(
-  'filesAdminApp/files/updateFiles',
+  "filesAdminApp/files/updateFiles",
   async (fileData, { dispatch, getState }) => {
-    const response = await axios.put('/api/File/'+fileData.id, fileData);
+    const response = await axios.put(
+      "/api/File/" + fileData.id,
+      fileData
+    );
     const data = await response.data;
 
     dispatch(getFiles());
@@ -44,9 +45,9 @@ export const updateFile = createAsyncThunk(
 );
 
 export const removeFile = createAsyncThunk(
-  'filesApp/files/removeFile',
+  "filesApp/files/removeFile",
   async (fileId, { dispatch, getState }) => {
-    await axios.delete('/api/File/'+fileId);
+    await axios.delete("/api/File/" + fileId);
 
     dispatch(getFiles());
 
@@ -66,8 +67,13 @@ const filesAdminSlice = createSlice({
   initialState: filesAdminAdapter.getInitialState({
     searchText: "",
     routeParams: {},
+    paramsData: {
+      PageIndex: 1,
+      PageSize: 10,
+      Count: 0,
+    },
     filesAdminDialog: {
-      type: 'new',
+      type: "new",
       props: {
         open: false,
       },
@@ -121,11 +127,20 @@ const filesAdminSlice = createSlice({
         data: null,
       };
     },
+    changeParamsDataPageIndex: (state, action) => {
+      state.paramsData.PageIndex = action.payload;
+    },
+    changeParamsDataPageSize: (state, action) => {
+      state.paramsData.PageSize = action.payload;
+    },
+    changeParamsDataCount: (state, action) => {
+      state.paramsData.Count = action.payload;
+    },
   },
   extraReducers: {
     [getFiles.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
-      filesAdminAdapter.setAll(state, data);
+      filesAdminAdapter.setAll(state, { data });
       state.routeParams = routeParams;
     },
   },
@@ -136,6 +151,9 @@ export const {
   closeNewFilesAdminDialog,
   openEditFilesAdminDialog,
   closeEditFilesAdminDialog,
+  changeParamsDataPageIndex,
+  changeParamsDataPageSize,
+  changeParamsDataCount,
 } = filesAdminSlice.actions;
 
 export default filesAdminSlice.reducer;

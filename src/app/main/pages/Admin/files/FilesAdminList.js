@@ -18,22 +18,47 @@ const FilesAdminList = () => {
   const files = useSelector(selectFiles);
 
   useEffect(() => {
-    if (files) {
-      setFilteredData(files);
+    
+    if (files[0]) {
+      setFilteredData(files[0].data);
     }
   }, [files]);
 
   const columns = useMemo(
     () => [
       {
-        Header: t('NAME'),
+        Header: "Name",
         accessor: "name",
         className: "font-medium",
         sortable: false,
       },
       {
-        Header: t('DESCRIPTION'),
+        Header: "Description",
         accessor: "description",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: "Url",
+        accessor: "url",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: "Folder Id",
+        accessor: "folderId",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: "Project Id",
+        accessor: "projectId",
+        className: "font-medium",
+        sortable: false,
+      },
+      {
+        Header: "Document Type Id",
+        accessor: "documentType.id",
         className: "font-medium",
         sortable: false,
       },
