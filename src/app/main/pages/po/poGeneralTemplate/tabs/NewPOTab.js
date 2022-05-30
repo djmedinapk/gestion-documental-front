@@ -39,10 +39,12 @@ import { selectProductTypes } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypes } from "./../../store/documentTypesAdminSlice";
 import { months, currentYear, dataPO } from "./../../store/Params";
 import { Done } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 const NewPOTab = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("poPage");
 
   var datosSS = JSON.parse(
     JSON.stringify(
@@ -645,6 +647,7 @@ const NewPOTab = () => {
                             }
                           }
                         );
+                        debugger;
                         //validacion
                         dispatch(
                           getFoldersValidateUp({
@@ -674,8 +677,13 @@ const NewPOTab = () => {
                                   dataUMF
                                 );
                                 setTimeout(function () {
-                                  messageDispatch("The PO was save!!", "success");
-                                  navigate("/explorer/project/" + dataClient.id);
+                                  messageDispatch(
+                                    "The PO was save!!",
+                                    "success"
+                                  );
+                                  navigate(
+                                    "/explorer/project/" + dataClient.id
+                                  );
                                 }, 5000);
                               }
                             );
@@ -1196,7 +1204,7 @@ const NewPOTab = () => {
           startIcon={<Icon>save</Icon>}
           disabled={validateButtonSave}
         >
-          Save
+          {t("SAVE")}
         </Button>
       </div>
 
@@ -1208,7 +1216,7 @@ const NewPOTab = () => {
             <TextField
               {...field}
               className="mt-8  mx-4"
-              label="Name PO"
+              label={t("NAME_PO")}
               id="namePO"
               size="small"
               variant="outlined"
@@ -1232,7 +1240,7 @@ const NewPOTab = () => {
             <TextField
               {...field}
               className="mt-8  mx-4"
-              label="Pediment"
+              label={t("PEDIMENT")}
               id="pediment"
               variant="outlined"
               size="small"
@@ -1255,7 +1263,7 @@ const NewPOTab = () => {
           render={({ field }) => (
             <FormControl className="w-full mt-8  mx-4" size="small">
               <InputLabel id="year-select-label" required>
-                Year
+                {t("YEAR")}
               </InputLabel>
               <Select
                 {...field}
@@ -1286,7 +1294,7 @@ const NewPOTab = () => {
           render={({ field }) => (
             <FormControl className="w-full mt-8  mx-4" size="small">
               <InputLabel id="month-select-label" required>
-                Month
+                {t("MONTH")}
               </InputLabel>
               <Select
                 {...field}
@@ -1318,7 +1326,7 @@ const NewPOTab = () => {
           render={({ field }) => (
             <FormControl className="w-full mt-8  mx-4" size="small">
               <InputLabel id="type-select-label" required>
-                Type
+                {t("TYPE")}
               </InputLabel>
               <Select
                 {...field}
@@ -1352,7 +1360,7 @@ const NewPOTab = () => {
             <TextField
               {...field}
               className="mt-8  mx-4"
-              label="Client"
+              label={t("CLIENT")}
               autoFocus
               id="client"
               size="small"
@@ -1440,7 +1448,7 @@ const NewPOTab = () => {
                     fullWidth
                     component="span"
                   >
-                    Choose File
+                    {t("CHOOSE_FILE")}
                   </Button>
                 </label>
 
@@ -1463,7 +1471,7 @@ const NewPOTab = () => {
             ) : file.statePO === "new" ? (
               <div key={i} className="flex flex-col md:flex-row -mx-8">
                 <FormControl className="w-full mt-8  mx-4" size="small">
-                  <InputLabel id="category-select-label">More Files</InputLabel>
+                  <InputLabel id="category-select-label">{t("MORE_FILES")}</InputLabel>
                   <Select
                     labelId="category-select-label"
                     id="category-select"
@@ -1539,7 +1547,7 @@ const NewPOTab = () => {
                     component="span"
                     disabled={file.documentType.name === "" ? true : false}
                   >
-                    Choose File
+                    {t("CHOOSE_FILE")}
                   </Button>
                 </label>
                 <Tooltip
@@ -1582,7 +1590,7 @@ const NewPOTab = () => {
       <div className="flex flex-col md:flex-row -mx-8 pt-20">
         <FormControl className="w-full mt-8  mx-4" size="small">
           <InputLabel id={datosSS.name + "selectNewResourceGeneral"}>
-            Type Source
+            {t("TYPE_SOURCE")}
           </InputLabel>
           <Select
             labelId={datosSS.name + "selectNewResourceGeneral"}
@@ -1644,7 +1652,7 @@ const NewPOTab = () => {
           }
           fullWidth
         >
-          Add Source
+          {t("ADD_SOURCE")}
         </Button>
       </div>
       <div className="pt-20">
@@ -1662,7 +1670,7 @@ const NewPOTab = () => {
           startIcon={<Icon>save</Icon>}
           disabled={validateButtonSave}
         >
-          Save
+          {t("SAVE")}
         </Button>
       </div>
     </div>

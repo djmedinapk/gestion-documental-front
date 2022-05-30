@@ -25,7 +25,7 @@ export const addFolder = createAsyncThunk(
     } else {
       folder.isPO = false;
     }
-    if(folder.productType.id ===""){
+    if (folder.productType.id === "") {
       folder.productType.id = 0;
     }
     const response = await axios.post("/api/Folder", folder);

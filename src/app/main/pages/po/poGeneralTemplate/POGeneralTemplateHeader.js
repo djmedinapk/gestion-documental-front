@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useFormContext } from "react-hook-form";
 import _ from "@lodash";
+import { useTranslation } from "react-i18next";
 
 function POGeneralTemplateHeader(props) {
   const methods = useFormContext();
@@ -14,6 +15,7 @@ function POGeneralTemplateHeader(props) {
   const images = watch("images");
   const name = watch("name");
   const theme = useTheme();
+  const { t } = useTranslation("poPage");
 
   return (
     <div className="flex flex-1 w-full items-center justify-between">
@@ -36,10 +38,10 @@ function POGeneralTemplateHeader(props) {
               animate={{ x: 0, transition: { delay: 0.3 } }}
             >
               <Typography className="text-16 sm:text-20 truncate font-semibold">
-                Create New PO
+                {t("CREATE_NEW_PO")}
               </Typography>
               <Typography variant="caption" className="font-medium">
-                PO Detail
+                {t("PO_DETAIL")}
               </Typography>
             </motion.div>
           </div>

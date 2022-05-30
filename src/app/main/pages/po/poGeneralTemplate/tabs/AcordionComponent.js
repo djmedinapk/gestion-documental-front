@@ -16,11 +16,13 @@ import Button from "@mui/material/Button";
 import Icon from "@mui/material/Icon";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
+import { useTranslation } from "react-i18next";
 
 import { useDeepCompareEffect } from "@fuse/hooks";
 
 const AcordionComponent = (props) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("poPage");
 
   useEffect(() => {}, [props]);
 
@@ -785,7 +787,7 @@ const AcordionComponent = (props) => {
                             fullWidth
                             component="span"
                           >
-                            Choose Files
+                            {t("CHOOSE_FILES")}
                           </Button>
                         </label>
 
@@ -800,7 +802,7 @@ const AcordionComponent = (props) => {
                             iProductPO +
                             "/...AcordionDetailsFolderProductDivTooltipInsideChooseFiles"
                           }
-                          title="Choose All Files"
+                          title={t("CHOOSE_FILES")}
                           placement="left"
                           arrow
                           TransitionComponent={Zoom}
@@ -1005,7 +1007,7 @@ const AcordionComponent = (props) => {
                             fullWidth
                             component="span"
                           >
-                            Choose File
+                            {t("CHOOSE_FILE")}
                           </Button>
                         </label>
 
@@ -1095,7 +1097,7 @@ const AcordionComponent = (props) => {
                               "/...AcordionDetailsFolderFileDivNewFormControlInputLabel"
                             }
                           >
-                            More Files
+                            {t("MORE_FILES")}
                           </InputLabel>
                           <Select
                             labelId={
@@ -1258,7 +1260,7 @@ const AcordionComponent = (props) => {
                               filePO.documentType.name === "" ? true : false
                             }
                           >
-                            Choose File
+                            {t("CHOOSE_FILE")}
                           </Button>
                         </label>
                         <Tooltip
@@ -1412,7 +1414,7 @@ const AcordionComponent = (props) => {
                       "/...AcordionDetailsFolderDivSourceFormControlInputLabel"
                     }
                   >
-                    Type Source
+                    {t("TYPE_SOURCE")}
                   </InputLabel>
                   <Select
                     labelId={
@@ -1556,7 +1558,7 @@ const AcordionComponent = (props) => {
                   }
                   fullWidth
                 >
-                  Add Source
+                  {t("ADD_SOURCE")}
                 </Button>
               </div>
             </AccordionDetails>

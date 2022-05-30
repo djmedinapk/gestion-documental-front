@@ -22,6 +22,7 @@ import NewPOTab from "./tabs/NewPOTab";
 import { getProductTypes } from "./../store/productTypesAdminSlice";
 
 import { getDocumentTypes } from "./../store/documentTypesAdminSlice";
+import { useTranslation } from "react-i18next";
 
 const Root = styled(FusePageCarded)(({ theme }) => ({
   "& .FusePageCarded-header": {
@@ -47,6 +48,7 @@ const schema = yup.object().shape({
 
 function POGeneralTemplate(props) {
   const dispatch = useDispatch();
+  const { t } = useTranslation("poPage");
   const product = useSelector(({ poGeneralTemplateApp }) => poGeneralTemplateApp.product);
 
   const routeParams = useParams();
@@ -107,7 +109,7 @@ function POGeneralTemplate(props) {
             scrollButtons="auto"
             classes={{ root: "w-full h-64" }}
           >
-            <Tab className="h-64" label="New PO" />
+            <Tab className="h-64" label={t("NEW_PO")} />
           </Tabs>
         }
         content={
