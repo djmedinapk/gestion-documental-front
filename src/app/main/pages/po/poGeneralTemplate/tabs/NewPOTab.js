@@ -294,12 +294,9 @@ const NewPOTab = () => {
 
   const handlePedimentPOState = (ev) => {
     datosSS.pediment = ev.target.value;
-    /*if (datosSS.pediment === "") {
-      errors.pediment = true;
-    } else {
-      errors.pediment = false;
-    }*/
-    handleUpdate();
+    filesGeneral.pediment = ev.target.value;
+   
+    //handleUpdate();
   };
 
   const handleProductTypePOState = (ev) => {
@@ -647,7 +644,6 @@ const NewPOTab = () => {
                             }
                           }
                         );
-                        debugger;
                         //validacion
                         dispatch(
                           getFoldersValidateUp({
@@ -1153,6 +1149,7 @@ const NewPOTab = () => {
 
   const handleSaveDataPO = () => {
     datosSS.name = filesGeneral.name;
+    datosSS.pediment = filesGeneral.pediment;
     handleUpdate();
 
     var validationSave = true;
@@ -1247,7 +1244,7 @@ const NewPOTab = () => {
               fullWidth
               //error={!!errors.pediment}
               //helperText={errors?.pediment?.message}
-              value={datosSS.pediment}
+              value={filesGeneral ? filesGeneral.pediment : ""}
               onChange={(event) => {
                 field.onChange(event);
                 handlePedimentPOState(event);
@@ -1604,13 +1601,13 @@ const NewPOTab = () => {
               key={datosSS.name + "menuItemSelectNewResourceFolderGeneral"}
               value="folder"
             >
-              <em> Folder </em>
+              <em> {t("FOLDER")} </em>
             </MenuItem>
             <MenuItem
               key={datosSS.name + "menuItemSelectNewResourceFileGeneral"}
               value="file"
             >
-              <em> File </em>
+              <em> {t("FILE")} </em>
             </MenuItem>
           </Select>
         </FormControl>
@@ -1622,7 +1619,7 @@ const NewPOTab = () => {
               <TextField
                 {...field}
                 className="mt-8  mx-4"
-                label="New Folder"
+                label={t("NEW_FOLDER_NAME")}
                 name={datosSS.name + "GeneralText"}
                 value={datosSS.addSourceState.nameFolder}
                 onChange={onChangeTextNewFolder}

@@ -562,7 +562,7 @@ const AcordionComponent = (props) => {
                               }
                               {...field}
                               className="mt-8  mx-4"
-                              label="Product Name"
+                              label={t("PRODUCT_NAME")}
                               id={
                                 props.parentPOFolder +
                                 "/" +
@@ -624,7 +624,7 @@ const AcordionComponent = (props) => {
                               }
                               {...field}
                               className="mt-8  mx-4"
-                              label="Model"
+                              label={t("MODEL")}
                               id={
                                 props.parentPOFolder +
                                 "/" +
@@ -695,7 +695,7 @@ const AcordionComponent = (props) => {
                               }
                               {...field}
                               className="mt-8  mx-4"
-                              label="Evidences (image/*)"
+                              label={t("EVIDENCES")+" (image/*)"}
                               value={productPO.files.map(
                                 (fileProductMap) =>
                                   " " + fileProductMap.contentFile.name
@@ -1451,7 +1451,7 @@ const AcordionComponent = (props) => {
                         }
                         value="product"
                       >
-                        <em> Product </em>
+                        <em> {t("PRODUCT")} </em>
                       </MenuItem>
                     ) : (
                       false
@@ -1467,7 +1467,7 @@ const AcordionComponent = (props) => {
                         }
                         value="folder"
                       >
-                        <em> Folder </em>
+                        <em> {t("FOLDER")} </em>
                       </MenuItem>
                     ) : (
                       false
@@ -1483,7 +1483,7 @@ const AcordionComponent = (props) => {
                         }
                         value="file"
                       >
-                        <em> File </em>
+                        <em> {t("FILE")} </em>
                       </MenuItem>
                     ) : (
                       false
@@ -1515,7 +1515,7 @@ const AcordionComponent = (props) => {
                           "/...AcordionDetailsFolderDivSourceControllerNewFolderTextField"
                         }
                         className="mt-8  mx-4"
-                        label="New Folder Name"
+                        label={t("NEW_FOLDER_NAME")}
                         name={iFolderPO + ""}
                         value={
                           props.dataPO.folders[iFolderPO].addSourceState

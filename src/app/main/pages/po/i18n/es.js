@@ -14,6 +14,14 @@ const locale = {
   ADD_SOURCE: "Agregar Recurso",
   TYPE_SOURCE: "Tipo de Recurso",
   MORE_FILES: "Más Archivos",
+  NEW_FOLDER_NAME: "Nombre de Nueva Carpeta",
+  FOLDER: "Carpeta",
+  FILE:"Archivo",
+  NEW_FILE: "Nuevo Archivo",
+  PRODUCT:"Producto",
+  PRODUCT_NAME: "Nombre de Producto",
+  MODEL: "Modelo",
+  EVIDENCES: "Evidencias",
 };
 
 export default locale;

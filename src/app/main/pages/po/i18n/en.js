@@ -14,6 +14,14 @@ const locale = {
   ADD_SOURCE: "Add Source",
   TYPE_SOURCE: "Type Source",
   MORE_FILES: "More Files",
+  NEW_FOLDER_NAME: "New Folder Name",
+  FOLDER: "Folder",
+  FILE:"File",
+  NEW_FILE: "New File",
+  PRODUCT: "Product",
+  PRODUCT_NAME: "Product Name",
+  MODEL: "Model",
+  EVIDENCES: "Evidences",
 };
 
 export default locale;
