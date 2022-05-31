@@ -405,52 +405,49 @@ const NewPOTab = () => {
     return validationReturn;
   };
 
-  const [
-    validationFolderEvidencesUVAReturn,
-    setValidationFolderEvidencesUVAReturn,
-  ] = useState(true);
-
-  const validationFolderEvidencesUVA = (dataVDTFS, mainFolder, route) => {
+   const validationFolderEvidencesUVA = (dataVDTFS) => {
+    var validationReturnP = true;
     dataVDTFS.folders.forEach((folderElement) => {
-      validationFolderEvidencesUVA(
-        folderElement,
-        mainFolder,
-        route + folderElement.name + "/"
-      );
+      if (folderElement.name === "UVA") {
+        folderElement.folders.forEach((folderUVAElement) => {
+          if (folderUVAElement.name === "Evidencias") {
+            folderUVAElement.products.forEach(
+              (productElement, iProductElement) => {
+                if (productElement.tempName === "") {
+                  validationReturnP = false;
+                  messageDispatch("You must enter a Product Name", "error");
+                } else if (productElement.model === "") {
+                  validationReturnP = false;
+                  messageDispatch("You must enter a Product Model", "error");
+                } else if (productElement.files.length === 0) {
+                  validationReturnP = false;
+                  messageDispatch("You must select the Product files", "error");
+                }
 
-      if (route + folderElement.name === mainFolder + "/UVA/Evidencias") {
-        folderElement.products.forEach((productElement, iProductElement) => {
-          if (productElement.tempName === "") {
-            setValidationFolderEvidencesUVAReturn(false);
-            messageDispatch("You must enter a Product Name", "error");
-          } else if (productElement.model === "") {
-            setValidationFolderEvidencesUVAReturn(false);
-            messageDispatch("You must enter a Product Model", "error");
-          } else if (productElement.files.length === 0) {
-            setValidationFolderEvidencesUVAReturn(false);
-            messageDispatch("You must select the Product files", "error");
-          }
-
-          folderElement.products.forEach(
-            (productValidationElement, iProductValidationElement) => {
-              if (
-                productValidationElement.tempName +
-                  "-" +
-                  productValidationElement.model ===
-                  productElement.tempName + "-" + productElement.model &&
-                iProductValidationElement !== iProductElement
-              ) {
-                setValidationFolderEvidencesUVAReturn(false);
-                messageDispatch(
-                  "The product in the Evidence folder already exists",
-                  "error"
+                folderUVAElement.products.forEach(
+                  (productValidationElement, iProductValidationElement) => {
+                    if (
+                      productValidationElement.tempName +
+                        "-" +
+                        productValidationElement.model ===
+                        productElement.tempName + "-" + productElement.model &&
+                      iProductValidationElement !== iProductElement
+                    ) {
+                      validationReturnP = false;
+                      messageDispatch(
+                        "The product in the Evidence folder already exists",
+                        "error"
+                      );
+                    }
+                  }
                 );
               }
-            }
-          );
+            );
+          }
         });
       }
     });
+    return validationReturnP;
   };
 
   const uploadSubFolders = (
@@ -1159,8 +1156,6 @@ const NewPOTab = () => {
 
     var validationSave = true;
 
-    validationFolderEvidencesUVA(datosSS, datosSS.name, datosSS.name + "/");
-
     if (datosSS.name === "") {
       validationSave = false;
       messageDispatch("You must enter a Name PO", "error");
@@ -1182,7 +1177,7 @@ const NewPOTab = () => {
     } else if (!validationFilesStorage(datosSS)) {
       validationSave = false;
       messageDispatch("You must select all files", "error");
-    } else if (!validationFolderEvidencesUVAReturn) {
+    } else if (!validationFolderEvidencesUVA(datosSS)) {
       validationSave = false;
     }
 
@@ -1628,7 +1623,9 @@ const NewPOTab = () => {
                 className="mt-8  mx-4"
                 label={t("NEW_FOLDER_NAME")}
                 name={datosSS.name + "GeneralText"}
-                value={filesGeneral ? filesGeneral.addSourceState.nameFolder : ""}
+                value={
+                  filesGeneral ? filesGeneral.addSourceState.nameFolder : ""
+                }
                 onChange={(event) => {
                   field.onChange(event);
                   onChangeTextNewFolder(event);
