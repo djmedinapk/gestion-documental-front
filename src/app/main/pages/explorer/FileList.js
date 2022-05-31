@@ -13,10 +13,12 @@ import { useEffect, useState } from "react";
 import withRouter from "@fuse/core/withRouter";
 import { useParams } from "react-router";
 import { setSelectedItem } from "./store/explorerSlice";
+import { useTranslation } from "react-i18next";
 
 function FileList(props) {
   const dispatch = useDispatch();
   const routeParams = useParams();
+  const { t } = useTranslation("searchPage");
   const isFolder = useSelector(
     ({ explorerApp }) => explorerApp.explorer.isFolder
   );
@@ -114,11 +116,13 @@ function FileList(props) {
         <TableHead>
           <TableRow>
             <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell className="hidden sm:table-cell">Type</TableCell>
-            <TableCell className="hidden sm:table-cell">Owner</TableCell>
+            <TableCell>{t("NAME")}</TableCell>
+            <TableCell className="hidden sm:table-cell">{t("TYPE")}</TableCell>
+            <TableCell className="hidden sm:table-cell">{t("OWNER")}</TableCell>
             {/* <TableCell className="text-center hidden sm:table-cell">Size</TableCell> */}
-            <TableCell className="hidden sm:table-cell">Modified</TableCell>
+            <TableCell className="hidden sm:table-cell">
+              {t("MODIFIED")}
+            </TableCell>
           </TableRow>
         </TableHead>
 
@@ -139,7 +143,9 @@ function FileList(props) {
                 </TableCell>
                 <TableCell className="font-medium">{item.name}</TableCell>
                 <TableCell className="hidden sm:table-cell">
-                  {item.type}
+                  {item.type === "folder"
+                    ? t("FOLDER")
+                    : item.type.toUpperCase()}
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">
                   {item.owner}

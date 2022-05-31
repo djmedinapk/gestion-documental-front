@@ -15,6 +15,7 @@ const locale = {
   OPENED: 'Abierto',
   CREATED:'Creado',
   DOCUMENT: 'Documento',
+  DOCUMENT_TYPE: 'Tipo de Documento',
 };
 
 export default locale;
