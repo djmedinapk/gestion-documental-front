@@ -7,9 +7,14 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getProjects, handleDialog, selectProjects } from "./store/projectsSlice";
+import {
+  getProjects,
+  handleDialog,
+  selectProjects,
+} from "./store/projectsSlice";
 import reducer from "./store";
 import ProjectDialog from "./ProjectDialog";
+import { useTranslation } from "react-i18next";
 
 const Root = styled("div")(({ theme }) => ({
   "& .board": {
@@ -22,6 +27,7 @@ const Root = styled("div")(({ theme }) => ({
 const ProjectBoard = () => {
   const dispatch = useDispatch();
   const projects = useSelector(selectProjects);
+  const { t } = useTranslation("projectPage");
 
   useEffect(() => {
     dispatch(getProjects());
@@ -55,7 +61,7 @@ const ProjectBoard = () => {
               className="mt-44 sm:mt-88 sm:py-24 text-32 sm:text-40 font-bold"
               color="inherit"
             >
-              Projects
+              {t("PROJECTS")}
             </Typography>
           </motion.div>
 
@@ -104,14 +110,14 @@ const ProjectBoard = () => {
                   className="text-16 font-medium text-center pt-16 px-32"
                   color="inherit"
                 >
-                  Add new project
+                  {t("ADD_NEW_PROJECT")}
                 </Typography>
               </Paper>
             </motion.div>
           </motion.div>
         </div>
       </Root>
-      <ProjectDialog/>
+      <ProjectDialog />
     </>
   );
 };

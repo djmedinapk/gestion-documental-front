@@ -17,6 +17,7 @@ import { addProjectBoard, handleDialog } from "./store/projectsSlice";
 import _ from "@lodash";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
 
 const defaultValues = {
   name: "",
@@ -24,14 +25,19 @@ const defaultValues = {
   description: "",
 };
 
-const schema = yup.object().shape({
-  name: yup.string().required("You must enter a name"),
-  code: yup.string().max(5).required("You mus enter a code")
-});
+
 
 const ProjectDialog = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("projectPage");
   const projectDialog = useSelector(({ projectApp }) => projectApp.projects.dialog);
+
+
+  const schema = yup.object().shape({
+    name: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("NAME")),
+    code: yup.string().max(5).required(t("YOU_MUST_ENTER_A") + " " + t("CODE"))
+  });
+
   const { control, watch, reset, handleSubmit, formState, getValues } = useForm(
     {
       mode: "onChange",
@@ -66,7 +72,7 @@ const ProjectDialog = () => {
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            New Project
+            {t("NEW_PROJECT")}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -87,7 +93,7 @@ const ProjectDialog = () => {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Name"
+                  label={t("NAME")}
                   id="name"
                   error={!!errors.name}
                   helperText={errors?.name?.message}
@@ -109,7 +115,7 @@ const ProjectDialog = () => {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Code"
+                  label={t("CODE")}
                   id="code"
                   error={!!errors.code}
                   helperText={errors?.code?.message}
@@ -132,7 +138,7 @@ const ProjectDialog = () => {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Description"
+                  label={t("DESCRIPTION")}
                   id="description"
                   variant="outlined"
                   multiline
@@ -152,7 +158,7 @@ const ProjectDialog = () => {
               type="submit"
               disabled={_.isEmpty(dirtyFields) || !isValid}
             >
-              Add
+              {t("ADD")}
             </Button>
           </div>
         </DialogActions>
