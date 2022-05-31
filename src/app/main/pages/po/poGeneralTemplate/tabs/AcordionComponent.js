@@ -114,6 +114,8 @@ const AcordionComponent = (props) => {
           });
           props.dataPO.folders[indexFolder].addSourceState.state = "";
           props.dataPO.folders[indexFolder].addSourceState.nameFolder = "";
+          props.filesGeneral.folders[indexFolder].addSourceState.state = "";
+          props.filesGeneral.folders[indexFolder].addSourceState.nameFolder = "";
 
           props.handleUpdate();
         } else {
@@ -168,6 +170,7 @@ const AcordionComponent = (props) => {
         },
       });
       props.dataPO.folders[indexFolder].addSourceState.state = "";
+      props.filesGeneral.folders[indexFolder].addSourceState.state = "";
 
       props.handleUpdate();
     } else if (
@@ -188,6 +191,7 @@ const AcordionComponent = (props) => {
         files: [],
       });
       props.dataPO.folders[indexFolder].addSourceState.state = "";
+      props.filesGeneral.folders[indexFolder].addSourceState.state = "";
 
       props.handleUpdate();
     }
@@ -252,7 +256,9 @@ const AcordionComponent = (props) => {
   const onChangeTextNewFolder = (ev) => {
     props.dataPO.folders[ev.target.name].addSourceState.nameFolder =
       ev.target.value;
-    props.handleUpdate();
+    props.filesGeneral.folders[ev.target.name].addSourceState.nameFolder =
+      ev.target.value;
+    //props.handleUpdate();
   };
 
   const handleDocumentTypeState = (ev) => {
@@ -695,7 +701,7 @@ const AcordionComponent = (props) => {
                               }
                               {...field}
                               className="mt-8  mx-4"
-                              label={t("EVIDENCES")+" (image/*)"}
+                              label={t("EVIDENCES") + " (image/*)"}
                               value={productPO.files.map(
                                 (fileProductMap) =>
                                   " " + fileProductMap.contentFile.name
@@ -1518,10 +1524,15 @@ const AcordionComponent = (props) => {
                         label={t("NEW_FOLDER_NAME")}
                         name={iFolderPO + ""}
                         value={
-                          props.dataPO.folders[iFolderPO].addSourceState
-                            .nameFolder
+                          props.filesGeneral
+                            ? props.filesGeneral.folders[iFolderPO]
+                                .addSourceState.nameFolder
+                            : ""
                         }
-                        onChange={onChangeTextNewFolder}
+                        onChange={(event) => {
+                          field.onChange(event);
+                          onChangeTextNewFolder(event);
+                        }}
                         variant="outlined"
                         size="small"
                         style={{ minWidth: "40%" }}

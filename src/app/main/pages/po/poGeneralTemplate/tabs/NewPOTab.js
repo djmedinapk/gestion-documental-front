@@ -212,6 +212,9 @@ const NewPOTab = () => {
             folders: [],
           });
 
+          filesGeneral.addSourceState.state = "";
+          filesGeneral.addSourceState.nameFolder = "";
+
           handleUpdate();
         } else {
           messageDispatch("The folder name already exists", "error");
@@ -265,6 +268,7 @@ const NewPOTab = () => {
       });
 
       datosSS.addSourceState.state = "";
+      filesGeneral.addSourceState.state = "";
 
       handleUpdate();
     }
@@ -283,7 +287,8 @@ const NewPOTab = () => {
 
   const onChangeTextNewFolder = (ev) => {
     datosSS.addSourceState.nameFolder = ev.target.value;
-    handleUpdate();
+    filesGeneral.addSourceState.nameFolder = ev.target.value;
+    //handleUpdate();
   };
 
   const handleNamePOState = (ev) => {
@@ -295,7 +300,7 @@ const NewPOTab = () => {
   const handlePedimentPOState = (ev) => {
     datosSS.pediment = ev.target.value;
     filesGeneral.pediment = ev.target.value;
-   
+
     //handleUpdate();
   };
 
@@ -1468,7 +1473,9 @@ const NewPOTab = () => {
             ) : file.statePO === "new" ? (
               <div key={i} className="flex flex-col md:flex-row -mx-8">
                 <FormControl className="w-full mt-8  mx-4" size="small">
-                  <InputLabel id="category-select-label">{t("MORE_FILES")}</InputLabel>
+                  <InputLabel id="category-select-label">
+                    {t("MORE_FILES")}
+                  </InputLabel>
                   <Select
                     labelId="category-select-label"
                     id="category-select"
@@ -1621,8 +1628,11 @@ const NewPOTab = () => {
                 className="mt-8  mx-4"
                 label={t("NEW_FOLDER_NAME")}
                 name={datosSS.name + "GeneralText"}
-                value={datosSS.addSourceState.nameFolder}
-                onChange={onChangeTextNewFolder}
+                value={filesGeneral ? filesGeneral.addSourceState.nameFolder : ""}
+                onChange={(event) => {
+                  field.onChange(event);
+                  onChangeTextNewFolder(event);
+                }}
                 variant="outlined"
                 size="small"
                 style={{ minWidth: "40%" }}
