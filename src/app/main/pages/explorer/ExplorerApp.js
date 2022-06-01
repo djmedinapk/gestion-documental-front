@@ -33,7 +33,9 @@ import {
   Typography,
 } from "@mui/material";
 import NewFolderDialog from "./NewFolderDialog";
+import EditFolderDialog from "./EditFolderDialog";
 import NewFileDialog from "./NewFileDialog";
+import EditFileDialog from "./EditFileDialog";
 import FileList from "./FileList";
 
 import { useNavigate } from "react-router-dom";
@@ -44,6 +46,7 @@ import { dataPO } from "./../po/store/Params";
 import { changeDatosPOs } from "./../po/store/poGeneralTemplateSlice";
 import RightSideBarContent from "./RightSideBarContent";
 import RightSideBarHeader from "./RightSideBarHeader";
+import { useTranslation } from "react-i18next";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -69,6 +72,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 
 const ExplorerApp = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("explorerPage");
   const routeParams = useParams();
   const navigate = useNavigate();
 
@@ -204,19 +208,19 @@ const ExplorerApp = () => {
                         <ListItemIcon>
                           <Icon>folder</Icon>
                         </ListItemIcon>
-                        <ListItemText primary="Add Folder" />
+                        <ListItemText primary={t("ADD_FOLDER")} />
                       </ListItemButton>
                       <ListItemButton onClick={() => handleAddNewFile()}>
                         <ListItemIcon>
                           <Icon>note_add</Icon>
                         </ListItemIcon>
-                        <ListItemText primary="Add File" />
+                        <ListItemText primary={t("ADD_FILE")} />
                       </ListItemButton>
                       <ListItemButton onClick={handleRedirectNewPO}>
                         <ListItemIcon>
                           <Icon>post_add</Icon>
                         </ListItemIcon>
-                        <ListItemText primary="Add New PO" />
+                        <ListItemText primary={t("ADD_NEW_PO")} />
                       </ListItemButton>
                     </List>
                   </Paper>
@@ -261,6 +265,9 @@ const ExplorerApp = () => {
       />
       <NewFolderDialog />
       <NewFileDialog />
+      <EditFolderDialog />
+      <EditFileDialog />
+      
     </>
   );
 };

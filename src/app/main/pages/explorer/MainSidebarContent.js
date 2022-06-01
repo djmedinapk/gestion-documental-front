@@ -7,11 +7,13 @@ import { showMessage } from 'app/store/fuse/messageSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { removeProject } from './store/explorerSlice';
+import { useTranslation } from "react-i18next";
 
 const MainSidebarContent = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("explorerPage");
   const project = useSelector(({explorerApp})=> explorerApp.explorer.projectData);
 
   const deleteProject = () => {
@@ -39,7 +41,7 @@ const MainSidebarContent = () => {
         <ListItemIcon className="min-w-40">
           <Icon className="text-20">delete</Icon>
         </ListItemIcon>
-        <ListItemText primary="Delete" />
+        <ListItemText primary={t("DELETE")} />
       </ListItem>      
     </List>
   );

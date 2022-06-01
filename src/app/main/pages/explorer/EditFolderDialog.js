@@ -12,15 +12,16 @@ import {
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { handleNewFolderDialog } from "./store/explorerSlice";
+import { handleEditFolderDialog } from "./store/explorerSlice";
+import { useCallback, useEffect } from "react";
 
 import _ from "@lodash";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addFolder } from "./store/folderSlice";
+import { updateFolder } from "./store/folderSlice";
 import { showMessage } from "app/store/fuse/messageSlice";
-import { useTranslation } from "react-i18next";
 
+import { useTranslation } from "react-i18next";
 
 const defaultValues = {
   name: "",
@@ -29,14 +30,14 @@ const defaultValues = {
 
 
 
-const NewFolderDialog = () => {
+const EditFolderDialog = () => {
   const { t } = useTranslation("explorerPage");
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     name: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("NAME")),
   });
   const dialog = useSelector(
-    ({ explorerApp }) => explorerApp.explorer.newFolderDialog
+    ({ explorerApp }) => explorerApp.explorer.editFolderDialog
   );
   const isFolder = useSelector(
     ({ explorerApp }) => explorerApp.explorer.isFolder
@@ -44,6 +45,10 @@ const NewFolderDialog = () => {
   const routeParams = useSelector(
     ({ explorerApp }) => explorerApp.explorer.routeParams
   );
+  const selectedItem = useSelector(
+    ({ explorerApp }) => explorerApp.explorer.selectedItem
+  );
+
   const { control, watch, reset, handleSubmit, formState, getValues } = useForm(
     {
       mode: "onChange",
@@ -54,17 +59,22 @@ const NewFolderDialog = () => {
 
   const { isValid, dirtyFields, errors } = formState;
 
-  const onSubmit = (data) => {
-    if (!isFolder && routeParams.folder) {
-      data.projectId = routeParams.id;
-    } else if (isFolder && routeParams.folder) {
-      data.folderId = routeParams.id;
+  const initDialog = useCallback(() => {
+    reset({ ...selectedItem.metadata });
+  }, [selectedItem, reset]);
+
+  useEffect(() => {
+    if (dialog.open) {
+      initDialog();
     }
-    dispatch(addFolder(data)).then(({ payload }) => {
+  }, [dialog.open, initDialog]);
+
+  const onSubmit = (data) => {
+    dispatch(updateFolder(data)).then(({ payload }) => {
       if (payload.status === 200) {
         dispatch(
           showMessage({
-            message: "Folder created",
+            message: "Folder Edited",
             autoHideDuration: 6000,
             anchorOrigin: {
               vertical: "bottom",
@@ -73,11 +83,11 @@ const NewFolderDialog = () => {
             variant: "success",
           })
         );
-        dispatch(handleNewFolderDialog());
+        dispatch(handleEditFolderDialog());
       } else {
         dispatch(
           showMessage({
-            message: "Error creating folder",
+            message: "Error editing folder",
             autoHideDuration: 6000,
             anchorOrigin: {
               vertical: "bottom",
@@ -91,7 +101,7 @@ const NewFolderDialog = () => {
   };
 
   const closeDialog = () => {
-    dispatch(handleNewFolderDialog());
+    dispatch(handleEditFolderDialog());
   };
 
   return (
@@ -108,7 +118,7 @@ const NewFolderDialog = () => {
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            {t("NEW_FOLDER")}
+            {t("EDIT_FOLDER")}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -120,7 +130,7 @@ const NewFolderDialog = () => {
         <DialogContent classes={{ root: "p-24" }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -142,7 +152,7 @@ const NewFolderDialog = () => {
           </div>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -171,7 +181,7 @@ const NewFolderDialog = () => {
               type="submit"
               disabled={_.isEmpty(dirtyFields) || !isValid}
             >
-              {t("ADD")}
+              {t("SAVE")}
             </Button>
           </div>
         </DialogActions>
@@ -180,4 +190,4 @@ const NewFolderDialog = () => {
   );
 };
 
-export default NewFolderDialog;
+export default EditFolderDialog;

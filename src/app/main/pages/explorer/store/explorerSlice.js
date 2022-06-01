@@ -122,7 +122,14 @@ const explorerSlice = createSlice({
     newFolderDialog: {
       open: false
     },
+    editFolderDialog: {
+      open: false
+    },
     newFileDialog: {
+      open: false,
+      data: null,
+    },
+    editFileDialog: {
       open: false,
       data: null,
     },
@@ -134,9 +141,19 @@ const explorerSlice = createSlice({
         open: !state.newFolderDialog.open
       }
     },
+    handleEditFolderDialog: (state, action) => {
+      state.editFolderDialog = {
+        open: !state.editFolderDialog.open
+      }
+    },
     handleNewFileDialog: (state, action) => {
       state.newFileDialog = {
         open: !state.newFileDialog.open
+      }
+    },
+    handleEditFileDialog: (state, action) => {
+      state.editFileDialog = {
+        open: !state.editFileDialog.open
       }
     },
     setSelectedItem: (state, action) => {
@@ -168,7 +185,9 @@ const explorerSlice = createSlice({
 
 export const {
   handleNewFolderDialog,
+  handleEditFolderDialog,
   handleNewFileDialog,
+  handleEditFileDialog,
   setSelectedItem,
   handleProjectDataFind
 } = explorerSlice.actions;

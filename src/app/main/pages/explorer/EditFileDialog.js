@@ -12,12 +12,12 @@ import Typography from "@mui/material/Typography";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { handleNewFileDialog } from "./store/explorerSlice";
+import { handleEditFileDialog } from "./store/explorerSlice";
 
 import _ from "@lodash";
 import * as yup from "yup";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { selectDocumentTypes } from "./store/documentTypeSlice";
 import { useParams } from "react-router";
 import { addFile } from "./store/fileSlice";
@@ -33,7 +33,7 @@ const defaultValues = {
  * Form Validation Schema
  */
 
-const NewFileDialog = () => {
+const EditFileDialog = () => {
   const { t } = useTranslation("explorerPage");
   const dispatch = useDispatch();
   const schema = yup.object().shape({
@@ -46,11 +46,16 @@ const NewFileDialog = () => {
     file: yup.string().required("You must select a file"),
   });
   const dialog = useSelector(
-    ({ explorerApp }) => explorerApp.explorer.newFileDialog
+    ({ explorerApp }) => explorerApp.explorer.editFileDialog
   );
   const isFolder = useSelector(
     ({ explorerApp }) => explorerApp.explorer.isFolder
   );
+
+  const selectedItem = useSelector(
+    ({ explorerApp }) => explorerApp.explorer.selectedItem
+  );
+
   const documentsType = useSelector(selectDocumentTypes);
   const routeParams = useParams();
 
@@ -65,6 +70,16 @@ const NewFileDialog = () => {
   const [fileSelected, setFileSelected] = useState(null);
   const [typeFileSelected, setTypeFileSelected] = useState("*");
 
+  const initDialog = useCallback(() => {
+    reset({ ...selectedItem.metadata });
+  }, [selectedItem, reset]);
+
+  useEffect(() => {
+    if (dialog.open) {
+      initDialog();
+    }
+  }, [dialog.open, initDialog]);
+
   useEffect(() => {
     if (getValues("documentTypeId") === 0) {
       setValue("documentTypeId", "");
@@ -72,7 +87,8 @@ const NewFileDialog = () => {
   }, [documentsType]);
 
   function onSubmit(data) {
-    const datos = new FormData();
+    console.log(data,fileSelected);
+    /*const datos = new FormData();
     datos.append("name", data.name);
     datos.append("description", data.description);
     datos.append("documentTypeId", data.documentTypeId);
@@ -109,7 +125,7 @@ const NewFileDialog = () => {
           })
         );
       }
-    });
+    });*/
   }
 
   const onChangeFileSelected = (file) => {
@@ -124,7 +140,7 @@ const NewFileDialog = () => {
   };
 
   const closeDialog = () => {
-    dispatch(handleNewFileDialog());
+    dispatch(handleEditFileDialog());
     setValue("name", "");
     setValue("documentTypeId", "");
     setValue("description", "");
@@ -152,7 +168,7 @@ const NewFileDialog = () => {
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            {t("NEW_FILE")}
+            {t("EDIT_FILE")}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -295,7 +311,7 @@ const NewFileDialog = () => {
               type="submit"
               disabled={_.isEmpty(dirtyFields) || !isValid}
             >
-              {t("ADD")}
+              {t("SAVE")}
             </Button>
           </div>
         </DialogActions>
@@ -304,4 +320,4 @@ const NewFileDialog = () => {
   );
 };
 
-export default NewFileDialog;
+export default EditFileDialog;

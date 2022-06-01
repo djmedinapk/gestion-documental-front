@@ -20,6 +20,23 @@ export const addFolder = createAsyncThunk(
   }
 );
 
+export const updateFolder = createAsyncThunk(
+  "folderApp/folder/updateFolder",
+  async (folderData, { dispatch, getState }) => {
+    const response = await axios.put(
+      "/api/Folder/" + folderData.id,
+      folderData
+    );
+    const {data, status} = await response;
+
+    const routeParams = getState().explorerApp.explorer.routeParams;
+    const isFolder = getState().explorerApp.explorer.isFolder;
+    dispatch(getCurrentFolder({ routeParams, isFolder }))
+
+    return {data, status};
+  }
+);
+
 const folderAdapter = createEntityAdapter({});
 
 
