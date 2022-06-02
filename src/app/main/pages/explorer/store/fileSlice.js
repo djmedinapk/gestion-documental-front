@@ -23,10 +23,7 @@ export const addFile = createAsyncThunk(
 export const updateFile = createAsyncThunk(
   "fileApp/file/updateFile",
   async (fileData, { dispatch, getState }) => {
-    const response = await axios.put(
-      "/api/File/" + fileData.id,
-      fileData
-    );
+    const response = await axios.put('/api/File/editUploadFile',  fileData );
     const {data, status} = await response;
     const routeParams = getState().explorerApp.explorer.routeParams;
     const isFolder = getState().explorerApp.explorer.isFolder;

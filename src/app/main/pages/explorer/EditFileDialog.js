@@ -20,7 +20,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useEffect, useState, useCallback } from "react";
 import { selectDocumentTypes } from "./store/documentTypeSlice";
 import { useParams } from "react-router";
-import { addFile } from "./store/fileSlice";
+import { updateFile } from "./store/fileSlice";
 import { showMessage } from "app/store/fuse/messageSlice";
 
 const defaultValues = {
@@ -38,12 +38,9 @@ const EditFileDialog = () => {
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     name: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("NAME")),
-    description: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("DESCRIPTION")),
-    documentTypeId: yup
-      .number()
-      .required("You must select a Document Type")
-      .min(1),
-    file: yup.string().required("You must select a file"),
+    description: yup
+      .string()
+      .required(t("YOU_MUST_ENTER_A") + " " + t("DESCRIPTION")),
   });
   const dialog = useSelector(
     ({ explorerApp }) => explorerApp.explorer.editFileDialog
@@ -72,6 +69,11 @@ const EditFileDialog = () => {
 
   const initDialog = useCallback(() => {
     reset({ ...selectedItem.metadata });
+    documentsType.forEach((documentTypeElement) => {
+      if (documentTypeElement.id === selectedItem.metadata.documentTypeId) {
+        setTypeFileSelected(documentTypeElement.extensionAllowed);
+      }
+    });
   }, [selectedItem, reset]);
 
   useEffect(() => {
@@ -87,22 +89,26 @@ const EditFileDialog = () => {
   }, [documentsType]);
 
   function onSubmit(data) {
-    console.log(data,fileSelected);
-    /*const datos = new FormData();
+    const datos = new FormData();
+    datos.append("id", data.id);
     datos.append("name", data.name);
+    datos.append("nameOld", selectedItem.metadata.name);
     datos.append("description", data.description);
+    datos.append("url", data.url);
+    if (data.folderId !== null) {
+      datos.append("folderId", data.folderId);
+    }
+    if (data.projectId !== null) {
+      datos.append("projectId", data.projectId);
+    }
     datos.append("documentTypeId", data.documentTypeId);
     datos.append("file", fileSelected);
-    if (isFolder && routeParams.id) {
-      datos.append("folderId", parseInt(routeParams.id, 10));
-    } else {
-      datos.append("projectId", parseInt(routeParams.id, 10));
-    }
-    dispatch(addFile(datos)).then(({ payload }) => {
+
+    dispatch(updateFile(datos)).then(({ payload }) => {
       if (payload.status === 200) {
         dispatch(
           showMessage({
-            message: "File created",
+            message: "File updated",
             autoHideDuration: 6000,
             anchorOrigin: {
               vertical: "bottom",
@@ -115,7 +121,7 @@ const EditFileDialog = () => {
       } else {
         dispatch(
           showMessage({
-            message: "Error creating File",
+            message: "Error updated File",
             autoHideDuration: 6000,
             anchorOrigin: {
               vertical: "bottom",
@@ -125,7 +131,7 @@ const EditFileDialog = () => {
           })
         );
       }
-    });*/
+    });
   }
 
   const onChangeFileSelected = (file) => {
@@ -145,14 +151,6 @@ const EditFileDialog = () => {
     setValue("documentTypeId", "");
     setValue("description", "");
     setFileSelected(null);
-  };
-
-  const handleSelectDocumentType = (ev) => {
-    documentsType.forEach((documentTypeElement) => {
-      if (documentTypeElement.id === ev.target.value) {
-        setTypeFileSelected(documentTypeElement.extensionAllowed);
-      }
-    });
   };
 
   return (
@@ -180,7 +178,7 @@ const EditFileDialog = () => {
         <DialogContent classes={{ root: "p-24" }}>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}
@@ -202,47 +200,7 @@ const EditFileDialog = () => {
           </div>
           <div className="flex">
             <div className="min-w-48 pt-20">
-              <Icon color="action">account_circle</Icon>
-            </div>
-            <Controller
-              control={control}
-              name="documentTypeId"
-              render={({ field }) => (
-                <>
-                  <FormControl className="w-full">
-                    <InputLabel id="category-select-label">
-                      {t("DOCUMENT_TYPE")}
-                    </InputLabel>
-                    <Select
-                      {...field}
-                      className="mb-24"
-                      labelId="category-select-label"
-                      id="category-select"
-                      label="Document Type"
-                      name="documentTypeId"
-                      error={!!errors.documentTypeId}
-                      fullWidth
-                      onChange={(event) => {
-                        field.onChange(event);
-                        handleSelectDocumentType(event);
-                      }}
-                    >
-                      {documentsType && documentsType.length > 0
-                        ? documentsType.map((doc) => (
-                            <MenuItem key={doc.id} value={doc.id}>
-                              <em> {doc.name} </em>
-                            </MenuItem>
-                          ))
-                        : ""}
-                    </Select>
-                  </FormControl>
-                </>
-              )}
-            />
-          </div>
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
+              <Icon color="action">article</Icon>
             </div>
             <Controller
               control={control}

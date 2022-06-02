@@ -24,7 +24,7 @@ export const updateFolder = createAsyncThunk(
   "folderApp/folder/updateFolder",
   async (folderData, { dispatch, getState }) => {
     const response = await axios.put(
-      "/api/Folder/" + folderData.id,
+      "/api/Folder/editFolderExplorer/" + folderData.id,
       folderData
     );
     const {data, status} = await response;

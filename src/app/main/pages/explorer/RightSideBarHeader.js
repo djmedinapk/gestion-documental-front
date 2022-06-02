@@ -71,9 +71,10 @@ function RightSideBarHeader(props) {
         )}
         {selectedItem.type === "folder" ? (
           selectedItem.name !== ".." ? (
-            <IconButton size="large" onClick={() => handleEditFolder()}>
-              <Icon>edit</Icon>
-            </IconButton>
+            // <IconButton size="large" onClick={() => handleEditFolder()}>
+            //   <Icon>edit</Icon>
+            // </IconButton>
+            false
           ) : (
             false
           )
