@@ -5,6 +5,8 @@ import StyledIcon from "./StyledIcon";
 
 import React, { useEffect, useState } from "react";
 
+import { Icon } from "@mui/material";
+
 import { useTranslation } from "react-i18next";
 
 const RightSideBarContent = () => {
@@ -19,6 +21,25 @@ const RightSideBarContent = () => {
   }
 
   if (selectedItem) {
+  }
+
+  const filteredByOrderVersions = () => {
+    var arrayReturn = [];
+    var arrayTemp = JSON.parse(JSON.stringify(selectedItem.metadata.versions));
+
+    arrayReturn = arrayTemp.sort(compareDates);
+
+    return arrayReturn;
+  };
+
+  function compareDates(a, b) {
+    if (a.archivedDate < b.archivedDate) {
+      return 1;
+    }
+    if (a.archivedDate > b.archivedDate) {
+      return -1;
+    }
+    return 0;
   }
 
   return (
@@ -70,6 +91,30 @@ const RightSideBarContent = () => {
           ) : (
             false
           )}
+          {selectedItem.metadata?.type !== "folder" ? (
+            <tr className="versionsGeneral h-52">
+              <th className="font-semibold">{t("VERSIONS")}</th>
+            </tr>
+          ) : (
+            false
+          )}
+          {selectedItem.metadata?.type !== "folder" &&
+          selectedItem.metadata?.versions
+            ? filteredByOrderVersions().map((versionElement) => (
+                <tr key={"versions" + versionElement.id}>
+                  <th style={{ paddingBottom: "20px" }}>
+                    <div style={{ minWidth: "130px" }}>
+                      <Icon style={{ paddingRight: "30px" }}>edit</Icon>
+                      <div>
+                        <a>
+                          {new Date(versionElement.archivedDate).toString()}
+                        </a>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              ))
+            : false}
         </tbody>
       </table>
     </motion.div>

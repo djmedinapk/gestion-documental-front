@@ -16,6 +16,7 @@ const locale = {
   NEW_FILE:"Nuevo Archivo",
   DELETE:"Eliminar",
   EDIT_FILE:"Editar Archivo",
+  VERSIONS:"Versiones",
 };
 
 export default locale;
