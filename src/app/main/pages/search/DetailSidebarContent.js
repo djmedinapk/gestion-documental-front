@@ -59,12 +59,41 @@ const DetailSidebarContent = (props) => {
         <tbody>
           <tr className="type h-52">
             <th className="font-semibold">{t("TYPE")}</th>
-            {selectedItem.documentType ? (
-              <td>{t(selectedItem.documentType.icon.toUpperCase())}</td>
-            ) : (
-              <td>{t("FOLDER")}</td>
-            )}
+            <td>
+              {selectedItem.documentType
+                ? t(selectedItem.documentType?.icon?.toUpperCase())
+                : t("FOLDER")}
+            </td>
           </tr>
+          {console.log(selectedItem)}
+
+          <tr className="modified h-52">
+            <th className="font-semibold">{t("MODIFIED")}</th>
+            <td>{new Date(selectedItem.lastUpdated).toDateString()}</td>
+          </tr>
+
+          {selectedItem.url ? (
+            <tr className="location h-52 text-left">
+              <th className="font-semibold">{t("LOCATION")}</th>
+              <td>{selectedItem.url ? selectedItem.url : false}</td>
+            </tr>
+          ) : (
+            false
+          )}
+
+          {/* <tr className="owner h-52">
+            <th className="font-semibold">{t("OWNER")}</th>
+            <td>-{selectedItem.owner}</td>
+          </tr> */}
+
+          {selectedItem.documentType ? (
+            <tr className="documentType h-52">
+              <th className="font-semibold">{t("DOCUMENT_TYPE")}</th>
+              <td>{selectedItem.documentType?.name}</td>
+            </tr>
+          ) : (
+            false
+          )}
         </tbody>
       </table>
     </motion.div>

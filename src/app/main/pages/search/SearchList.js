@@ -36,7 +36,7 @@ const SearchList = (props) => {
     }
   }, [files, selectedItemId]);
 
-  const handleClick = (event, item, i) => {
+  const handleClickFolder = (event, item, i) => {
     switch (event.detail) {
       case 1:
         dispatch(setSelectedItem(item));
@@ -48,6 +48,21 @@ const SearchList = (props) => {
           props.navigate(`/explorer/project/${item.projectId}`);
         } else if (item.folderId !== 0) {
           props.navigate(`/explorer/folder/${item.id}`);
+        }
+        break;
+      default:
+        return;
+    }
+  };
+
+  const handleClickFile = (event, item, i) => {
+    switch (event.detail) {
+      case 2:
+        dispatch(setSelectedItem(null));
+        if (item.projectId !== 0) {
+          props.navigate(`/explorer/project/${item.projectId}`);
+        } else if (item.folderId !== 0) {
+          props.navigate(`/explorer/folder/${item.folderId}`);
         }
         break;
       default:
@@ -83,7 +98,7 @@ const SearchList = (props) => {
                 key={i}
                 hover
                 onClick={(event) => {
-                  handleClick(event, item, i);
+                  handleClickFolder(event, item, i);
                 }}
                 selected={i === selectedItemId}
                 className="cursor-pointer h-64"
@@ -126,6 +141,7 @@ const SearchList = (props) => {
                 onClick={(event) => {
                   dispatch(setSelectedItem(item));
                   dispatch(setSelectedItemId(i + dataFolders.length));
+                  handleClickFile(event, item, i);
                 }}
                 selected={dataFolders.length + i === selectedItemId}
                 className="cursor-pointer h-64"

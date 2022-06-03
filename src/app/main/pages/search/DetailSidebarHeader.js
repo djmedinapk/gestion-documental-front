@@ -19,7 +19,8 @@ function DetailSidebarHeader(props) {
 
   return (
     <div className="flex flex-col justify-between h-full p-4 sm:p-12">
-      {selectedItem.documentType ? (
+      <div className="toolbar flex align-center justify-end"></div>
+      {/* {selectedItem.documentType ? (
         <div className="toolbar flex align-center justify-end">
           <motion.div
             initial={{ scale: 0 }}
@@ -43,7 +44,7 @@ function DetailSidebarHeader(props) {
         </div>
       ) : (
         false
-      )}
+      )} */}
       <div className="p-12">
         <motion.div
           initial={{ scale: 0 }}

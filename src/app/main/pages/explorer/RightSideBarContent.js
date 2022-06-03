@@ -73,15 +73,19 @@ const RightSideBarContent = () => {
             <td>{selectedItem.modified}</td>
           </tr>
 
-          <tr className="location h-52 text-left">
-            <th className="font-semibold">{t("LOCATION")}</th>
-            <td>{selectedItem.metadata?.url}</td>
-          </tr>
+          {selectedItem.type !== "folder" ? (
+            <tr className="location h-52 text-left">
+              <th className="font-semibold">{t("LOCATION")}</th>
+              <td>{selectedItem.metadata?.url}</td>
+            </tr>
+          ) : (
+            false
+          )}
 
-          <tr className="owner h-52">
+          {/* <tr className="owner h-52">
             <th className="font-semibold">{t("OWNER")}</th>
             <td>-{selectedItem.owner}</td>
-          </tr>
+          </tr> */}
 
           {selectedItem.metadata?.documentType ? (
             <tr className="documentType h-52">
@@ -91,7 +95,7 @@ const RightSideBarContent = () => {
           ) : (
             false
           )}
-          {selectedItem.metadata?.type !== "folder" ? (
+          {selectedItem.type !== "folder" ? (
             <tr className="versionsGeneral h-52">
               <th className="font-semibold">{t("VERSIONS")}</th>
             </tr>
