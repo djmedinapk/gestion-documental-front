@@ -65,7 +65,6 @@ const DetailSidebarContent = (props) => {
                 : t("FOLDER")}
             </td>
           </tr>
-          {console.log(selectedItem)}
 
           <tr className="modified h-52">
             <th className="font-semibold">{t("MODIFIED")}</th>
