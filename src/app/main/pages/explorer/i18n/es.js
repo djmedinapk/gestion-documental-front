@@ -17,6 +17,10 @@ const locale = {
   DELETE:"Eliminar",
   EDIT_FILE:"Editar Archivo",
   VERSIONS:"Versiones",
+  DELETE_FILE: "Eliminar Archivo",
+  "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_?":
+    "¿Está seguro(a) de que quiere eliminar esto?",
+  CANCEL: "Cancelar",
 };
 
 export default locale;

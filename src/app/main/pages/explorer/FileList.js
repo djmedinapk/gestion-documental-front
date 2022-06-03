@@ -59,7 +59,6 @@ function FileList(props) {
     });
 
     if (isFolder && data.folderId) {
-      //console.log("cas", data)
       totalFiles.push({
         id: data.folderId,
         name: "..",
@@ -69,7 +68,6 @@ function FileList(props) {
       });
     }
     if (isFolder && data.projectId) {
-      //console.log("cas", data)
       totalFiles.push({
         id: data.projectId,
         name: "..",
@@ -83,7 +81,6 @@ function FileList(props) {
     totalFiles = fiForm ? totalFiles.concat(fiForm) : totalFiles;
     totalFiles = filesDocs ? totalFiles.concat(filesDocs) : totalFiles;
     setFilesList(totalFiles);
-    //console.log("files",totalFiles);
     dispatch(setSelectedItem(null));
   }, [files, filesFolder, routeParams]);
 
@@ -128,7 +125,7 @@ function FileList(props) {
 
         <TableBody>
           {filesList?.map((item) => {
-            return (
+            return item.metadata?.deletedAt === null || !item.metadata ? (
               <TableRow
                 key={item.id}
                 hover
@@ -170,6 +167,8 @@ function FileList(props) {
                   </TableCell>
                 </Hidden>
               </TableRow>
+            ) : (
+              false
             );
           })}
         </TableBody>

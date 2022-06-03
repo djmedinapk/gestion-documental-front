@@ -133,6 +133,10 @@ const explorerSlice = createSlice({
       open: false,
       data: null,
     },
+    deleteFileDialog: {
+      open: false,
+      data: null,
+    },
     selectedItem: null,
   }),
   reducers: {
@@ -154,6 +158,11 @@ const explorerSlice = createSlice({
     handleEditFileDialog: (state, action) => {
       state.editFileDialog = {
         open: !state.editFileDialog.open
+      }
+    },
+    handleDeleteFileDialog: (state, action) => {
+      state.deleteFileDialog = {
+        open: !state.deleteFileDialog.open
       }
     },
     setSelectedItem: (state, action) => {
@@ -188,6 +197,7 @@ export const {
   handleEditFolderDialog,
   handleNewFileDialog,
   handleEditFileDialog,
+  handleDeleteFileDialog,
   setSelectedItem,
   handleProjectDataFind
 } = explorerSlice.actions;

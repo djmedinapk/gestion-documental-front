@@ -36,6 +36,7 @@ import NewFolderDialog from "./NewFolderDialog";
 import EditFolderDialog from "./EditFolderDialog";
 import NewFileDialog from "./NewFileDialog";
 import EditFileDialog from "./EditFileDialog";
+import DeleteFileDialog from "./DeleteFileDialog";
 import FileList from "./FileList";
 
 import { useNavigate } from "react-router-dom";
@@ -267,6 +268,7 @@ const ExplorerApp = () => {
       <NewFileDialog />
       <EditFolderDialog />
       <EditFileDialog />
+      <DeleteFileDialog />
       
     </>
   );

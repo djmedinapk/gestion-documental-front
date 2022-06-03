@@ -134,7 +134,7 @@ const SearchList = (props) => {
             );
           })}
           {dataFiles.map((item, i) => {
-            return (
+            return item.deletedAt === null ? (
               <TableRow
                 key={dataFolders.length + i}
                 hover
@@ -176,6 +176,8 @@ const SearchList = (props) => {
                   </TableCell>
                 </Hidden>
               </TableRow>
+            ) : (
+              false
             );
           })}
         </TableBody>

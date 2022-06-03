@@ -13,6 +13,7 @@ import {
   handleNewFileDialog,
   handleEditFolderDialog,
   handleEditFileDialog,
+  handleDeleteFileDialog,
   selectFiles,
   getFindFolder,
   getFindProject,
@@ -44,6 +45,11 @@ function RightSideBarHeader(props) {
     setOpen(!open);
   };
 
+  const handleDeleteFile = () => {
+    dispatch(handleDeleteFileDialog());
+    setOpen(!open);
+  };
+
   return (
     <div className="flex flex-col justify-between h-full p-4 sm:p-12">
       <div className="toolbar flex align-center justify-end">
@@ -53,7 +59,7 @@ function RightSideBarHeader(props) {
               initial={{ scale: 0 }}
               animate={{ scale: 1, transition: { delay: 0.2 } }}
             >
-              <IconButton size="large">
+              <IconButton size="large" onClick={() => handleDeleteFile()}>
                 <Icon>delete</Icon>
               </IconButton>
             </motion.div>
