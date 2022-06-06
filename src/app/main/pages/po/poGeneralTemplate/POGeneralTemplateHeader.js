@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useFormContext } from "react-hook-form";
 import _ from "@lodash";
 import { useTranslation } from "react-i18next";
+import { extraMainURLFrontend } from "./../../../../AppParams";
 
 function POGeneralTemplateHeader(props) {
   const methods = useFormContext();
@@ -28,7 +29,7 @@ function POGeneralTemplateHeader(props) {
           >
             <img
               className="w-32 sm:w-48 rounded"
-              src="assets/images/ecommerce/product-image-placeholder.png"
+              src={extraMainURLFrontend+"assets/images/ecommerce/product-image-placeholder.png"}
               alt={name}
             />
           </motion.div>

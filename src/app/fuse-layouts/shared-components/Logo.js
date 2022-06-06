@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { extraMainURLFrontend } from "./../../AppParams";
 
 const Root = styled('div')(({ theme }) => ({
   '& > .logo-icon': {
@@ -19,7 +20,7 @@ const Root = styled('div')(({ theme }) => ({
 function Logo() {
   return (
     <Root className="flex items-center">
-      <img className="logo-icon h-28" src="assets/images/logos/logo_tekmovil_full.png" alt="logo" />
+      <img className="logo-icon h-28" src={extraMainURLFrontend+"assets/images/logos/logo_tekmovil_full.png"} alt="logo" />
     </Root>
   );
 }

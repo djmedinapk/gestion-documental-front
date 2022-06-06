@@ -17,6 +17,7 @@ import History from '@history';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { submitLogin } from 'app/auth/store/loginSlice';
+import { extraMainURLFrontend } from "./../../../../AppParams";
 
 /**
  * Form Validation Schema
@@ -68,7 +69,7 @@ function LoginPage() {
         <motion.div initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }}>
           <Card className="w-full max-w-384">
             <CardContent className="flex flex-col items-center justify-center p-16 sm:p-24 md:p-32">
-              <img className="w-128 m-32" src="assets/images/logos/logo_tekmovil.png" alt="logo" />
+              <img className="w-128 m-32" src={extraMainURLFrontend+"assets/images/logos/logo_tekmovil.png"} alt="logo" />
 
               <Typography variant="h6" className="mt-16 mb-24 font-semibold text-18 sm:text-24">
                 Login to your account

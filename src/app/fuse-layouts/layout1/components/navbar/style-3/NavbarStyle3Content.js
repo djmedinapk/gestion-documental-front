@@ -10,6 +10,7 @@ import { selectNavigation } from 'app/store/fuse/navigationSlice';
 import { navbarCloseMobile } from 'app/store/fuse/navbarSlice';
 import { selectContrastMainTheme } from 'app/store/fuse/settingsSlice';
 import { useLocation } from 'react-router-dom';
+import { extraMainURLFrontend } from "./../../../../../AppParams";
 
 const Root = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
@@ -109,7 +110,7 @@ function NavbarStyle3Content(props) {
       <Root className={clsx('flex flex-auto flex h-full', props.className)}>
         <ThemeProvider theme={contrastTheme}>
           <div id="fuse-navbar-side-panel" className="flex shrink-0 flex-col items-center">
-            <img className="w-44 my-32" src="assets/images/logos/logo_tekmovil.png" alt="logo" />
+            <img className="w-44 my-32" src={extraMainURLFrontend+"assets/images/logos/logo_tekmovil.png"} alt="logo" />
 
             <FuseScrollbars
               className="flex flex-1 min-h-0 justify-center w-full overflow-y-auto overflow-x-hidden"

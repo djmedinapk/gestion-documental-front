@@ -9,6 +9,8 @@ import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
+import { extraMainURLFrontend } from "./../../../../AppParams";
+
 
 /**
  * Form Validation Schema
@@ -40,7 +42,7 @@ function ForgotPasswordPage() {
         <motion.div initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }}>
           <Card className="w-full max-w-384">
             <CardContent className="flex flex-col items-center justify-center p-16 sm:p-24 md:p-32">
-              <img className="w-128 m-32" src="assets/images/logos/fuse.svg" alt="logo" />
+              <img className="w-128 m-32" src={extraMainURLFrontend+"assets/images/logos/fuse.svg"} alt="logo" />
 
               <Typography variant="h6" className="mt-16 mb-24 font-semibold text-18 sm:text-24">
                 Recover your password

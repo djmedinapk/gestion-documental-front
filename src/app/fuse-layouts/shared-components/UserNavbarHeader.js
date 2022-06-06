@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
+import { extraMainURLFrontend } from "./../../AppParams";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   '& .username, & .email': {
@@ -50,7 +51,7 @@ function UserNavbarHeader(props) {
           src={
             user.data.photoURL && user.data.photoURL !== ''
               ? user.data.photoURL
-              : 'assets/images/avatars/profile.jpg'
+              : extraMainURLFrontend+'assets/images/avatars/profile.jpg'
           }
         />
       </div>
