@@ -72,7 +72,7 @@ function FuseShortcuts(props) {
             )}
           </ListItemIcon>
           <ListItemText primary={item.title} />
-          <IconButton
+          {/* <IconButton
             onClick={(ev) => {
               ev.preventDefault();
               ev.stopPropagation();
@@ -81,7 +81,7 @@ function FuseShortcuts(props) {
             size="large"
           >
             <Icon color="action">{shortcuts.includes(item.id) ? 'star' : 'star_border'}</Icon>
-          </IconButton>
+          </IconButton> */}
         </MenuItem>
       </Link>
     );

@@ -133,7 +133,7 @@ export const logoutUser = () => async (dispatch, getState) => {
   }
 
   history.push({
-    pathname: '/',
+    pathname: '/login',
   });
 
   switch (user.from) {
@@ -203,9 +203,9 @@ export const updateUserData = (user) => async (dispatch, getState) => {
 const initialState = {
   role: [], // guest
   data: {
-    displayName: 'John Doe',
+    displayName: 'User',
     photoURL: 'assets/images/avatars/Velazquez.jpg',
-    email: 'johndoe@withinpixels.com',
+    email: 'user@tekmovil.com',
     shortcuts: ['calendar', 'mail', 'contacts', 'todo'],
   },
 };
