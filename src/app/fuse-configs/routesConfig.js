@@ -34,6 +34,10 @@ const routes = [
   // The individual route configs which has auth option won't be overridden.
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, null),
   {
+    path: "/",
+    element: <Navigate to="projects" />,
+  },
+  {
     path: "/login",
     element: <Navigate to="login" />,
   },
