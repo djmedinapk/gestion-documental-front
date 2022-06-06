@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { changeLanguage } from 'app/store/i18nSlice';
+import { extraMainURLFrontend } from "./../../../../src/app/AppParams";
 
 const languages = [
   { id: 'en', title: 'English', flag: 'us' },
@@ -41,7 +42,7 @@ function LanguageSwitcher(props) {
       <Button className="h-40 w-64" onClick={langMenuClick}>
         <img
           className="mx-4 min-w-20"
-          src={`assets/images/flags/${currentLanguage.flag}.png`}
+          src={extraMainURLFrontend+`assets/images/flags/${currentLanguage.flag}.png`}
           alt={currentLanguage.title}
         />
 
@@ -71,7 +72,7 @@ function LanguageSwitcher(props) {
             <ListItemIcon className="min-w-40">
               <img
                 className="min-w-20"
-                src={`assets/images/flags/${lng.flag}.png`}
+                src={extraMainURLFrontend+`assets/images/flags/${lng.flag}.png`}
                 alt={lng.title}
               />
             </ListItemIcon>

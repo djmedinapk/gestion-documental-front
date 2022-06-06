@@ -1,10 +1,12 @@
 import { memo } from 'react';
+import { extraMainURLFrontend } from "./../../../../src/app/AppParams";
+
 
 function DemoContent() {
   return (
     <div>
       <img
-        src="assets/images/demo-content/morain-lake.jpg"
+        src={extraMainURLFrontend+"assets/images/demo-content/morain-lake.jpg"}
         alt="beach"
         style={{
           maxWidth: '640px',
