@@ -58,29 +58,47 @@ function FileList(props) {
       };
     });
 
+    var firstFolderValidation = false;
+
     if (isFolder && data.folderId) {
-      totalFiles.push({
-        id: data.folderId,
-        name: "..",
-        description: "",
-        modified: "",
-        type: "folder",
+      totalFiles.forEach((element) => {
+        if (element.name === "..") {
+          firstFolderValidation = true;
+        }
       });
+      if (!firstFolderValidation) {
+        totalFiles.push({
+          id: data.folderId,
+          name: "..",
+          description: "",
+          modified: "",
+          type: "folder",
+        });
+      }
     }
+    firstFolderValidation = false;
     if (isFolder && data.projectId) {
-      totalFiles.push({
-        id: data.projectId,
-        name: "..",
-        description: "",
-        modified: "",
-        type: "folder",
-        defaultUrl: "project",
+      totalFiles.forEach((element) => {
+        if (element.name === "..") {
+          firstFolderValidation = true;
+        }
       });
+      if (!firstFolderValidation) {
+        totalFiles.push({
+          id: data.projectId,
+          name: "..",
+          description: "",
+          modified: "",
+          type: "folder",
+          defaultUrl: "project",
+        });
+      }
     }
 
     totalFiles = fiForm ? totalFiles.concat(fiForm) : totalFiles;
     totalFiles = filesDocs ? totalFiles.concat(filesDocs) : totalFiles;
     setFilesList(totalFiles);
+
     dispatch(setSelectedItem(null));
   }, [files, filesFolder, routeParams]);
 
@@ -90,12 +108,14 @@ function FileList(props) {
         dispatch(setSelectedItem(item));
         break;
       case 2:
-        if (item.type == "folder" && !item.defaultUrl) {
+        if (item.type === "folder" && !item.defaultUrl) {
           dispatch(setSelectedItem(null));
+          setFilesList([]);
           props.navigate(`/explorer/folder/${item.id}`);
         }
-        if (item.type == "folder" && item.defaultUrl == "project") {
+        if (item.type === "folder" && item.defaultUrl === "project") {
           dispatch(setSelectedItem(null));
+          setFilesList([]);
           props.navigate(`/explorer/project/${item.id}`);
         }
         break;
