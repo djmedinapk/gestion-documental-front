@@ -518,6 +518,27 @@ export const dataPO = {
           },
         },
         {
+          name: "Fletes Pagados",
+          statePO: "old",
+          documentType: {
+            id: 0,
+            name: "Fletes Pagados",
+            description: "",
+            regex: "",
+            code: "",
+            icon: "",
+            extensionAllowed: ".pdf",
+            lastUpdated: "",
+          },
+          contentFile: {
+            name: "",
+            lastModified: 0,
+            lastModifiedDate: null,
+            size: 0,
+            type: "",
+          },
+        },
+        {
           name: "Archivo M con numeros de Pedimento",
           statePO: "old",
           documentType: {
