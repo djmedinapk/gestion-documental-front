@@ -119,10 +119,10 @@ const AcordionComponent = (props) => {
 
           props.handleUpdate();
         } else {
-          props.messageDispatch("The folder name already exists", "error");
+          props.messageDispatch(t('THE_FOLDER_NAME_ALREADY_EXISTS'), "error");
         }
       } else {
-        props.messageDispatch("You must enter a folder name", "error");
+        props.messageDispatch(t("YOU_MUST_ENTER_A") +" "+ t('FOLDER_NAME'), "error");
       }
     } else if (
       props.dataPO.folders[indexFolder].addSourceState.state === "file"
