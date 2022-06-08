@@ -375,6 +375,7 @@ const NewPOTab = () => {
 
     dataVFS.files.forEach((fileElement) => {
       if (fileElement.contentFile.name === "") {
+        messageDispatch("You must select file: "+dataVFS.name+" - "+fileElement.documentType.name, "error");
         validationReturn = false;
       }
     });
@@ -1171,12 +1172,11 @@ const NewPOTab = () => {
     } else if (!validationDocumentTypeFilesStorage(datosSS)) {
       validationSave = false;
       messageDispatch(
-        "You must select the document type of all files",
+        "You must select the document type of all new files",
         "error"
       );
     } else if (!validationFilesStorage(datosSS)) {
       validationSave = false;
-      messageDispatch("You must select all files", "error");
     } else if (!validationFolderEvidencesUVA(datosSS)) {
       validationSave = false;
     }
