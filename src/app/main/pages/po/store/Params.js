@@ -36,6 +36,7 @@ export const currentYear = new Date().getFullYear();
           {
             name: "Dictamen",
             statePO: "old",
+            stateRequired: false,
             documentType: {
               id: 7,
               name: "Dictamen",
@@ -57,6 +58,7 @@ export const currentYear = new Date().getFullYear();
           {
             name: "Folio de UVA",
             statePO: "old",
+            stateRequired: false,
             documentType: {
               id: 7,
               name: "Folio de UVA",
@@ -112,6 +114,7 @@ export const dataPO = {
         {
           name: "Orden de Compra",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Orden de Compra",
@@ -133,6 +136,7 @@ export const dataPO = {
         {
           name: "Shipping Notice",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Shipping Notice",
@@ -154,6 +158,7 @@ export const dataPO = {
         {
           name: 'Guia Aerea NO Revalidada "rated"',
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: 'Guia Aerea NO Revalidada "rated"',
@@ -175,6 +180,7 @@ export const dataPO = {
         {
           name: 'Guia Aerea NO Revalidada "unrated"',
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: 'Guia Aerea NO Revalidada "unrated"',
@@ -196,6 +202,7 @@ export const dataPO = {
         {
           name: "Factura Fabricante",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Factura Fabricante",
@@ -217,6 +224,7 @@ export const dataPO = {
         {
           name: "Packing List Fabricante",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Packing List Fabricante",
@@ -238,6 +246,7 @@ export const dataPO = {
         {
           name: 'Poliza de Seguro "Insurance Policy"',
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: 'Poliza de Seguro "Insurance Policy"',
@@ -259,6 +268,7 @@ export const dataPO = {
         {
           name: "Listado de IMEI",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Listado de IMEI",
@@ -289,6 +299,7 @@ export const dataPO = {
         {
           name: "DODA",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "DODA",
@@ -310,6 +321,7 @@ export const dataPO = {
         {
           name: "Pedimento Pagado",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Pedimento Pagado",
@@ -331,6 +343,7 @@ export const dataPO = {
         {
           name: "Pedimento Simplificado",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Pedimento Simplificado",
@@ -352,6 +365,7 @@ export const dataPO = {
         {
           name: "Pedimento Rectificado",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Pedimento Rectificado",
@@ -373,6 +387,7 @@ export const dataPO = {
         {
           name: "Factura de Importación",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Factura de Importación",
@@ -394,6 +409,7 @@ export const dataPO = {
         {
           name: "Carta UVA",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Carta UVA",
@@ -415,6 +431,7 @@ export const dataPO = {
         {
           name: "Folio de UVA",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Folio de UVA",
@@ -436,6 +453,7 @@ export const dataPO = {
         {
           name: "Series",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Series",
@@ -457,6 +475,7 @@ export const dataPO = {
         {
           name: "Packing List",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Packing List",
@@ -478,6 +497,7 @@ export const dataPO = {
         {
           name: "Hojas de Calculo",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Hojas de Calculo",
@@ -499,6 +519,7 @@ export const dataPO = {
         {
           name: "Manifestacion de Valor",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Manifestacion de Valor",
@@ -520,6 +541,7 @@ export const dataPO = {
         {
           name: "Fletes Pagados",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Fletes Pagados",
@@ -541,6 +563,7 @@ export const dataPO = {
         {
           name: "Archivo M con numeros de Pedimento",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Archivo M con numeros de Pedimento",
@@ -562,6 +585,7 @@ export const dataPO = {
         {
           name: "Actas",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Actas",
@@ -593,6 +617,7 @@ export const dataPO = {
         {
           name: "Pedimento Pagado",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Pedimento Pagado",
@@ -614,6 +639,7 @@ export const dataPO = {
         {
           name: "Pedimento Rectificado",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Pedimento Rectificado",
@@ -635,6 +661,7 @@ export const dataPO = {
         {
           name: "Factura de Importación",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Factura de Importación",
@@ -656,6 +683,7 @@ export const dataPO = {
         {
           name: "Carta UVA",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Carta UVA",
@@ -677,6 +705,7 @@ export const dataPO = {
         {
           name: "Folio de UVA",
           statePO: "old",
+          stateRequired: true,
           documentType: {
             id: 0,
             name: "Folio de UVA",
@@ -698,6 +727,7 @@ export const dataPO = {
         {
           name: "Dictamen",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Dictamen",
@@ -738,6 +768,7 @@ export const dataPO = {
         {
           name: "COVE",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "COVE",
@@ -759,6 +790,7 @@ export const dataPO = {
         {
           name: "ACUSE COVE",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "ACUSE COVE",
@@ -780,6 +812,7 @@ export const dataPO = {
         {
           name: "E DOC - Guia Aerea",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Guia Aerea",
@@ -801,6 +834,7 @@ export const dataPO = {
         {
           name: "E DOC - Acuse Guia Aerea",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Acuse Guia Aerea",
@@ -822,6 +856,7 @@ export const dataPO = {
         {
           name: "E DOC - Carta 3.1.8",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Carta 3.1.8",
@@ -843,6 +878,7 @@ export const dataPO = {
         {
           name: "E DOC - Acuse Carta 3.1.8",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Acuse Carta 3.1.8",
@@ -864,6 +900,7 @@ export const dataPO = {
         {
           name: "E DOC - Folio UVA",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Folio UVA",
@@ -885,6 +922,7 @@ export const dataPO = {
         {
           name: "E DOC - Acuse Folio UVA",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Acuse Folio UVA",
@@ -906,6 +944,7 @@ export const dataPO = {
         {
           name: "E DOC - Carta UVA",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Carta UVA",
@@ -927,6 +966,7 @@ export const dataPO = {
         {
           name: "E DOC - Acuse Carta UVA",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Acuse Carta UVA",
@@ -948,6 +988,7 @@ export const dataPO = {
         {
           name: "E DOC - Contrato UVA",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Contrato UVA",
@@ -969,6 +1010,7 @@ export const dataPO = {
         {
           name: "E DOC - Acuse Contrato UVA",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Acuse Contrato UVA",
@@ -990,6 +1032,7 @@ export const dataPO = {
         {
           name: "E DOC - Numeros de Serie",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Numeros de Serie",
@@ -1011,6 +1054,7 @@ export const dataPO = {
         {
           name: "E DOC - Acuse Numeros de Serie",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Acuse Numeros de Serie",
@@ -1032,6 +1076,7 @@ export const dataPO = {
         {
           name: "E DOC - Certificado NOM",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Certificado NOM",
@@ -1053,6 +1098,7 @@ export const dataPO = {
         {
           name: "E DOC - Acuse Certificado NOM",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "E DOC - Acuse Certificado NOM",
@@ -1083,6 +1129,7 @@ export const dataPO = {
         {
           name: "Factura Agente Aduanal",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Agente Aduanal (pdf)",
@@ -1104,6 +1151,7 @@ export const dataPO = {
         {
           name: "Factura Agente Aduanal",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Agente Aduanal (xml)",
@@ -1125,6 +1173,7 @@ export const dataPO = {
         {
           name: "Depositos a Agente Aduanal",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Depositos a Agente Aduanal",
@@ -1146,6 +1195,7 @@ export const dataPO = {
         {
           name: "Factura Revalidación",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Revalidación (pdf)",
@@ -1167,6 +1217,7 @@ export const dataPO = {
         {
           name: "Factura Revalidación",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Revalidación (xml)",
@@ -1188,6 +1239,7 @@ export const dataPO = {
         {
           name: "Factura Maniobras",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Maniobras (pdf)",
@@ -1209,6 +1261,7 @@ export const dataPO = {
         {
           name: "Factura Maniobras",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Maniobras (xml)",
@@ -1230,6 +1283,7 @@ export const dataPO = {
         {
           name: "Factura Almacenaje",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Almacenaje (pdf)",
@@ -1251,6 +1305,7 @@ export const dataPO = {
         {
           name: "Factura Almacenaje",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Almacenaje (xml)",
@@ -1272,6 +1327,7 @@ export const dataPO = {
         {
           name: "Factura Transporte",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Transporte (pdf)",
@@ -1293,6 +1349,7 @@ export const dataPO = {
         {
           name: "Factura Transporte",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Transporte (xml)",
@@ -1314,6 +1371,7 @@ export const dataPO = {
         {
           name: "Factura Custodia",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Custodia (pdf)",
@@ -1335,6 +1393,7 @@ export const dataPO = {
         {
           name: "Factura Custodia",
           statePO: "old",
+          stateRequired: false,
           documentType: {
             id: 0,
             name: "Factura Custodia (xml)",

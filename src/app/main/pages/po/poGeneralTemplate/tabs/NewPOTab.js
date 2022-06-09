@@ -86,11 +86,15 @@ const NewPOTab = () => {
   };
 
   const schema = yup.object().shape({
-    namePO: yup.string().required(t("YOU_MUST_ENTER_A") +" "+ t("NAME_PO") ),
-    pediment: yup.string().required(t("YOU_MUST_ENTER_A") +" "+ t("PEDIMENT") ),
-    year: yup.string().required(t("YOU_MUST_SELECT_A") +" "+ t("YEAR") ),
-    month: yup.string().required(t("YOU_MUST_SELECT_A") +" "+ t("MONTH") ),
-    type: yup.string().required(t("YOU_MUST_SELECT_A") +" "+ t("PRODUCT_TYPE") ),
+    namePO: yup.string().required(t("YOU_MUST_ENTER_A") + " " + t("NAME_PO")),
+    pediment: yup
+      .string()
+      .required(t("YOU_MUST_ENTER_A") + " " + t("PEDIMENT")),
+    year: yup.string().required(t("YOU_MUST_SELECT_A") + " " + t("YEAR")),
+    month: yup.string().required(t("YOU_MUST_SELECT_A") + " " + t("MONTH")),
+    type: yup
+      .string()
+      .required(t("YOU_MUST_SELECT_A") + " " + t("PRODUCT_TYPE")),
   });
 
   const { control, formState } = useForm({
@@ -217,15 +221,19 @@ const NewPOTab = () => {
 
           handleUpdate();
         } else {
-          messageDispatch(t('THE_FOLDER_NAME_ALREADY_EXISTS'), "error");
+          messageDispatch(t("THE_FOLDER_NAME_ALREADY_EXISTS"), "error");
         }
       } else {
-        messageDispatch(t("YOU_MUST_ENTER_A") +" "+ t('FOLDER_NAME'), "error");
+        messageDispatch(
+          t("YOU_MUST_ENTER_A") + " " + t("FOLDER_NAME"),
+          "error"
+        );
       }
     } else if (datosSS.addSourceState.state === "file") {
       datosSS.files.push({
         name: "New File",
         statePO: "new",
+        stateRequired: false,
         documentType: {
           id: 3,
           name: "",
@@ -248,6 +256,7 @@ const NewPOTab = () => {
       filesGeneral.files.push({
         name: "New File",
         statePO: "new",
+        stateRequired: false,
         documentType: {
           id: 3,
           name: "",
@@ -374,7 +383,10 @@ const NewPOTab = () => {
     var validationReturn = true;
 
     dataVFS.files.forEach((fileElement) => {
-      if (fileElement.contentFile.name === "") {
+      if (
+        fileElement.contentFile.name === "" &&
+        fileElement.stateRequired === true
+      ) {
         messageDispatch(
           t("YOU_MUST_SELECT_FILE") +
             ": " +
@@ -435,7 +447,10 @@ const NewPOTab = () => {
                   );
                 } else if (productElement.files.length === 0) {
                   validationReturnP = false;
-                  messageDispatch(t('YOU_MUST_SELECT_THE_PRODUCT_FILES'), "error");
+                  messageDispatch(
+                    t("YOU_MUST_SELECT_THE_PRODUCT_FILES"),
+                    "error"
+                  );
                 }
 
                 folderUVAElement.products.forEach(
@@ -449,7 +464,7 @@ const NewPOTab = () => {
                     ) {
                       validationReturnP = false;
                       messageDispatch(
-                        t('THE_PRODUCT_IN_THE_EVIDENCE_FOLDER_ALREADY_EXISTS'),
+                        t("THE_PRODUCT_IN_THE_EVIDENCE_FOLDER_ALREADY_EXISTS"),
                         "error"
                       );
                     }
@@ -492,7 +507,9 @@ const NewPOTab = () => {
         datosGeneralF.append(`Url`, routeFolder);
         datosGeneralF.append(`FolderId`, idParentFolder);
         datosGeneralF.append(`file`, fileElement.contentFile);
-        dispatch(fileUp(datosGeneralF));
+        if (fileElement.contentFile.name !== "") {
+          dispatch(fileUp(datosGeneralF));
+        }
       });
     }
 
@@ -528,7 +545,9 @@ const NewPOTab = () => {
               datos.append(`Url`, routeFolder + folderElement.name);
               datos.append(`FolderId`, result.payload.id);
               datos.append(`file`, fileElement.contentFile);
-              dispatch(fileUp(datos));
+              if (fileElement.contentFile.name !== "") {
+                dispatch(fileUp(datos));
+              }
             }
           );
 
@@ -570,8 +589,9 @@ const NewPOTab = () => {
                     );
                     datos.append(`FolderId`, resultFolderProductObj.payload.id);
                     datos.append(`file`, fileElement.contentFile);
-
-                    dispatch(fileUp(datos));
+                    if (fileElement.contentFile.name !== "") {
+                      dispatch(fileUp(datos));
+                    }
                   });
                 }
               );
@@ -690,7 +710,7 @@ const NewPOTab = () => {
                                 );
                                 setTimeout(function () {
                                   messageDispatch(
-                                    t('THE_PO_WAS_SAVE'),
+                                    t("THE_PO_WAS_SAVE"),
                                     "success"
                                   );
                                   navigate(
@@ -701,7 +721,10 @@ const NewPOTab = () => {
                             );
                           } else {
                             setValidateButtonSave(false);
-                            messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                            messageDispatch(
+                              t("THE_PO_ALREADY_EXISTS"),
+                              "error"
+                            );
                           }
                         });
                       });
@@ -752,14 +775,17 @@ const NewPOTab = () => {
                                 dataUMF
                               );
                               setTimeout(function () {
-                                messageDispatch(t('THE_PO_WAS_SAVE'), "success");
+                                messageDispatch(
+                                  t("THE_PO_WAS_SAVE"),
+                                  "success"
+                                );
                                 navigate("/explorer/project/" + dataClient.id);
                               }, 5000);
                             }
                           );
                         } else {
                           setValidateButtonSave(false);
-                          messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                          messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
                         }
                       });
                     }
@@ -823,14 +849,14 @@ const NewPOTab = () => {
                               dataUMF
                             );
                             setTimeout(function () {
-                              messageDispatch(t('THE_PO_WAS_SAVE'), "success");
+                              messageDispatch(t("THE_PO_WAS_SAVE"), "success");
                               navigate("/explorer/project/" + dataClient.id);
                             }, 5000);
                           }
                         );
                       } else {
                         setValidateButtonSave(false);
-                        messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                        messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
                       }
                     });
                   });
@@ -875,14 +901,14 @@ const NewPOTab = () => {
                             dataUMF
                           );
                           setTimeout(function () {
-                            messageDispatch(t('THE_PO_WAS_SAVE'), "success");
+                            messageDispatch(t("THE_PO_WAS_SAVE"), "success");
                             navigate("/explorer/project/" + dataClient.id);
                           }, 5000);
                         }
                       );
                     } else {
                       setValidateButtonSave(false);
-                      messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                      messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
                     }
                   });
                 }
@@ -970,14 +996,17 @@ const NewPOTab = () => {
                                 dataUMF
                               );
                               setTimeout(function () {
-                                messageDispatch(t('THE_PO_WAS_SAVE'), "success");
+                                messageDispatch(
+                                  t("THE_PO_WAS_SAVE"),
+                                  "success"
+                                );
                                 navigate("/explorer/project/" + dataClient.id);
                               }, 5000);
                             }
                           );
                         } else {
                           setValidateButtonSave(false);
-                          messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                          messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
                         }
                       });
                     });
@@ -1022,14 +1051,14 @@ const NewPOTab = () => {
                               dataUMF
                             );
                             setTimeout(function () {
-                              messageDispatch(t('THE_PO_WAS_SAVE'), "success");
+                              messageDispatch(t("THE_PO_WAS_SAVE"), "success");
                               navigate("/explorer/project/" + dataClient.id);
                             }, 5000);
                           }
                         );
                       } else {
                         setValidateButtonSave(false);
-                        messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                        messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
                       }
                     });
                   }
@@ -1093,14 +1122,14 @@ const NewPOTab = () => {
                             dataUMF
                           );
                           setTimeout(function () {
-                            messageDispatch(t('THE_PO_WAS_SAVE'), "success");
+                            messageDispatch(t("THE_PO_WAS_SAVE"), "success");
                             navigate("/explorer/project/" + dataClient.id);
                           }, 5000);
                         }
                       );
                     } else {
                       setValidateButtonSave(false);
-                      messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                      messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
                     }
                   });
                 });
@@ -1145,14 +1174,14 @@ const NewPOTab = () => {
                           dataUMF
                         );
                         setTimeout(function () {
-                          messageDispatch(t('THE_PO_WAS_SAVE'), "success");
+                          messageDispatch(t("THE_PO_WAS_SAVE"), "success");
                           navigate("/explorer/project/" + dataClient.id);
                         }, 5000);
                       }
                     );
                   } else {
                     setValidateButtonSave(false);
-                    messageDispatch(t('THE_PO_ALREADY_EXISTS'), "error");
+                    messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
                   }
                 });
               }

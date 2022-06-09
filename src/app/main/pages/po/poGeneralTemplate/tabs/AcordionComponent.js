@@ -115,14 +115,18 @@ const AcordionComponent = (props) => {
           props.dataPO.folders[indexFolder].addSourceState.state = "";
           props.dataPO.folders[indexFolder].addSourceState.nameFolder = "";
           props.filesGeneral.folders[indexFolder].addSourceState.state = "";
-          props.filesGeneral.folders[indexFolder].addSourceState.nameFolder = "";
+          props.filesGeneral.folders[indexFolder].addSourceState.nameFolder =
+            "";
 
           props.handleUpdate();
         } else {
-          props.messageDispatch(t('THE_FOLDER_NAME_ALREADY_EXISTS'), "error");
+          props.messageDispatch(t("THE_FOLDER_NAME_ALREADY_EXISTS"), "error");
         }
       } else {
-        props.messageDispatch(t("YOU_MUST_ENTER_A") +" "+ t('FOLDER_NAME'), "error");
+        props.messageDispatch(
+          t("YOU_MUST_ENTER_A") + " " + t("FOLDER_NAME"),
+          "error"
+        );
       }
     } else if (
       props.dataPO.folders[indexFolder].addSourceState.state === "file"
@@ -130,6 +134,7 @@ const AcordionComponent = (props) => {
       props.dataPO.folders[indexFolder].files.push({
         name: "New File",
         statePO: "new",
+        stateRequired: false,
         documentType: {
           id: 0,
           name: "",
@@ -151,6 +156,7 @@ const AcordionComponent = (props) => {
       props.filesGeneral.folders[indexFolder].files.push({
         name: "New File",
         statePO: "new",
+        stateRequired: false,
         documentType: {
           id: 0,
           name: "",
@@ -201,6 +207,7 @@ const AcordionComponent = (props) => {
     props.dataPO.folders[indexFolder].products[indexProduct].files.push({
       name: "New File",
       statePO: "new",
+      stateRequired: false,
       documentType: {
         id: 0,
         name: "",
@@ -917,7 +924,7 @@ const AcordionComponent = (props) => {
                                 ")"
                               }
                               value={filePO.contentFile.name}
-                              required
+                              required={filePO.stateRequired}
                               id={
                                 props.parentPOFolder +
                                 "/" +
