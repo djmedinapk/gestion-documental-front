@@ -61,6 +61,12 @@ const NewPOTab = () => {
     )
   );
 
+  var finalFile = { name: "", route: "" };
+
+  const [continueValidationSave, setContinueValidationSave] = useState(false);
+
+  const [idParentFolderCVS, setIdParentFolderCVS] = useState(0);
+
   //const filesGeneral = JSON.parse(JSON.stringify(datosSS));
 
   const [chooseFilesDataUpload, setChooseFilesDataUpload] = useState([]);
@@ -129,6 +135,13 @@ const NewPOTab = () => {
       handleUpdate();
     }
   }, [datosDocumentTypes]);
+
+  useEffect(() => {
+    if (continueValidationSave === true) {
+      setContinueValidationSave(false);
+      uploadFilesRepeated(datosSS, idParentFolderCVS, filesGeneral);
+    }
+  }, [continueValidationSave]);
 
   const documentTypesAsingJsonDatosSS = (dataE) => {
     dataE.folders.forEach((folder, iFolder) => {
@@ -479,6 +492,90 @@ const NewPOTab = () => {
     return validationReturnP;
   };
 
+  const findIdFolderInsider = (
+    nameFolderVI,
+    folderIdVI,
+    indexVI,
+    dataTotalVI,
+    fileVI,
+    routeVI
+  ) => {
+    dispatch(
+      getFoldersValidateUp({
+        Name: nameFolderVI[indexVI],
+        FolderId: folderIdVI,
+      })
+    ).then((resultCadenaV) => {
+      if (indexVI < dataTotalVI - 1) {
+        findIdFolderInsider(
+          nameFolderVI,
+          resultCadenaV.payload.data.data[0].id,
+          indexVI + 1,
+          dataTotalVI,
+          fileVI,
+          routeVI + "/" + nameFolderVI[indexVI]
+        );
+      } else {
+        var datosGeneralFVI = new FormData();
+        datosGeneralFVI.append(`name`, fileVI.contentFile.name);
+        datosGeneralFVI.append(`description`, fileVI.contentFile.name);
+        datosGeneralFVI.append(`documentTypeId`, fileVI.documentType.id);
+        datosGeneralFVI.append(`Url`, routeVI + "/" + nameFolderVI[indexVI]);
+        datosGeneralFVI.append(
+          `FolderId`,
+          resultCadenaV.payload.data.data[0].id
+        );
+        datosGeneralFVI.append(`file`, fileVI.contentFile);
+        if (fileVI.contentFile.name !== "") {
+          dispatch(fileUp(datosGeneralFVI));
+        }
+      }
+    });
+  };
+
+  const findLastFile = (data, route) => {
+    data.files.forEach((element) => {
+      if (element.contentFile.name !== "") {
+        finalFile.name = element.contentFile.name;
+        finalFile.route = route;
+      }
+    });
+
+    data.folders.forEach((element, index) => {
+      findLastFile(element, route + "/" + element.name);
+    });
+  };
+
+  const uploadFilesRepeated = (
+    dataPORepeated,
+    folderVId,
+    dataPORepeatedFiles
+  ) => {
+    dataPORepeated.files.forEach((fileElement, iFileElement) => {
+      if (fileElement.foldersRepeated.length !== 0) {
+        fileElement.foldersRepeated.forEach((elementFoldersRepeated) => {
+          var arrayDeCadenas = elementFoldersRepeated.url.split("/");
+          findIdFolderInsider(
+            arrayDeCadenas,
+            folderVId,
+            0,
+            arrayDeCadenas.length,
+            dataPORepeatedFiles.files[iFileElement],
+            dataPORepeated.name
+          );
+        });
+      }
+    });
+
+    dataPORepeated.folders.forEach((folderElement, iFolderElement) => {
+      uploadFilesRepeated(
+        folderElement,
+        folderVId,
+        dataPORepeatedFiles.folders[iFolderElement]
+      );
+    });
+  };
+
   const uploadSubFolders = (
     dataUF,
     dataUFTemp,
@@ -546,7 +643,33 @@ const NewPOTab = () => {
               datos.append(`FolderId`, result.payload.id);
               datos.append(`file`, fileElement.contentFile);
               if (fileElement.contentFile.name !== "") {
-                dispatch(fileUp(datos));
+                dispatch(fileUp(datos)).then((resultFUNR) => {
+                  var desctructRoute = routeFolder.split("/");
+                  var routeVTempF = "";
+                  desctructRoute.forEach(
+                    (elementDesctructRoute, elementDesctructRouteI) => {
+                      if (elementDesctructRouteI >= 4) {
+                        if (elementDesctructRouteI === 4) {
+                          routeVTempF = elementDesctructRoute;
+                        } else {
+                          routeVTempF =
+                            routeVTempF + "/" + elementDesctructRoute;
+                        }
+                      }
+                    }
+                  );
+
+                  if (
+                    routeVTempF +
+                      folderElement.name +
+                      "/" +
+                      fileElement.contentFile.name ===
+                    finalFile.route + "/" + finalFile.name
+                  ) {
+                    setIdParentFolderCVS(idParentFolder);
+                    setContinueValidationSave(true);
+                  }
+                });
               }
             }
           );
@@ -708,15 +831,15 @@ const NewPOTab = () => {
                                     "/",
                                   dataUMF
                                 );
-                                setTimeout(function () {
-                                  messageDispatch(
-                                    t("THE_PO_WAS_SAVE"),
-                                    "success"
-                                  );
-                                  navigate(
-                                    "/explorer/project/" + dataClient.id
-                                  );
-                                }, 5000);
+                                // setTimeout(function () {
+                                //   messageDispatch(
+                                //     t("THE_PO_WAS_SAVE"),
+                                //     "success"
+                                //   );
+                                //   navigate(
+                                //     "/explorer/project/" + dataClient.id
+                                //   );
+                                // }, 5000);
                               }
                             );
                           } else {
@@ -774,13 +897,13 @@ const NewPOTab = () => {
                                   "/",
                                 dataUMF
                               );
-                              setTimeout(function () {
-                                messageDispatch(
-                                  t("THE_PO_WAS_SAVE"),
-                                  "success"
-                                );
-                                navigate("/explorer/project/" + dataClient.id);
-                              }, 5000);
+                              // setTimeout(function () {
+                              //   messageDispatch(
+                              //     t("THE_PO_WAS_SAVE"),
+                              //     "success"
+                              //   );
+                              //   navigate("/explorer/project/" + dataClient.id);
+                              // }, 5000);
                             }
                           );
                         } else {
@@ -848,10 +971,10 @@ const NewPOTab = () => {
                                 "/",
                               dataUMF
                             );
-                            setTimeout(function () {
-                              messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                              navigate("/explorer/project/" + dataClient.id);
-                            }, 5000);
+                            // setTimeout(function () {
+                            //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
+                            //   navigate("/explorer/project/" + dataClient.id);
+                            // }, 5000);
                           }
                         );
                       } else {
@@ -900,10 +1023,10 @@ const NewPOTab = () => {
                               "/",
                             dataUMF
                           );
-                          setTimeout(function () {
-                            messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                            navigate("/explorer/project/" + dataClient.id);
-                          }, 5000);
+                          // setTimeout(function () {
+                          //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
+                          //   navigate("/explorer/project/" + dataClient.id);
+                          // }, 5000);
                         }
                       );
                     } else {
@@ -995,13 +1118,13 @@ const NewPOTab = () => {
                                   "/",
                                 dataUMF
                               );
-                              setTimeout(function () {
-                                messageDispatch(
-                                  t("THE_PO_WAS_SAVE"),
-                                  "success"
-                                );
-                                navigate("/explorer/project/" + dataClient.id);
-                              }, 5000);
+                              // setTimeout(function () {
+                              //   messageDispatch(
+                              //     t("THE_PO_WAS_SAVE"),
+                              //     "success"
+                              //   );
+                              //   navigate("/explorer/project/" + dataClient.id);
+                              // }, 5000);
                             }
                           );
                         } else {
@@ -1050,10 +1173,10 @@ const NewPOTab = () => {
                                 "/",
                               dataUMF
                             );
-                            setTimeout(function () {
-                              messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                              navigate("/explorer/project/" + dataClient.id);
-                            }, 5000);
+                            // setTimeout(function () {
+                            //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
+                            //   navigate("/explorer/project/" + dataClient.id);
+                            // }, 5000);
                           }
                         );
                       } else {
@@ -1121,10 +1244,10 @@ const NewPOTab = () => {
                               "/",
                             dataUMF
                           );
-                          setTimeout(function () {
-                            messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                            navigate("/explorer/project/" + dataClient.id);
-                          }, 5000);
+                          // setTimeout(function () {
+                          //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
+                          //   navigate("/explorer/project/" + dataClient.id);
+                          // }, 5000);
                         }
                       );
                     } else {
@@ -1173,10 +1296,10 @@ const NewPOTab = () => {
                             "/",
                           dataUMF
                         );
-                        setTimeout(function () {
-                          messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                          navigate("/explorer/project/" + dataClient.id);
-                        }, 5000);
+                        // setTimeout(function () {
+                        //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
+                        //   navigate("/explorer/project/" + dataClient.id);
+                        // }, 5000);
                       }
                     );
                   } else {
@@ -1191,6 +1314,8 @@ const NewPOTab = () => {
       }
     });
   };
+
+  var lastFile = "";
 
   const handleSaveDataPO = () => {
     datosSS.name = filesGeneral.name;
@@ -1225,6 +1350,8 @@ const NewPOTab = () => {
     } else if (!validationFolderEvidencesUVA(datosSS)) {
       validationSave = false;
     }
+
+    findLastFile(datosSS, datosSS.name);
 
     if (validationSave === true) {
       setValidateButtonSave(true);
