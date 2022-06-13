@@ -798,6 +798,7 @@ const AcordionComponent = (props) => {
                             size="small"
                             style={{ height: "100%" }}
                             fullWidth
+                            disabled={props.validateButtonSave}
                             component="span"
                           >
                             {t("CHOOSE_FILES")}
@@ -1019,6 +1020,7 @@ const AcordionComponent = (props) => {
                             style={{ height: "100%" }}
                             fullWidth
                             component="span"
+                            disabled={props.validateButtonSave}
                           >
                             {t("CHOOSE_FILE")}
                           </Button>
@@ -1270,7 +1272,7 @@ const AcordionComponent = (props) => {
                             fullWidth
                             component="span"
                             disabled={
-                              filePO.documentType.name === "" ? true : false
+                              filePO.documentType.name === "" || props.validateButtonSave === true ? true : false
                             }
                           >
                             {t("CHOOSE_FILE")}
@@ -1374,6 +1376,7 @@ const AcordionComponent = (props) => {
                   setValidationYup={props.setValidationYup}
                   messageDispatch={props.messageDispatch}
                   validationFolderName={props.validationFolderName}
+                  validateButtonSave={props.validateButtonSave}
                 />
               ) : (
                 false
@@ -1567,6 +1570,7 @@ const AcordionComponent = (props) => {
                   color="info"
                   className="mt-8  mx-4"
                   onClick={() => handleAdd(iFolderPO)}
+                  disabled={props.validateButtonSave}
                   startIcon={<Icon>add_circle</Icon>}
                   size="small"
                   style={

@@ -801,8 +801,27 @@ const NewPOTab = () => {
                     datos.append(`file`, fileElement.contentFile);
                     if (fileElement.contentFile.name !== "") {
                       dispatch(fileUp(datos)).then((resultFileProductValue) => {
+                        var desctructRouteFileProd = routeFolder.split("/");
+                        var validationDesctructRouteFileProd = "";
+                        desctructRouteFileProd.forEach(
+                          (
+                            elementDesctructRouteFileProd,
+                            IElementDesctructRouteFileProd
+                          ) => {
+                            if (IElementDesctructRouteFileProd === 4) {
+                              validationDesctructRouteFileProd =
+                                elementDesctructRouteFileProd;
+                            } else {
+                              validationDesctructRouteFileProd =
+                                validationDesctructRouteFileProd +
+                                "/" +
+                                elementDesctructRouteFileProd;
+                            }
+                          }
+                        );
+
                         if (
-                          routeFolder +
+                          validationDesctructRouteFileProd +
                             folderElement.name +
                             "/" +
                             productElement.tempName +
@@ -1504,6 +1523,7 @@ const NewPOTab = () => {
               error={!!errors.namePO}
               helperText={errors?.namePO?.message}
               value={filesGeneral ? filesGeneral.name : ""}
+              disabled={validateButtonSave}
               onChange={(event) => {
                 field.onChange(event);
                 handleNamePOState(event);
@@ -1524,6 +1544,7 @@ const NewPOTab = () => {
               variant="outlined"
               size="small"
               fullWidth
+              disabled={validateButtonSave}
               //error={!!errors.pediment}
               //helperText={errors?.pediment?.message}
               value={filesGeneral ? filesGeneral.pediment : ""}
@@ -1549,6 +1570,7 @@ const NewPOTab = () => {
                 labelId="year-select-label"
                 id="year"
                 label="Year"
+                disabled={validateButtonSave}
                 value={datosSS.year}
                 onChange={(event) => {
                   field.onChange(event);
@@ -1580,6 +1602,7 @@ const NewPOTab = () => {
                 labelId="month-select-label"
                 id="month"
                 label="Month"
+                disabled={validateButtonSave}
                 value={datosSS.month}
                 onChange={(event) => {
                   field.onChange(event);
@@ -1612,6 +1635,7 @@ const NewPOTab = () => {
                 labelId="type-select-label"
                 id="type"
                 label="Type"
+                disabled={validateButtonSave}
                 value={datosSS.productType}
                 onChange={(event) => {
                   field.onChange(event);
@@ -1674,6 +1698,7 @@ const NewPOTab = () => {
           errors={errors}
           messageDispatch={messageDispatch}
           validationFolderName={validationFolderName}
+          validateButtonSave={validateButtonSave}
         />
       ) : (
         ""
@@ -1726,6 +1751,7 @@ const NewPOTab = () => {
                     style={{ height: "100%" }}
                     fullWidth
                     component="span"
+                    disabled={validateButtonSave}
                   >
                     {t("CHOOSE_FILE")}
                   </Button>
@@ -1826,7 +1852,7 @@ const NewPOTab = () => {
                     style={{ height: "100%" }}
                     fullWidth
                     component="span"
-                    disabled={file.documentType.name === "" ? true : false}
+                    disabled={file.documentType.name === "" || validateButtonSave === true ? true : false}
                   >
                     {t("CHOOSE_FILE")}
                   </Button>
@@ -1931,6 +1957,7 @@ const NewPOTab = () => {
           onClick={() => handleAdd()}
           startIcon={<Icon>add_circle</Icon>}
           size="small"
+          disabled={validateButtonSave}
           style={
             datosSS.addSourceState.state === "folder"
               ? { minWidth: "40%" }
