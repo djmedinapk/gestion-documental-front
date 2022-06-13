@@ -62,8 +62,23 @@ const NewPOTab = () => {
   );
 
   var finalFile = { name: "", route: "" };
+  var finalFileProducts = { name: "", route: "" };
+  var finalFolder = { name: "", route: "" };
+  var finalFileRepeated = { name: "", route: "" };
 
-  const [continueValidationSave, setContinueValidationSave] = useState(false);
+  const [continueValidationSaveByFiles, setContinueValidationSaveByFiles] =
+    useState(false);
+  const [
+    continueValidationSaveByFilesProducts,
+    setContinueValidationSaveByFilesProducts,
+  ] = useState(false);
+  const [continueValidationSaveByFolders, setContinueValidationSaveByFolders] =
+    useState(false);
+
+  const [
+    continueValidationSaveByFilesRepeated,
+    setContinueValidationSaveByFilesRepeated,
+  ] = useState(false);
 
   const [idParentFolderCVS, setIdParentFolderCVS] = useState(0);
 
@@ -137,11 +152,34 @@ const NewPOTab = () => {
   }, [datosDocumentTypes]);
 
   useEffect(() => {
-    if (continueValidationSave === true) {
-      setContinueValidationSave(false);
+    if (
+      continueValidationSaveByFiles === true &&
+      continueValidationSaveByFilesProducts === true &&
+      continueValidationSaveByFolders === true
+    ) {
+      setContinueValidationSaveByFiles(false);
+      setContinueValidationSaveByFilesProducts(false);
+      setContinueValidationSaveByFolders(false);
+      if (finalFileRepeated.name === "") {
+        setContinueValidationSaveByFilesRepeated(true);
+      }
       uploadFilesRepeated(datosSS, idParentFolderCVS, filesGeneral);
     }
-  }, [continueValidationSave]);
+  }, [
+    continueValidationSaveByFiles,
+    continueValidationSaveByFilesProducts,
+    continueValidationSaveByFolders,
+  ]);
+
+  useEffect(() => {
+    if (continueValidationSaveByFilesRepeated === true) {
+      setContinueValidationSaveByFilesRepeated(false);
+      setTimeout(function () {
+        messageDispatch(t("THE_PO_WAS_SAVE"), "success");
+        navigate("/explorer/project/" + dataClient.id);
+      }, 1000);
+    }
+  }, [continueValidationSaveByFilesRepeated]);
 
   const documentTypesAsingJsonDatosSS = (dataE) => {
     dataE.folders.forEach((folder, iFolder) => {
@@ -527,22 +565,52 @@ const NewPOTab = () => {
         );
         datosGeneralFVI.append(`file`, fileVI.contentFile);
         if (fileVI.contentFile.name !== "") {
-          dispatch(fileUp(datosGeneralFVI));
+          dispatch(fileUp(datosGeneralFVI)).then((resultUPRepeated) => {
+            if (
+              routeVI +
+                "/" +
+                nameFolderVI[indexVI] +
+                "/" +
+                fileVI.contentFile.name ===
+              finalFileRepeated.route + "/" + finalFileRepeated.name
+            ) {
+              setContinueValidationSaveByFilesRepeated(true);
+            }
+          });
         }
       }
     });
   };
 
-  const findLastFile = (data, route) => {
+  const findLastFile = (data, route, namePO) => {
+    finalFolder.name = data.name;
+    finalFolder.route = route;
+
     data.files.forEach((element) => {
       if (element.contentFile.name !== "") {
         finalFile.name = element.contentFile.name;
         finalFile.route = route;
+        if (element.foldersRepeated.length !== 0) {
+          element.foldersRepeated.forEach((elementRepeated) => {
+            finalFileRepeated.name = element.contentFile.name;
+            finalFileRepeated.route = namePO + "/" + elementRepeated.url;
+          });
+        }
       }
     });
 
+    if (route === namePO + "/UVA/Evidencias") {
+      data.products.forEach((elementProduct) => {
+        elementProduct.files.forEach((elementProductFile) => {
+          finalFileProducts.name = elementProductFile.contentFile.name;
+          finalFileProducts.route =
+            route + "/" + elementProduct.tempName + "-" + elementProduct.model;
+        });
+      });
+    }
+
     data.folders.forEach((element, index) => {
-      findLastFile(element, route + "/" + element.name);
+      findLastFile(element, route + "/" + element.name, namePO);
     });
   };
 
@@ -620,6 +688,25 @@ const NewPOTab = () => {
       };
 
       dispatch(folderUp(folderObj)).then((result) => {
+        var desctructRouteFUP = routeFolder.split("/");
+        var validationDesctructRouteFUP = "";
+        desctructRouteFUP.forEach(
+          (elementDesctructRouteFUP, IElementDesctructRouteFUP) => {
+            if (IElementDesctructRouteFUP === 4) {
+              validationDesctructRouteFUP = elementDesctructRouteFUP;
+            } else {
+              validationDesctructRouteFUP =
+                validationDesctructRouteFUP + "/" + elementDesctructRouteFUP;
+            }
+          }
+        );
+        if (
+          validationDesctructRouteFUP + folderElement.name ===
+          finalFolder.route
+        ) {
+          setContinueValidationSaveByFolders(true);
+        }
+
         if (
           routeFolder + folderElement.name !==
           dataClient.name +
@@ -667,7 +754,7 @@ const NewPOTab = () => {
                     finalFile.route + "/" + finalFile.name
                   ) {
                     setIdParentFolderCVS(idParentFolder);
-                    setContinueValidationSave(true);
+                    setContinueValidationSaveByFiles(true);
                   }
                 });
               }
@@ -713,7 +800,21 @@ const NewPOTab = () => {
                     datos.append(`FolderId`, resultFolderProductObj.payload.id);
                     datos.append(`file`, fileElement.contentFile);
                     if (fileElement.contentFile.name !== "") {
-                      dispatch(fileUp(datos));
+                      dispatch(fileUp(datos)).then((resultFileProductValue) => {
+                        if (
+                          routeFolder +
+                            folderElement.name +
+                            "/" +
+                            productElement.tempName +
+                            "-" +
+                            productElement.model +
+                            "/" +
+                            fileElement.contentFile.name ===
+                          finalFileProducts.route + "/" + finalFileProducts.name
+                        ) {
+                          setContinueValidationSaveByFilesProducts(true);
+                        }
+                      });
                     }
                   });
                 }
@@ -728,7 +829,11 @@ const NewPOTab = () => {
           folderCreateSystemUp({
             FolderRoute: routeFolder + folderElement.name,
           })
-        );
+        ).then((resultFCSUP) => {
+          if (routeFolder + folderElement.name === finalFolder.route) {
+            setContinueValidationSaveByFolders(true);
+          }
+        });
       }
     });
   };
@@ -1351,9 +1456,14 @@ const NewPOTab = () => {
       validationSave = false;
     }
 
-    findLastFile(datosSS, datosSS.name);
-
     if (validationSave === true) {
+      findLastFile(datosSS, datosSS.name, datosSS.name);
+      if (finalFile.name === "") {
+        setContinueValidationSaveByFiles(true);
+      }
+      if (finalFileProducts.name === "") {
+        setContinueValidationSaveByFilesProducts(true);
+      }
       setValidateButtonSave(true);
       uploadMainFolders(datosSS, filesGeneral);
     }
