@@ -1,1 +1,1 @@
-export const extraMainURLFrontend = "GD/";
+export const extraMainURLFrontend = "/";
