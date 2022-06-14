@@ -19,3 +19,10 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'tekit-gestionDocumental-uat'
+    runOptions: 'commands'
+    commands: 'cd GD/GestionDocumental.Front && sudo docker-compose down && git pull && sudo docker-compose up -d --build'
+    readyTimeout: '20000'
