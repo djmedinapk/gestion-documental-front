@@ -115,14 +115,18 @@ const AcordionComponent = (props) => {
           props.dataPO.folders[indexFolder].addSourceState.state = "";
           props.dataPO.folders[indexFolder].addSourceState.nameFolder = "";
           props.filesGeneral.folders[indexFolder].addSourceState.state = "";
-          props.filesGeneral.folders[indexFolder].addSourceState.nameFolder = "";
+          props.filesGeneral.folders[indexFolder].addSourceState.nameFolder =
+            "";
 
           props.handleUpdate();
         } else {
-          props.messageDispatch("The folder name already exists", "error");
+          props.messageDispatch(t("THE_FOLDER_NAME_ALREADY_EXISTS"), "error");
         }
       } else {
-        props.messageDispatch("You must enter a folder name", "error");
+        props.messageDispatch(
+          t("YOU_MUST_ENTER_A") + " " + t("FOLDER_NAME"),
+          "error"
+        );
       }
     } else if (
       props.dataPO.folders[indexFolder].addSourceState.state === "file"
@@ -130,6 +134,7 @@ const AcordionComponent = (props) => {
       props.dataPO.folders[indexFolder].files.push({
         name: "New File",
         statePO: "new",
+        stateRequired: false,
         documentType: {
           id: 0,
           name: "",
@@ -151,6 +156,7 @@ const AcordionComponent = (props) => {
       props.filesGeneral.folders[indexFolder].files.push({
         name: "New File",
         statePO: "new",
+        stateRequired: false,
         documentType: {
           id: 0,
           name: "",
@@ -201,6 +207,7 @@ const AcordionComponent = (props) => {
     props.dataPO.folders[indexFolder].products[indexProduct].files.push({
       name: "New File",
       statePO: "new",
+      stateRequired: false,
       documentType: {
         id: 0,
         name: "",
@@ -791,6 +798,7 @@ const AcordionComponent = (props) => {
                             size="small"
                             style={{ height: "100%" }}
                             fullWidth
+                            disabled={props.validateButtonSave}
                             component="span"
                           >
                             {t("CHOOSE_FILES")}
@@ -917,7 +925,7 @@ const AcordionComponent = (props) => {
                                 ")"
                               }
                               value={filePO.contentFile.name}
-                              required
+                              required={filePO.stateRequired}
                               id={
                                 props.parentPOFolder +
                                 "/" +
@@ -1012,6 +1020,7 @@ const AcordionComponent = (props) => {
                             style={{ height: "100%" }}
                             fullWidth
                             component="span"
+                            disabled={props.validateButtonSave}
                           >
                             {t("CHOOSE_FILE")}
                           </Button>
@@ -1263,7 +1272,7 @@ const AcordionComponent = (props) => {
                             fullWidth
                             component="span"
                             disabled={
-                              filePO.documentType.name === "" ? true : false
+                              filePO.documentType.name === "" || props.validateButtonSave === true ? true : false
                             }
                           >
                             {t("CHOOSE_FILE")}
@@ -1367,6 +1376,7 @@ const AcordionComponent = (props) => {
                   setValidationYup={props.setValidationYup}
                   messageDispatch={props.messageDispatch}
                   validationFolderName={props.validationFolderName}
+                  validateButtonSave={props.validateButtonSave}
                 />
               ) : (
                 false
@@ -1560,6 +1570,7 @@ const AcordionComponent = (props) => {
                   color="info"
                   className="mt-8  mx-4"
                   onClick={() => handleAdd(iFolderPO)}
+                  disabled={props.validateButtonSave}
                   startIcon={<Icon>add_circle</Icon>}
                   size="small"
                   style={
