@@ -4,21 +4,25 @@ import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
+import Tooltip from "@mui/material/Tooltip";
+import Zoom from "@mui/material/Zoom";
+import { useNavigate } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 
 import {
-  getCurrentFolder,
-  getFiles,
-  handleNewFileDialog,
   handleEditFolderDialog,
   handleEditFileDialog,
   handleDeleteFileDialog,
-  selectFiles,
-  getFindFolder,
-  getFindProject,
-  handleProjectDataFind,
 } from "./store/explorerSlice";
+
+import { dataPO } from "./../po/store/Params";
+import {
+  changeDatosPOs,
+  getPOById,
+} from "./../po/store/poEditGeneralTemplateSlice";
+
+import { changeGeneralParamsEditPO } from "./../../../store/globalParamsSlice";
 
 function RightSideBarHeader(props) {
   const dispatch = useDispatch();
@@ -27,7 +31,9 @@ function RightSideBarHeader(props) {
     ({ explorerApp }) => explorerApp.explorer.selectedItem
   );
 
-  const { t } = useTranslation("searchPage");
+  const { t } = useTranslation("explorerPage");
+
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
 
@@ -49,6 +55,55 @@ function RightSideBarHeader(props) {
     dispatch(handleDeleteFileDialog());
     setOpen(!open);
   };
+
+  const handleEditPO = () => {
+    dispatch(
+      changeGeneralParamsEditPO({
+        id: selectedItem.metadata.id,
+        name: selectedItem.metadata.name,
+      })
+    );
+    dispatch(getPOById({ idFolderPO: selectedItem.metadata.id })).then(
+      (resultPOE) => {
+        let dataUp = JSON.parse(JSON.stringify(dataPO));
+        if (dataUp.name === "") {
+          dispatch(
+            changeDatosPOs(searchInfoEditPO(dataUp, resultPOE.payload.data))
+          );
+          navigate("/apps/po/po-edit-general-template");
+        }
+      }
+    );
+  };
+
+  const searchInfoEditPO = (dataUp, resultPOE) => {
+    dataUp.name = resultPOE.name;
+    dataUp.year = resultPOE.year;
+    dataUp.month = resultPOE.month;
+    dataUp.productType = resultPOE.productType;
+    dataUp.client.id = resultPOE.client.id;
+    dataUp.client.name = resultPOE.client.name;
+
+    dataUp.folders.forEach((elementFolder) => {
+      resultPOE.folders.forEach((elementResultFolder) => {
+        if (elementFolder.name === elementResultFolder.name) {
+          elementFolder.files.forEach((elementFile) => {
+            elementResultFolder.files.forEach((elementResultFile) => {
+              if(elementFile.documentType.name === elementResultFile.documentType.name){
+                elementFile.contentFile.name = elementResultFile.name;
+                elementFile.documentType.id = elementResultFile.documentType.id;
+              }
+            });
+          });
+        }
+      });
+      searchFoldersInfoEditPO(elementFolder);
+    });
+
+    return dataUp;
+  };
+
+  const searchFoldersInfoEditPO = (folder) => {};
 
   return (
     <div className="flex flex-col justify-between h-full p-4 sm:p-12">
@@ -76,11 +131,17 @@ function RightSideBarHeader(props) {
           false
         )}
         {selectedItem.type === "folder" ? (
-          selectedItem.name !== ".." ? (
-            // <IconButton size="large" onClick={() => handleEditFolder()}>
-            //   <Icon>edit</Icon>
-            // </IconButton>
-            false
+          selectedItem.metadata?.isPO === true ? (
+            <Tooltip
+              title={t("EDIT_PO")}
+              placement="bottom"
+              arrow
+              TransitionComponent={Zoom}
+            >
+              <IconButton size="large" onClick={() => handleEditPO()}>
+                <Icon>edit</Icon>
+              </IconButton>
+            </Tooltip>
           ) : (
             false
           )
