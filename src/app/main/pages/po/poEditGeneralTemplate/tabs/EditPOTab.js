@@ -34,7 +34,6 @@ import {
   folderUp,
   folderCreateSystemUp,
   getFoldersValidateUp,
-  getPOById,
 } from "./../../store/poEditGeneralTemplateSlice";
 import { selectProductTypesEditPO } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypesEditPO } from "./../../store/documentTypesAdminSlice";

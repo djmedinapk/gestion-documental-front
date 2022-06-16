@@ -987,6 +987,12 @@ const AcordionComponent = (props) => {
                           onClick={(event) => {
                             event.target.value = null;
                           }}
+                          disabled={
+                            props.validateButtonSave === true ||
+                            (filePO.id !== undefined && filePO.id !== 0)
+                              ? true
+                              : false
+                          }
                         />
                         <label
                           htmlFor={
@@ -1002,6 +1008,7 @@ const AcordionComponent = (props) => {
                           className="mt-8  mx-4"
                           style={{ minWidth: "15%" }}
                         >
+                          {console.log(filePO.id)}
                           <Button
                             key={
                               props.parentPOFolder +
@@ -1020,7 +1027,12 @@ const AcordionComponent = (props) => {
                             style={{ height: "100%" }}
                             fullWidth
                             component="span"
-                            disabled={props.validateButtonSave}
+                            disabled={
+                              props.validateButtonSave === true ||
+                              (filePO.id !== undefined && filePO.id !== 0)
+                                ? true
+                                : false
+                            }
                           >
                             {t("CHOOSE_FILE")}
                           </Button>
@@ -1272,7 +1284,10 @@ const AcordionComponent = (props) => {
                             fullWidth
                             component="span"
                             disabled={
-                              filePO.documentType.name === "" || props.validateButtonSave === true ? true : false
+                              filePO.documentType.name === "" ||
+                              props.validateButtonSave === true
+                                ? true
+                                : false
                             }
                           >
                             {t("CHOOSE_FILE")}

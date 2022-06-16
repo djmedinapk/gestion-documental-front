@@ -558,6 +558,7 @@ const NewPOTab = () => {
         datosGeneralFVI.append(`name`, fileVI.contentFile.name);
         datosGeneralFVI.append(`description`, fileVI.contentFile.name);
         datosGeneralFVI.append(`documentTypeId`, fileVI.documentType.id);
+        datosGeneralFVI.append(`stateDbPO`, fileVI.statePO);
         datosGeneralFVI.append(`Url`, routeVI + "/" + nameFolderVI[indexVI]);
         datosGeneralFVI.append(
           `FolderId`,
@@ -671,6 +672,7 @@ const NewPOTab = () => {
         datosGeneralF.append(`documentTypeId`, fileElement.documentType.id);
         datosGeneralF.append(`Url`, routeFolder);
         datosGeneralF.append(`FolderId`, idParentFolder);
+        datosGeneralF.append(`stateDbPO`, fileElement.statePO);
         datosGeneralF.append(`file`, fileElement.contentFile);
         if (fileElement.contentFile.name !== "") {
           dispatch(fileUp(datosGeneralF));
@@ -685,6 +687,7 @@ const NewPOTab = () => {
         isPO: false,
         FolderId: idParentFolder,
         UserId: dataClient.userId,
+        StateDbPO: folderElement.statePO,
       };
 
       dispatch(folderUp(folderObj)).then((result) => {
@@ -728,6 +731,7 @@ const NewPOTab = () => {
               datos.append(`documentTypeId`, fileElement.documentType.id);
               datos.append(`Url`, routeFolder + folderElement.name);
               datos.append(`FolderId`, result.payload.id);
+              datos.append(`stateDbPO`, fileElement.statePO);
               datos.append(`file`, fileElement.contentFile);
               if (fileElement.contentFile.name !== "") {
                 dispatch(fileUp(datos)).then((resultFUNR) => {
@@ -780,6 +784,7 @@ const NewPOTab = () => {
                 isPO: false,
                 FolderId: result.payload.id,
                 UserId: dataClient.userId,
+                StateDbPO: "old",
               };
               dispatch(folderUp(folderProductObj)).then(
                 (resultFolderProductObj) => {
@@ -788,6 +793,7 @@ const NewPOTab = () => {
                     datos.append(`name`, fileElement.contentFile.name);
                     datos.append(`description`, fileElement.contentFile.name);
                     datos.append(`documentTypeId`, fileElement.documentType.id);
+                    datos.append(`stateDbPO`, fileElement.statePO);
                     datos.append(
                       `Url`,
                       routeFolder +
@@ -847,6 +853,7 @@ const NewPOTab = () => {
         dispatch(
           folderCreateSystemUp({
             FolderRoute: routeFolder + folderElement.name,
+            StateDbPO: folderElement.statePO,
           })
         ).then((resultFCSUP) => {
           if (routeFolder + folderElement.name === finalFolder.route) {
@@ -864,6 +871,7 @@ const NewPOTab = () => {
       isPO: false,
       ProjectId: dataClient.id,
       UserId: dataClient.userId,
+      StateDbPO: dataUMF.statePO,
     };
 
     //validation Year
@@ -881,6 +889,7 @@ const NewPOTab = () => {
             isPO: false,
             FolderId: resultYear.payload.id,
             UserId: dataClient.userId,
+            StateDbPO: dataUMF.statePO,
           };
 
           //validation ProductType
@@ -899,6 +908,7 @@ const NewPOTab = () => {
                     isPO: false,
                     FolderId: resultProductType.payload.id,
                     UserId: dataClient.userId,
+                    StateDbPO: dataUMF.statePO,
                   };
                   //validation month
                   dispatch(
@@ -916,6 +926,7 @@ const NewPOTab = () => {
                           FolderId: resultMonth.payload.id,
                           ProductTypeId: 0,
                           UserId: dataClient.userId,
+                          StateDbPO: dataUMF.statePO,
                         };
                         datosProductTypes[0].data.forEach(
                           (productTypeElement) => {
@@ -983,6 +994,7 @@ const NewPOTab = () => {
                         FolderId: resultValidateMonth.payload.data.data[0].id,
                         ProductTypeId: 0,
                         UserId: dataClient.userId,
+                        StateDbPO: dataUMF.statePO,
                       };
 
                       datosProductTypes[0].data.forEach(
@@ -1046,6 +1058,7 @@ const NewPOTab = () => {
                 isPO: false,
                 FolderId: resultValidateProductType.payload.data.data[0].id,
                 UserId: dataClient.userId,
+                StateDbPO: dataUMF.statePO,
               };
               //validation month
               dispatch(
@@ -1063,6 +1076,7 @@ const NewPOTab = () => {
                       FolderId: resultMonth.payload.id,
                       ProductTypeId: 0,
                       UserId: dataClient.userId,
+                      StateDbPO: dataUMF.statePO,
                     };
                     datosProductTypes[0].data.forEach((productTypeElement) => {
                       if (dataUMF.productType === productTypeElement.name) {
@@ -1115,6 +1129,7 @@ const NewPOTab = () => {
                     FolderId: resultValidateMonth.payload.data.data[0].id,
                     ProductTypeId: 0,
                     UserId: dataClient.userId,
+                    StateDbPO: dataUMF.statePO,
                   };
                   datosProductTypes[0].data.forEach((productTypeElement) => {
                     if (dataUMF.productType === productTypeElement.name) {
@@ -1170,6 +1185,7 @@ const NewPOTab = () => {
           isPO: false,
           FolderId: resultValidateYear.payload.data.data[0].id,
           UserId: dataClient.userId,
+          StateDbPO: dataUMF.statePO,
         };
 
         //validation ProductType
@@ -1188,6 +1204,7 @@ const NewPOTab = () => {
                   isPO: false,
                   FolderId: resultProductType.payload.id,
                   UserId: dataClient.userId,
+                  StateDbPO: dataUMF.statePO,
                 };
                 //validation month
                 dispatch(
@@ -1205,6 +1222,7 @@ const NewPOTab = () => {
                         FolderId: resultMonth.payload.id,
                         ProductTypeId: 0,
                         UserId: dataClient.userId,
+                        StateDbPO: dataUMF.statePO,
                       };
                       datosProductTypes[0].data.forEach(
                         (productTypeElement) => {
@@ -1265,6 +1283,7 @@ const NewPOTab = () => {
                       FolderId: resultValidateMonth.payload.data.data[0].id,
                       ProductTypeId: 0,
                       UserId: dataClient.userId,
+                      StateDbPO: dataUMF.statePO,
                     };
                     datosProductTypes[0].data.forEach((productTypeElement) => {
                       if (dataUMF.productType === productTypeElement.name) {
@@ -1319,6 +1338,7 @@ const NewPOTab = () => {
               isPO: false,
               FolderId: resultValidateProductType.payload.data.data[0].id,
               UserId: dataClient.userId,
+              StateDbPO: dataUMF.statePO,
             };
             //validation month
             dispatch(
@@ -1336,6 +1356,7 @@ const NewPOTab = () => {
                     FolderId: resultMonth.payload.id,
                     ProductTypeId: 0,
                     UserId: dataClient.userId,
+                    StateDbPO: dataUMF.statePO,
                   };
                   datosProductTypes[0].data.forEach((productTypeElement) => {
                     if (dataUMF.productType === productTypeElement.name) {
@@ -1388,6 +1409,7 @@ const NewPOTab = () => {
                   FolderId: resultValidateMonth.payload.data.data[0].id,
                   ProductTypeId: 0,
                   UserId: dataClient.userId,
+                  StateDbPO: dataUMF.statePO,
                 };
                 datosProductTypes[0].data.forEach((productTypeElement) => {
                   if (dataUMF.productType === productTypeElement.name) {
@@ -1852,7 +1874,12 @@ const NewPOTab = () => {
                     style={{ height: "100%" }}
                     fullWidth
                     component="span"
-                    disabled={file.documentType.name === "" || validateButtonSave === true ? true : false}
+                    disabled={
+                      file.documentType.name === "" ||
+                      validateButtonSave === true
+                        ? true
+                        : false
+                    }
                   >
                     {t("CHOOSE_FILE")}
                   </Button>

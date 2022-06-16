@@ -78,26 +78,42 @@ function RightSideBarHeader(props) {
 
   const searchInfoEditPO = (dataUp, resultPOE) => {
     dataUp.name = resultPOE.name;
-    dataUp.year = resultPOE.year;
-    dataUp.month = resultPOE.month;
-    dataUp.productType = resultPOE.productType;
-    dataUp.client.id = resultPOE.client.id;
-    dataUp.client.name = resultPOE.client.name;
-
+    if (resultPOE.stateDbPO !== null) {
+      dataUp.statePO = resultPOE.StateDbPO;
+    }
+    if (dataUp.year !== null && dataUp.year !== undefined) {
+      dataUp.year = resultPOE.year;
+      dataUp.month = resultPOE.month;
+      dataUp.productType = resultPOE.productType;
+      dataUp.client.id = resultPOE.client.id;
+      dataUp.client.name = resultPOE.client.name;
+    }
     dataUp.folders.forEach((elementFolder) => {
       resultPOE.folders.forEach((elementResultFolder) => {
         if (elementFolder.name === elementResultFolder.name) {
+          if (elementFolder.folders.length !== 0) {
+            elementFolder = searchInfoEditPO(
+              elementFolder,
+              elementResultFolder
+            );
+          }
+
           elementFolder.files.forEach((elementFile) => {
             elementResultFolder.files.forEach((elementResultFile) => {
-              if(elementFile.documentType.name === elementResultFile.documentType.name){
+              if (
+                elementFile.documentType.name ===
+                elementResultFile.documentType.name
+              ) {
+                elementFile.id = elementResultFile.id;
                 elementFile.contentFile.name = elementResultFile.name;
                 elementFile.documentType.id = elementResultFile.documentType.id;
+                elementFile.documentType.name =
+                  elementResultFile.documentType.name;
               }
             });
           });
         }
       });
-      searchFoldersInfoEditPO(elementFolder);
     });
 
     return dataUp;
