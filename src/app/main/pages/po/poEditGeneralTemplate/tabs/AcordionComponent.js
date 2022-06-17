@@ -405,6 +405,7 @@ const AcordionComponent = (props) => {
                 onClick={() => handleRemoveFolder(iFolderPO)}
                 size="small"
                 style={{ maxWidth: "10%" }}
+                disabled={folderPO.id ? true : false}
               >
                 <Icon>delete</Icon>
               </Button>
@@ -518,6 +519,7 @@ const AcordionComponent = (props) => {
                             }
                             size="small"
                             style={{ maxWidth: "10%" }}
+                            disabled={productPO.id ? true : false}
                           >
                             <Icon>delete</Icon>
                           </Button>
@@ -588,6 +590,7 @@ const AcordionComponent = (props) => {
                               }
                               value={productPO.tempName}
                               name={iFolderPO + "." + iProductPO}
+                              disabled={productPO.id ? true : false}
                               onChange={(event) =>
                                 onChangeTextNameProductEvidenciasUVA(
                                   iFolderPO,
@@ -650,6 +653,7 @@ const AcordionComponent = (props) => {
                               }
                               value={productPO.model}
                               name={iFolderPO + "." + iProductPO}
+                              disabled={productPO.id ? true : false}
                               onChange={onChangeTextModelProductEvidenciasUVA}
                               variant="outlined"
                               size="small"
@@ -766,6 +770,7 @@ const AcordionComponent = (props) => {
                           onClick={(event) => {
                             event.target.value = null;
                           }}
+                          disabled={props.validateButtonSave || productPO.id ? true : false}
                         />
                         <label
                           htmlFor={
@@ -798,7 +803,7 @@ const AcordionComponent = (props) => {
                             size="small"
                             style={{ height: "100%" }}
                             fullWidth
-                            disabled={props.validateButtonSave}
+                            disabled={props.validateButtonSave || productPO.id ? true : false}
                             component="span"
                           >
                             {t("CHOOSE_FILES")}
@@ -1008,7 +1013,6 @@ const AcordionComponent = (props) => {
                           className="mt-8  mx-4"
                           style={{ minWidth: "15%" }}
                         >
-                          {console.log(filePO.id)}
                           <Button
                             key={
                               props.parentPOFolder +
@@ -1354,6 +1358,7 @@ const AcordionComponent = (props) => {
                           }
                           onClick={() => handleRemoveFile(iFolderPO, iFilePO)}
                           size="small"
+                          disabled={filePO.id ? true : false}
                         >
                           <Icon>delete</Icon>
                         </Button>

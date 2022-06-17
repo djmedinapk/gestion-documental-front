@@ -135,6 +135,7 @@ const AcordionComponent = (props) => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 0,
           name: "",
@@ -157,6 +158,7 @@ const AcordionComponent = (props) => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 0,
           name: "",
@@ -208,6 +210,7 @@ const AcordionComponent = (props) => {
       name: "New File",
       statePO: "new",
       stateRequired: false,
+      foldersRepeated: [],
       documentType: {
         id: 0,
         name: "",
@@ -329,6 +332,7 @@ const AcordionComponent = (props) => {
       props.dataPO.folders[indexFolder].products[indexProduct].files.push({
         name: "New File",
         statePO: "new",
+        foldersRepeated: [],
         documentType: documentSigleTypeImage,
         contentFile: {
           name: "",
@@ -365,6 +369,7 @@ const AcordionComponent = (props) => {
         {
           name: "New File",
           statePO: "new",
+          foldersRepeated: [],
           documentType: documentSigleTypeImage,
           contentFile: null,
         }

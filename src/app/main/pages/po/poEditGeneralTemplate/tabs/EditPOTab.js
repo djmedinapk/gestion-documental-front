@@ -98,7 +98,7 @@ const EditPOTab = () => {
 
   const datosDocumentTypes = useSelector(selectDocumentTypesEditPO);
 
- // const datosPOEditMethod = useSelector(selectDataEditPO);
+  // const datosPOEditMethod = useSelector(selectDataEditPO);
 
   const [dataYears, setDataYears] = useState([]);
 
@@ -141,7 +141,7 @@ const EditPOTab = () => {
   useDeepCompareEffect(() => {
     if (dataMainEditPO.id === 0 && dataMainEditPO.name === "") {
       navigate("/projects");
-    } 
+    }
     setDataYears(getYearsData());
   }, [dispatch, datosProductTypes, datosDocumentTypes]);
 
@@ -1892,6 +1892,7 @@ const EditPOTab = () => {
                   key={file.name + i + "deleteFile"}
                   onClick={() => handleRemoveFile(i)}
                   size="small"
+                  disabled={file.id ? true : false}
                 >
                   <Icon>delete</Icon>
                 </Button>

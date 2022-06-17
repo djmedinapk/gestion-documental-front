@@ -285,6 +285,7 @@ const NewPOTab = () => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 3,
           name: "",
@@ -308,6 +309,7 @@ const NewPOTab = () => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 3,
           name: "",
@@ -784,7 +786,7 @@ const NewPOTab = () => {
                 isPO: false,
                 FolderId: result.payload.id,
                 UserId: dataClient.userId,
-                StateDbPO: "old",
+                StateDbPO: "new",
               };
               dispatch(folderUp(folderProductObj)).then(
                 (resultFolderProductObj) => {

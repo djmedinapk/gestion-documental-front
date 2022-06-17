@@ -23,6 +23,7 @@ import {
 } from "./../po/store/poEditGeneralTemplateSlice";
 
 import { changeGeneralParamsEditPO } from "./../../../store/globalParamsSlice";
+import { result } from "lodash";
 
 function RightSideBarHeader(props) {
   const dispatch = useDispatch();
@@ -67,19 +68,143 @@ function RightSideBarHeader(props) {
       (resultPOE) => {
         let dataUp = JSON.parse(JSON.stringify(dataPO));
         if (dataUp.name === "") {
-          dispatch(
-            changeDatosPOs(searchInfoEditPO(dataUp, resultPOE.payload.data))
+          let originalData = searchInfoEditPO(dataUp, resultPOE.payload.data);
+          let originalDataWithNew = searchInfoEditPONew(
+            originalData,
+            resultPOE.payload.data,
+            originalData.name,
+            originalData.name
           );
+          dispatch(changeDatosPOs(originalDataWithNew));
           navigate("/apps/po/po-edit-general-template");
         }
       }
     );
   };
 
+  const searchInfoEditPONew = (dataUp, resultPOE, route, namePO) => {
+    if (route !== namePO + "/UVA/Evidencias") {
+      resultPOE.files.forEach((elementFiles) => {
+        if (elementFiles.stateDbPO === "new") {
+          var dataFilePush = {
+            id: elementFiles.id,
+            name: elementFiles.name,
+            statePO: elementFiles.stateDbPO,
+            stateRequired: false,
+            foldersRepeated: [],
+            documentType: elementFiles.documentType,
+            contentFile: {
+              name: elementFiles.name,
+              lastModified: 0,
+              lastModifiedDate: null,
+              size: 0,
+              type: "",
+            },
+          };
+          dataUp.files.push(dataFilePush);
+        }
+      });
+
+      resultPOE.folders.forEach((elementResultFolder) => {
+        if (elementResultFolder.stateDbPO === "new") {
+          var dataFolderPush = {
+            id: elementResultFolder.id,
+            name: elementResultFolder.name,
+            statePO: elementResultFolder.stateDbPO,
+            accordionState: elementResultFolder.name,
+            addSourceState: { state: "", nameFolder: "" },
+            files: [],
+            folders: [],
+          };
+
+          if (elementResultFolder.folders.length !== 0) {
+            dataFolderPush = searchInfoEditPONew(
+              dataFolderPush,
+              elementResultFolder,
+              route + "/" + dataFolderPush.name,
+              namePO
+            );
+          } else {
+            elementResultFolder.files.forEach((elementFilesRes) => {
+              var dataFilePushRes = {
+                id: elementFilesRes.id,
+                name: elementFilesRes.name,
+                statePO: elementFilesRes.stateDbPO,
+                stateRequired: false,
+                foldersRepeated: [],
+                documentType: elementFilesRes.documentType,
+                contentFile: {
+                  name: elementFilesRes.name,
+                  lastModified: 0,
+                  lastModifiedDate: null,
+                  size: 0,
+                  type: "",
+                },
+              };
+              dataFolderPush.files.push(dataFilePushRes);
+            });
+          }
+
+          dataUp.folders.push(dataFolderPush);
+        } else if (elementResultFolder.stateDbPO === "old") {
+          dataUp.folders.forEach((elementdataUpFolderOld) => {
+            if (
+              elementdataUpFolderOld.name === elementResultFolder.name &&
+              elementdataUpFolderOld.statePO === "old"
+            ) {
+              elementdataUpFolderOld = searchInfoEditPONew(
+                elementdataUpFolderOld,
+                elementResultFolder,
+                route + "/" + elementdataUpFolderOld.name,
+                namePO
+              );
+            }
+          });
+        }
+      });
+    } else {
+      resultPOE.folders.forEach((elementResultFolder) => {
+        var nameProduct = elementResultFolder.name.split('-');
+
+        var productPO = {
+          id: elementResultFolder.id,
+          name: nameProduct[0],
+          tempName: nameProduct[0],
+          model: nameProduct[1],
+          statePO: "new",
+          files: [],
+        };
+
+        elementResultFolder.files.forEach(fileProductElement => {
+          var dataFileProductPush = {
+            id: fileProductElement.id,
+            name: fileProductElement.name,
+            statePO: fileProductElement.stateDbPO,
+            stateRequired: false,
+            foldersRepeated: [],
+            documentType: fileProductElement.documentType,
+            contentFile: {
+              name: fileProductElement.name,
+              lastModified: 0,
+              lastModifiedDate: null,
+              size: 0,
+              type: "",
+            },
+          };
+          productPO.files.push(dataFileProductPush);
+        });
+        dataUp.products.push(productPO);
+      });
+    }
+
+    return dataUp;
+  };
+
   const searchInfoEditPO = (dataUp, resultPOE) => {
+    dataUp.id = resultPOE.id;
     dataUp.name = resultPOE.name;
-    if (resultPOE.stateDbPO !== null) {
-      dataUp.statePO = resultPOE.StateDbPO;
+    if (resultPOE.stateDbPO !== null && resultPOE.stateDbPO !== "") {
+      dataUp.statePO = resultPOE.stateDbPO;
     }
     if (dataUp.year !== null && dataUp.year !== undefined) {
       dataUp.year = resultPOE.year;
@@ -90,7 +215,10 @@ function RightSideBarHeader(props) {
     }
     dataUp.folders.forEach((elementFolder) => {
       resultPOE.folders.forEach((elementResultFolder) => {
-        if (elementFolder.name === elementResultFolder.name) {
+        if (
+          elementFolder.name === elementResultFolder.name &&
+          elementResultFolder.stateDbPO === "old"
+        ) {
           if (elementFolder.folders.length !== 0) {
             elementFolder = searchInfoEditPO(
               elementFolder,
@@ -102,8 +230,15 @@ function RightSideBarHeader(props) {
             elementResultFolder.files.forEach((elementResultFile) => {
               if (
                 elementFile.documentType.name ===
-                elementResultFile.documentType.name
+                  elementResultFile.documentType.name &&
+                elementResultFile.stateDbPO === "old"
               ) {
+                if (
+                  elementResultFile.stateDbPO !== null &&
+                  elementResultFile.stateDbPO !== ""
+                ) {
+                  elementFile.statePO = elementResultFile.stateDbPO;
+                }
                 elementFile.id = elementResultFile.id;
                 elementFile.contentFile.name = elementResultFile.name;
                 elementFile.documentType.id = elementResultFile.documentType.id;
