@@ -182,7 +182,7 @@ const EditPOTab = () => {
       setContinueValidationSaveByFilesRepeated(false);
       setTimeout(function () {
         messageDispatch(t("THE_PO_WAS_UPDATED"), "success");
-       // navigate("/explorer/folder/" + datosSS.id);
+        navigate("/explorer/folder/" + datosSS.id);
       }, 1000);
     }
   }, [continueValidationSaveByFilesRepeated]);
@@ -764,10 +764,9 @@ const EditPOTab = () => {
         ) {
           setContinueValidationSaveByFolders(true);
         }
-
         if (
           routeFolder + folderElement.name !==
-          dataClient.name +
+          dataGeneral.client.name +
             "/" +
             dataGeneral.year +
             "/" +
@@ -844,7 +843,7 @@ const EditPOTab = () => {
                   productElement.tempName + "-" + productElement.model,
                 isPO: false,
                 FolderId: folderElement.id,
-                UserId: dataClient.userId,
+                UserId: dataGeneral.client.id,
                 StateDbPO: folderElement.statePO,
               };
               if (
@@ -954,7 +953,7 @@ const EditPOTab = () => {
 
           if (
             routeFolder + folderElement.name !==
-            dataClient.name +
+            dataGeneral.client.name +
               "/" +
               dataGeneral.year +
               "/" +
@@ -1032,7 +1031,7 @@ const EditPOTab = () => {
                     productElement.tempName + "-" + productElement.model,
                   isPO: false,
                   FolderId: result.payload.id,
-                  UserId: dataClient.userId,
+                  UserId: dataGeneral.client.id,
                   StateDbPO: "new",
                 };
                 if (
@@ -1206,17 +1205,8 @@ const EditPOTab = () => {
       if (finalFolder.name === "") {
         setContinueValidationSaveByFolders(true);
       }
-      //setValidateButtonSave(true);
+      setValidateButtonSave(true);
       uploadMainFolders(datosSS, filesGeneral);
-
-      console.log(
-        finalFile,
-        continueValidationSaveByFiles,
-        finalFileProducts,
-        continueValidationSaveByFilesProducts,
-        finalFolder,
-        continueValidationSaveByFolders
-      );
     }
   };
 
