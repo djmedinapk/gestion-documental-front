@@ -37,6 +37,8 @@ const locale = {
   THE_FOLDER_NAME_ALREADY_EXISTS: "El nombre de la carpeta ya existe",
   FOLDER_NAME: "Nombre de la Carpeta",
   EDIT_PO:"Editar PO",
+  THE_PO_WAS_UPDATED: "La PO ha sido actualizada",
+  UPDATE: "Actualizar",
 };
 
 export default locale;

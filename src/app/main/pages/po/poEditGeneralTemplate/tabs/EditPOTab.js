@@ -169,7 +169,7 @@ const EditPOTab = () => {
       if (finalFileRepeated.name === "") {
         setContinueValidationSaveByFilesRepeated(true);
       }
-      uploadFilesRepeated(datosSS, idParentFolderCVS, filesGeneral);
+      uploadFilesRepeated(datosSS, datosSS.id, filesGeneral);
     }
   }, [
     continueValidationSaveByFiles,
@@ -181,8 +181,8 @@ const EditPOTab = () => {
     if (continueValidationSaveByFilesRepeated === true) {
       setContinueValidationSaveByFilesRepeated(false);
       setTimeout(function () {
-        messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-        navigate("/explorer/project/" + dataClient.id);
+        messageDispatch(t("THE_PO_WAS_UPDATED"), "success");
+       // navigate("/explorer/folder/" + datosSS.id);
       }, 1000);
     }
   }, [continueValidationSaveByFilesRepeated]);
@@ -291,6 +291,7 @@ const EditPOTab = () => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 3,
           name: "",
@@ -314,6 +315,7 @@ const EditPOTab = () => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 3,
           name: "",
@@ -564,6 +566,7 @@ const EditPOTab = () => {
         datosGeneralFVI.append(`name`, fileVI.contentFile.name);
         datosGeneralFVI.append(`description`, fileVI.contentFile.name);
         datosGeneralFVI.append(`documentTypeId`, fileVI.documentType.id);
+        datosGeneralFVI.append(`stateDbPO`, fileVI.statePO);
         datosGeneralFVI.append(`Url`, routeVI + "/" + nameFolderVI[indexVI]);
         datosGeneralFVI.append(
           `FolderId`,
@@ -571,35 +574,60 @@ const EditPOTab = () => {
         );
         datosGeneralFVI.append(`file`, fileVI.contentFile);
         if (fileVI.contentFile.name !== "") {
-          dispatch(fileUp(datosGeneralFVI)).then((resultUPRepeated) => {
-            if (
-              routeVI +
-                "/" +
-                nameFolderVI[indexVI] +
-                "/" +
-                fileVI.contentFile.name ===
-              finalFileRepeated.route + "/" + finalFileRepeated.name
-            ) {
-              setContinueValidationSaveByFilesRepeated(true);
-            }
-          });
+          if (
+            fileVI.id !== undefined &&
+            fileVI.id !== null &&
+            fileVI.id !== 0
+          ) {
+          } else {
+            dispatch(fileUp(datosGeneralFVI)).then((resultUPRepeated) => {
+              if (
+                routeVI +
+                  "/" +
+                  nameFolderVI[indexVI] +
+                  "/" +
+                  fileVI.contentFile.name ===
+                finalFileRepeated.route + "/" + finalFileRepeated.name
+              ) {
+                setContinueValidationSaveByFilesRepeated(true);
+              }
+            });
+          }
         }
       }
     });
   };
 
   const findLastFile = (data, route, namePO) => {
-    finalFolder.name = data.name;
-    finalFolder.route = route;
+    if (data.id !== undefined && data.id !== null && data.id != 0) {
+    } else {
+      finalFolder.name = data.name;
+      finalFolder.route = route;
+    }
 
     data.files.forEach((element) => {
       if (element.contentFile.name !== "") {
-        finalFile.name = element.contentFile.name;
-        finalFile.route = route;
+        if (
+          element.id !== undefined &&
+          element.id !== null &&
+          element.id != 0
+        ) {
+        } else {
+          finalFile.name = element.contentFile.name;
+          finalFile.route = route;
+        }
+
         if (element.foldersRepeated.length !== 0) {
           element.foldersRepeated.forEach((elementRepeated) => {
-            finalFileRepeated.name = element.contentFile.name;
-            finalFileRepeated.route = namePO + "/" + elementRepeated.url;
+            if (
+              element.id !== undefined &&
+              element.id !== null &&
+              element.id != 0
+            ) {
+            } else {
+              finalFileRepeated.name = element.contentFile.name;
+              finalFileRepeated.route = namePO + "/" + elementRepeated.url;
+            }
           });
         }
       }
@@ -608,9 +636,20 @@ const EditPOTab = () => {
     if (route === namePO + "/UVA/Evidencias") {
       data.products.forEach((elementProduct) => {
         elementProduct.files.forEach((elementProductFile) => {
-          finalFileProducts.name = elementProductFile.contentFile.name;
-          finalFileProducts.route =
-            route + "/" + elementProduct.tempName + "-" + elementProduct.model;
+          if (
+            elementProduct.id !== undefined &&
+            elementProduct.id !== null &&
+            elementProduct.id != 0
+          ) {
+          } else {
+            finalFileProducts.name = elementProductFile.contentFile.name;
+            finalFileProducts.route =
+              route +
+              "/" +
+              elementProduct.tempName +
+              "-" +
+              elementProduct.model;
+          }
         });
       });
     }
@@ -659,7 +698,7 @@ const EditPOTab = () => {
   ) => {
     if (
       routeFolder ===
-      dataClient.name +
+      dataGeneral.client.name +
         "/" +
         dataGeneral.year +
         "/" +
@@ -675,11 +714,19 @@ const EditPOTab = () => {
         datosGeneralF.append(`name`, fileElement.contentFile.name);
         datosGeneralF.append(`description`, fileElement.contentFile.name);
         datosGeneralF.append(`documentTypeId`, fileElement.documentType.id);
+        datosGeneralF.append(`stateDbPO`, fileElement.statePO);
         datosGeneralF.append(`Url`, routeFolder);
         datosGeneralF.append(`FolderId`, idParentFolder);
         datosGeneralF.append(`file`, fileElement.contentFile);
         if (fileElement.contentFile.name !== "") {
-          dispatch(fileUp(datosGeneralF));
+          if (
+            fileElement.id !== undefined &&
+            fileElement.id !== null &&
+            fileElement.id !== 0
+          ) {
+          } else {
+            dispatch(fileUp(datosGeneralF));
+          }
         }
       });
     }
@@ -690,10 +737,15 @@ const EditPOTab = () => {
         description: folderElement.name,
         isPO: false,
         FolderId: idParentFolder,
-        UserId: dataClient.userId,
+        UserId: dataGeneral.client.id,
+        StateDbPO: folderElement.statePO,
       };
 
-      dispatch(folderUp(folderObj)).then((result) => {
+      if (
+        folderElement.id !== null &&
+        folderElement.id !== undefined &&
+        folderElement.id !== 0
+      ) {
         var desctructRouteFUP = routeFolder.split("/");
         var validationDesctructRouteFUP = "";
         desctructRouteFUP.forEach(
@@ -733,45 +785,52 @@ const EditPOTab = () => {
               datos.append(`description`, fileElement.contentFile.name);
               datos.append(`documentTypeId`, fileElement.documentType.id);
               datos.append(`Url`, routeFolder + folderElement.name);
-              datos.append(`FolderId`, result.payload.id);
+              datos.append(`stateDbPO`, fileElement.statePO);
+              datos.append(`FolderId`, folderElement.id);
               datos.append(`file`, fileElement.contentFile);
               if (fileElement.contentFile.name !== "") {
-                dispatch(fileUp(datos)).then((resultFUNR) => {
-                  var desctructRoute = routeFolder.split("/");
-                  var routeVTempF = "";
-                  desctructRoute.forEach(
-                    (elementDesctructRoute, elementDesctructRouteI) => {
-                      if (elementDesctructRouteI >= 4) {
-                        if (elementDesctructRouteI === 4) {
-                          routeVTempF = elementDesctructRoute;
-                        } else {
-                          routeVTempF =
-                            routeVTempF + "/" + elementDesctructRoute;
+                if (
+                  fileElement.id !== null &&
+                  fileElement.id !== undefined &&
+                  fileElement.id !== 0
+                ) {
+                } else {
+                  dispatch(fileUp(datos)).then((resultFUNR) => {
+                    var desctructRoute = routeFolder.split("/");
+                    var routeVTempF = "";
+                    desctructRoute.forEach(
+                      (elementDesctructRoute, elementDesctructRouteI) => {
+                        if (elementDesctructRouteI >= 4) {
+                          if (elementDesctructRouteI === 4) {
+                            routeVTempF = elementDesctructRoute;
+                          } else {
+                            routeVTempF =
+                              routeVTempF + "/" + elementDesctructRoute;
+                          }
                         }
                       }
-                    }
-                  );
+                    );
 
-                  if (
-                    routeVTempF +
-                      folderElement.name +
-                      "/" +
-                      fileElement.contentFile.name ===
-                    finalFile.route + "/" + finalFile.name
-                  ) {
-                    setIdParentFolderCVS(idParentFolder);
-                    setContinueValidationSaveByFiles(true);
-                  }
-                });
+                    if (
+                      routeVTempF +
+                        folderElement.name +
+                        "/" +
+                        fileElement.contentFile.name ===
+                      finalFile.route + "/" + finalFile.name
+                    ) {
+                      setIdParentFolderCVS(idParentFolder);
+                      setContinueValidationSaveByFiles(true);
+                    }
+                  });
+                }
               }
             }
           );
-
           if (folderElement.folders.length !== 0) {
             uploadSubFolders(
               folderElement,
               dataUFTemp.folders[iFolderElement],
-              result.payload.id,
+              folderElement.id,
               routeFolder + folderElement.name + "/",
               dataGeneral
             );
@@ -784,665 +843,320 @@ const EditPOTab = () => {
                 description:
                   productElement.tempName + "-" + productElement.model,
                 isPO: false,
-                FolderId: result.payload.id,
+                FolderId: folderElement.id,
                 UserId: dataClient.userId,
+                StateDbPO: folderElement.statePO,
               };
-              dispatch(folderUp(folderProductObj)).then(
-                (resultFolderProductObj) => {
-                  productElement.files.forEach((fileElement, iFileElement) => {
-                    var datos = new FormData();
-                    datos.append(`name`, fileElement.contentFile.name);
-                    datos.append(`description`, fileElement.contentFile.name);
-                    datos.append(`documentTypeId`, fileElement.documentType.id);
-                    datos.append(
-                      `Url`,
-                      routeFolder +
-                        folderElement.name +
-                        "/" +
-                        productElement.tempName +
-                        "-" +
-                        productElement.model
-                    );
-                    datos.append(`FolderId`, resultFolderProductObj.payload.id);
-                    datos.append(`file`, fileElement.contentFile);
-                    if (fileElement.contentFile.name !== "") {
-                      dispatch(fileUp(datos)).then((resultFileProductValue) => {
-                        var desctructRouteFileProd = routeFolder.split("/");
-                        var validationDesctructRouteFileProd = "";
-                        desctructRouteFileProd.forEach(
-                          (
-                            elementDesctructRouteFileProd,
-                            IElementDesctructRouteFileProd
-                          ) => {
-                            if (IElementDesctructRouteFileProd === 4) {
-                              validationDesctructRouteFileProd =
-                                elementDesctructRouteFileProd;
-                            } else {
-                              validationDesctructRouteFileProd =
-                                validationDesctructRouteFileProd +
-                                "/" +
-                                elementDesctructRouteFileProd;
-                            }
-                          }
+              if (
+                productElement.id !== null &&
+                productElement.id !== undefined &&
+                productElement.id !== 0
+              ) {
+              } else {
+                dispatch(folderUp(folderProductObj)).then(
+                  (resultFolderProductObj) => {
+                    productElement.files.forEach(
+                      (fileElement, iFileElement) => {
+                        var datos = new FormData();
+                        datos.append(`name`, fileElement.contentFile.name);
+                        datos.append(
+                          `description`,
+                          fileElement.contentFile.name
                         );
-
-                        if (
-                          validationDesctructRouteFileProd +
+                        datos.append(
+                          `documentTypeId`,
+                          fileElement.documentType.id
+                        );
+                        datos.append(`stateDbPO`, fileElement.statePO);
+                        datos.append(
+                          `Url`,
+                          routeFolder +
                             folderElement.name +
                             "/" +
                             productElement.tempName +
                             "-" +
-                            productElement.model +
-                            "/" +
-                            fileElement.contentFile.name ===
-                          finalFileProducts.route + "/" + finalFileProducts.name
-                        ) {
-                          setContinueValidationSaveByFilesProducts(true);
+                            productElement.model
+                        );
+                        datos.append(
+                          `FolderId`,
+                          resultFolderProductObj.payload.id
+                        );
+                        datos.append(`file`, fileElement.contentFile);
+                        if (fileElement.contentFile.name !== "") {
+                          dispatch(fileUp(datos)).then(
+                            (resultFileProductValue) => {
+                              var desctructRouteFileProd =
+                                routeFolder.split("/");
+                              var validationDesctructRouteFileProd = "";
+                              desctructRouteFileProd.forEach(
+                                (
+                                  elementDesctructRouteFileProd,
+                                  IElementDesctructRouteFileProd
+                                ) => {
+                                  if (IElementDesctructRouteFileProd === 4) {
+                                    validationDesctructRouteFileProd =
+                                      elementDesctructRouteFileProd;
+                                  } else {
+                                    validationDesctructRouteFileProd =
+                                      validationDesctructRouteFileProd +
+                                      "/" +
+                                      elementDesctructRouteFileProd;
+                                  }
+                                }
+                              );
+
+                              if (
+                                validationDesctructRouteFileProd +
+                                  folderElement.name +
+                                  "/" +
+                                  productElement.tempName +
+                                  "-" +
+                                  productElement.model +
+                                  "/" +
+                                  fileElement.contentFile.name ===
+                                finalFileProducts.route +
+                                  "/" +
+                                  finalFileProducts.name
+                              ) {
+                                setContinueValidationSaveByFilesProducts(true);
+                              }
+                            }
+                          );
                         }
-                      });
-                    }
-                  });
-                }
-              );
+                      }
+                    );
+                  }
+                );
+              }
             }
           );
         }
-      });
-
-      if (folderElement.files.length === 0) {
-        dispatch(
-          folderCreateSystemUp({
-            FolderRoute: routeFolder + folderElement.name,
-          })
-        ).then((resultFCSUP) => {
-          if (routeFolder + folderElement.name === finalFolder.route) {
+      } else {
+        dispatch(folderUp(folderObj)).then((result) => {
+          var desctructRouteFUP = routeFolder.split("/");
+          var validationDesctructRouteFUP = "";
+          desctructRouteFUP.forEach(
+            (elementDesctructRouteFUP, IElementDesctructRouteFUP) => {
+              if (IElementDesctructRouteFUP === 4) {
+                validationDesctructRouteFUP = elementDesctructRouteFUP;
+              } else {
+                validationDesctructRouteFUP =
+                  validationDesctructRouteFUP + "/" + elementDesctructRouteFUP;
+              }
+            }
+          );
+          if (
+            validationDesctructRouteFUP + folderElement.name ===
+            finalFolder.route
+          ) {
             setContinueValidationSaveByFolders(true);
           }
+
+          if (
+            routeFolder + folderElement.name !==
+            dataClient.name +
+              "/" +
+              dataGeneral.year +
+              "/" +
+              dataGeneral.productType +
+              "/" +
+              dataGeneral.month +
+              "/" +
+              dataGeneral.name +
+              "/UVA/Evidencias"
+          ) {
+            dataUFTemp.folders[iFolderElement].files.forEach(
+              (fileElement, iFileElement) => {
+                var datos = new FormData();
+                datos.append(`name`, fileElement.contentFile.name);
+                datos.append(`description`, fileElement.contentFile.name);
+                datos.append(`documentTypeId`, fileElement.documentType.id);
+                datos.append(`Url`, routeFolder + folderElement.name);
+                datos.append(`stateDbPO`, fileElement.statePO);
+                datos.append(`FolderId`, result.payload.id);
+                datos.append(`file`, fileElement.contentFile);
+                if (fileElement.contentFile.name !== "") {
+                  if (
+                    fileElement.id !== null &&
+                    fileElement.id !== undefined &&
+                    fileElement.id !== 0
+                  ) {
+                  } else {
+                    dispatch(fileUp(datos)).then((resultFUNR) => {
+                      var desctructRoute = routeFolder.split("/");
+                      var routeVTempF = "";
+                      desctructRoute.forEach(
+                        (elementDesctructRoute, elementDesctructRouteI) => {
+                          if (elementDesctructRouteI >= 4) {
+                            if (elementDesctructRouteI === 4) {
+                              routeVTempF = elementDesctructRoute;
+                            } else {
+                              routeVTempF =
+                                routeVTempF + "/" + elementDesctructRoute;
+                            }
+                          }
+                        }
+                      );
+
+                      if (
+                        routeVTempF +
+                          folderElement.name +
+                          "/" +
+                          fileElement.contentFile.name ===
+                        finalFile.route + "/" + finalFile.name
+                      ) {
+                        setIdParentFolderCVS(idParentFolder);
+                        setContinueValidationSaveByFiles(true);
+                      }
+                    });
+                  }
+                }
+              }
+            );
+
+            if (folderElement.folders.length !== 0) {
+              uploadSubFolders(
+                folderElement,
+                dataUFTemp.folders[iFolderElement],
+                result.payload.id,
+                routeFolder + folderElement.name + "/",
+                dataGeneral
+              );
+            }
+          } else {
+            dataUFTemp.folders[iFolderElement].products.forEach(
+              (productElement, iProductElement) => {
+                var folderProductObj = {
+                  name: productElement.tempName + "-" + productElement.model,
+                  description:
+                    productElement.tempName + "-" + productElement.model,
+                  isPO: false,
+                  FolderId: result.payload.id,
+                  UserId: dataClient.userId,
+                  StateDbPO: "new",
+                };
+                if (
+                  productElement.id !== null &&
+                  productElement.id !== undefined &&
+                  productElement.id !== 0
+                ) {
+                } else {
+                  dispatch(folderUp(folderProductObj)).then(
+                    (resultFolderProductObj) => {
+                      productElement.files.forEach(
+                        (fileElement, iFileElement) => {
+                          var datos = new FormData();
+                          datos.append(`name`, fileElement.contentFile.name);
+                          datos.append(
+                            `description`,
+                            fileElement.contentFile.name
+                          );
+                          datos.append(
+                            `documentTypeId`,
+                            fileElement.documentType.id
+                          );
+                          datos.append(`stateDbPO`, fileElement.statePO);
+                          datos.append(
+                            `Url`,
+                            routeFolder +
+                              folderElement.name +
+                              "/" +
+                              productElement.tempName +
+                              "-" +
+                              productElement.model
+                          );
+                          datos.append(
+                            `FolderId`,
+                            resultFolderProductObj.payload.id
+                          );
+                          datos.append(`file`, fileElement.contentFile);
+                          if (fileElement.contentFile.name !== "") {
+                            dispatch(fileUp(datos)).then(
+                              (resultFileProductValue) => {
+                                var desctructRouteFileProd =
+                                  routeFolder.split("/");
+                                var validationDesctructRouteFileProd = "";
+                                desctructRouteFileProd.forEach(
+                                  (
+                                    elementDesctructRouteFileProd,
+                                    IElementDesctructRouteFileProd
+                                  ) => {
+                                    if (IElementDesctructRouteFileProd === 4) {
+                                      validationDesctructRouteFileProd =
+                                        elementDesctructRouteFileProd;
+                                    } else {
+                                      validationDesctructRouteFileProd =
+                                        validationDesctructRouteFileProd +
+                                        "/" +
+                                        elementDesctructRouteFileProd;
+                                    }
+                                  }
+                                );
+
+                                if (
+                                  validationDesctructRouteFileProd +
+                                    folderElement.name +
+                                    "/" +
+                                    productElement.tempName +
+                                    "-" +
+                                    productElement.model +
+                                    "/" +
+                                    fileElement.contentFile.name ===
+                                  finalFileProducts.route +
+                                    "/" +
+                                    finalFileProducts.name
+                                ) {
+                                  setContinueValidationSaveByFilesProducts(
+                                    true
+                                  );
+                                }
+                              }
+                            );
+                          }
+                        }
+                      );
+                    }
+                  );
+                }
+              }
+            );
+          }
         });
+
+        //subir folders vacios
+        if (folderElement.files.length === 0) {
+          dispatch(
+            folderCreateSystemUp({
+              FolderRoute: routeFolder + folderElement.name,
+              StateDbPO: folderElement.statePO,
+            })
+          ).then((resultFCSUP) => {
+            if (routeFolder + folderElement.name === finalFolder.route) {
+              setContinueValidationSaveByFolders(true);
+            }
+          });
+        }
       }
     });
   };
 
   const uploadMainFolders = (dataUMF, filesGeneralData) => {
-    var folderObjYear = {
-      name: dataUMF.year,
-      description: dataUMF.year,
-      isPO: false,
-      ProjectId: dataClient.id,
-      UserId: dataClient.userId,
-    };
-
-    //validation Year
-    dispatch(
-      getFoldersValidateUp({
-        Name: folderObjYear.name,
-        ProjectId: folderObjYear.ProjectId,
-      })
-    ).then((resultValidateYear) => {
-      if (resultValidateYear.payload.data.data.length === 0) {
-        dispatch(folderUp(folderObjYear)).then((resultYear) => {
-          var folderObjProductType = {
-            name: dataUMF.productType,
-            description: dataUMF.productType,
-            isPO: false,
-            FolderId: resultYear.payload.id,
-            UserId: dataClient.userId,
-          };
-
-          //validation ProductType
-          dispatch(
-            getFoldersValidateUp({
-              Name: folderObjProductType.name,
-              FolderId: folderObjProductType.FolderId,
-            })
-          ).then((resultValidateProductType) => {
-            if (resultValidateProductType.payload.data.data.length === 0) {
-              dispatch(folderUp(folderObjProductType)).then(
-                (resultProductType) => {
-                  var folderObjMonth = {
-                    name: dataUMF.month,
-                    description: dataUMF.month,
-                    isPO: false,
-                    FolderId: resultProductType.payload.id,
-                    UserId: dataClient.userId,
-                  };
-                  //validation month
-                  dispatch(
-                    getFoldersValidateUp({
-                      Name: folderObjMonth.name,
-                      FolderId: folderObjMonth.FolderId,
-                    })
-                  ).then((resultValidateMonth) => {
-                    if (resultValidateMonth.payload.data.data.length === 0) {
-                      dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
-                        var folderObjBNamePO = {
-                          name: dataUMF.name,
-                          description: dataUMF.name,
-                          isPO: true,
-                          FolderId: resultMonth.payload.id,
-                          ProductTypeId: 0,
-                          UserId: dataClient.userId,
-                        };
-                        datosProductTypes[0].data.forEach(
-                          (productTypeElement) => {
-                            if (
-                              dataUMF.productType === productTypeElement.name
-                            ) {
-                              folderObjBNamePO.ProductTypeId =
-                                productTypeElement.id;
-                            }
-                          }
-                        );
-                        //validacion
-                        dispatch(
-                          getFoldersValidateUp({
-                            Name: folderObjBNamePO.name,
-                            FolderId: folderObjBNamePO.FolderId,
-                          })
-                        ).then((resultValidateNamePO) => {
-                          if (
-                            resultValidateNamePO.payload.data.data.length === 0
-                          ) {
-                            dispatch(folderUp(folderObjBNamePO)).then(
-                              (resultNamePO) => {
-                                uploadSubFolders(
-                                  dataUMF,
-                                  filesGeneralData,
-                                  resultNamePO.payload.id,
-                                  dataClient.name +
-                                    "/" +
-                                    datosSS.year +
-                                    "/" +
-                                    datosSS.productType +
-                                    "/" +
-                                    datosSS.month +
-                                    "/" +
-                                    datosSS.name +
-                                    "/",
-                                  dataUMF
-                                );
-                                // setTimeout(function () {
-                                //   messageDispatch(
-                                //     t("THE_PO_WAS_SAVE"),
-                                //     "success"
-                                //   );
-                                //   navigate(
-                                //     "/explorer/project/" + dataClient.id
-                                //   );
-                                // }, 5000);
-                              }
-                            );
-                          } else {
-                            setValidateButtonSave(false);
-                            messageDispatch(
-                              t("THE_PO_ALREADY_EXISTS"),
-                              "error"
-                            );
-                          }
-                        });
-                      });
-                    } else {
-                      var folderObjBNamePO = {
-                        name: dataUMF.name,
-                        description: dataUMF.name,
-                        isPO: true,
-                        FolderId: resultValidateMonth.payload.data.data[0].id,
-                        ProductTypeId: 0,
-                        UserId: dataClient.userId,
-                      };
-
-                      datosProductTypes[0].data.forEach(
-                        (productTypeElement) => {
-                          if (dataUMF.productType === productTypeElement.name) {
-                            folderObjBNamePO.ProductTypeId =
-                              productTypeElement.id;
-                          }
-                        }
-                      );
-                      //validacion NamePO
-                      dispatch(
-                        getFoldersValidateUp({
-                          Name: folderObjBNamePO.name,
-                          FolderId: folderObjBNamePO.FolderId,
-                        })
-                      ).then((resultValidateNamePO) => {
-                        if (
-                          resultValidateNamePO.payload.data.data.length === 0
-                        ) {
-                          dispatch(folderUp(folderObjBNamePO)).then(
-                            (resultNamePO) => {
-                              uploadSubFolders(
-                                dataUMF,
-                                filesGeneralData,
-                                resultNamePO.payload.id,
-                                dataClient.name +
-                                  "/" +
-                                  datosSS.year +
-                                  "/" +
-                                  datosSS.productType +
-                                  "/" +
-                                  datosSS.month +
-                                  "/" +
-                                  datosSS.name +
-                                  "/",
-                                dataUMF
-                              );
-                              // setTimeout(function () {
-                              //   messageDispatch(
-                              //     t("THE_PO_WAS_SAVE"),
-                              //     "success"
-                              //   );
-                              //   navigate("/explorer/project/" + dataClient.id);
-                              // }, 5000);
-                            }
-                          );
-                        } else {
-                          setValidateButtonSave(false);
-                          messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
-                        }
-                      });
-                    }
-                  });
-                }
-              );
-            } else {
-              var folderObjMonth = {
-                name: dataUMF.month,
-                description: dataUMF.month,
-                isPO: false,
-                FolderId: resultValidateProductType.payload.data.data[0].id,
-                UserId: dataClient.userId,
-              };
-              //validation month
-              dispatch(
-                getFoldersValidateUp({
-                  Name: folderObjMonth.name,
-                  FolderId: folderObjMonth.FolderId,
-                })
-              ).then((resultValidateMonth) => {
-                if (resultValidateMonth.payload.data.data.length === 0) {
-                  dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
-                    var folderObjBNamePO = {
-                      name: dataUMF.name,
-                      description: dataUMF.name,
-                      isPO: true,
-                      FolderId: resultMonth.payload.id,
-                      ProductTypeId: 0,
-                      UserId: dataClient.userId,
-                    };
-                    datosProductTypes[0].data.forEach((productTypeElement) => {
-                      if (dataUMF.productType === productTypeElement.name) {
-                        folderObjBNamePO.ProductTypeId = productTypeElement.id;
-                      }
-                    });
-                    //validacion
-                    dispatch(
-                      getFoldersValidateUp({
-                        Name: folderObjBNamePO.name,
-                        FolderId: folderObjBNamePO.FolderId,
-                      })
-                    ).then((resultValidateNamePO) => {
-                      if (resultValidateNamePO.payload.data.data.length === 0) {
-                        dispatch(folderUp(folderObjBNamePO)).then(
-                          (resultNamePO) => {
-                            uploadSubFolders(
-                              dataUMF,
-                              filesGeneralData,
-                              resultNamePO.payload.id,
-                              dataClient.name +
-                                "/" +
-                                datosSS.year +
-                                "/" +
-                                datosSS.productType +
-                                "/" +
-                                datosSS.month +
-                                "/" +
-                                datosSS.name +
-                                "/",
-                              dataUMF
-                            );
-                            // setTimeout(function () {
-                            //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                            //   navigate("/explorer/project/" + dataClient.id);
-                            // }, 5000);
-                          }
-                        );
-                      } else {
-                        setValidateButtonSave(false);
-                        messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
-                      }
-                    });
-                  });
-                } else {
-                  var folderObjBNamePO = {
-                    name: dataUMF.name,
-                    description: dataUMF.name,
-                    isPO: true,
-                    FolderId: resultValidateMonth.payload.data.data[0].id,
-                    ProductTypeId: 0,
-                    UserId: dataClient.userId,
-                  };
-                  datosProductTypes[0].data.forEach((productTypeElement) => {
-                    if (dataUMF.productType === productTypeElement.name) {
-                      folderObjBNamePO.ProductTypeId = productTypeElement.id;
-                    }
-                  });
-                  //validacion NamePO
-                  dispatch(
-                    getFoldersValidateUp({
-                      Name: folderObjBNamePO.name,
-                      FolderId: folderObjBNamePO.FolderId,
-                    })
-                  ).then((resultValidateNamePO) => {
-                    if (resultValidateNamePO.payload.data.data.length === 0) {
-                      dispatch(folderUp(folderObjBNamePO)).then(
-                        (resultNamePO) => {
-                          uploadSubFolders(
-                            dataUMF,
-                            filesGeneralData,
-                            resultNamePO.payload.id,
-                            dataClient.name +
-                              "/" +
-                              datosSS.year +
-                              "/" +
-                              datosSS.productType +
-                              "/" +
-                              datosSS.month +
-                              "/" +
-                              datosSS.name +
-                              "/",
-                            dataUMF
-                          );
-                          // setTimeout(function () {
-                          //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                          //   navigate("/explorer/project/" + dataClient.id);
-                          // }, 5000);
-                        }
-                      );
-                    } else {
-                      setValidateButtonSave(false);
-                      messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
-                    }
-                  });
-                }
-              });
-            }
-          });
-        });
-      } else {
-        var folderObjProductType = {
-          name: dataUMF.productType,
-          description: dataUMF.productType,
-          isPO: false,
-          FolderId: resultValidateYear.payload.data.data[0].id,
-          UserId: dataClient.userId,
-        };
-
-        //validation ProductType
-        dispatch(
-          getFoldersValidateUp({
-            Name: folderObjProductType.name,
-            FolderId: folderObjProductType.FolderId,
-          })
-        ).then((resultValidateProductType) => {
-          if (resultValidateProductType.payload.data.data.length === 0) {
-            dispatch(folderUp(folderObjProductType)).then(
-              (resultProductType) => {
-                var folderObjMonth = {
-                  name: dataUMF.month,
-                  description: dataUMF.month,
-                  isPO: false,
-                  FolderId: resultProductType.payload.id,
-                  UserId: dataClient.userId,
-                };
-                //validation month
-                dispatch(
-                  getFoldersValidateUp({
-                    Name: folderObjMonth.name,
-                    FolderId: folderObjMonth.FolderId,
-                  })
-                ).then((resultValidateMonth) => {
-                  if (resultValidateMonth.payload.data.data.length === 0) {
-                    dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
-                      var folderObjBNamePO = {
-                        name: dataUMF.name,
-                        description: dataUMF.name,
-                        isPO: true,
-                        FolderId: resultMonth.payload.id,
-                        ProductTypeId: 0,
-                        UserId: dataClient.userId,
-                      };
-                      datosProductTypes[0].data.forEach(
-                        (productTypeElement) => {
-                          if (dataUMF.productType === productTypeElement.name) {
-                            folderObjBNamePO.ProductTypeId =
-                              productTypeElement.id;
-                          }
-                        }
-                      );
-                      //validacion
-                      dispatch(
-                        getFoldersValidateUp({
-                          Name: folderObjBNamePO.name,
-                          FolderId: folderObjBNamePO.FolderId,
-                        })
-                      ).then((resultValidateNamePO) => {
-                        if (
-                          resultValidateNamePO.payload.data.data.length === 0
-                        ) {
-                          dispatch(folderUp(folderObjBNamePO)).then(
-                            (resultNamePO) => {
-                              uploadSubFolders(
-                                dataUMF,
-                                filesGeneralData,
-                                resultNamePO.payload.id,
-                                dataClient.name +
-                                  "/" +
-                                  datosSS.year +
-                                  "/" +
-                                  datosSS.productType +
-                                  "/" +
-                                  datosSS.month +
-                                  "/" +
-                                  datosSS.name +
-                                  "/",
-                                dataUMF
-                              );
-                              // setTimeout(function () {
-                              //   messageDispatch(
-                              //     t("THE_PO_WAS_SAVE"),
-                              //     "success"
-                              //   );
-                              //   navigate("/explorer/project/" + dataClient.id);
-                              // }, 5000);
-                            }
-                          );
-                        } else {
-                          setValidateButtonSave(false);
-                          messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
-                        }
-                      });
-                    });
-                  } else {
-                    var folderObjBNamePO = {
-                      name: dataUMF.name,
-                      description: dataUMF.name,
-                      isPO: true,
-                      FolderId: resultValidateMonth.payload.data.data[0].id,
-                      ProductTypeId: 0,
-                      UserId: dataClient.userId,
-                    };
-                    datosProductTypes[0].data.forEach((productTypeElement) => {
-                      if (dataUMF.productType === productTypeElement.name) {
-                        folderObjBNamePO.ProductTypeId = productTypeElement.id;
-                      }
-                    });
-                    //validacion NamePO
-                    dispatch(
-                      getFoldersValidateUp({
-                        Name: folderObjBNamePO.name,
-                        FolderId: folderObjBNamePO.FolderId,
-                      })
-                    ).then((resultValidateNamePO) => {
-                      if (resultValidateNamePO.payload.data.data.length === 0) {
-                        dispatch(folderUp(folderObjBNamePO)).then(
-                          (resultNamePO) => {
-                            uploadSubFolders(
-                              dataUMF,
-                              filesGeneralData,
-                              resultNamePO.payload.id,
-                              dataClient.name +
-                                "/" +
-                                datosSS.year +
-                                "/" +
-                                datosSS.productType +
-                                "/" +
-                                datosSS.month +
-                                "/" +
-                                datosSS.name +
-                                "/",
-                              dataUMF
-                            );
-                            // setTimeout(function () {
-                            //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                            //   navigate("/explorer/project/" + dataClient.id);
-                            // }, 5000);
-                          }
-                        );
-                      } else {
-                        setValidateButtonSave(false);
-                        messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
-                      }
-                    });
-                  }
-                });
-              }
-            );
-          } else {
-            var folderObjMonth = {
-              name: dataUMF.month,
-              description: dataUMF.month,
-              isPO: false,
-              FolderId: resultValidateProductType.payload.data.data[0].id,
-              UserId: dataClient.userId,
-            };
-            //validation month
-            dispatch(
-              getFoldersValidateUp({
-                Name: folderObjMonth.name,
-                FolderId: folderObjMonth.FolderId,
-              })
-            ).then((resultValidateMonth) => {
-              if (resultValidateMonth.payload.data.data.length === 0) {
-                dispatch(folderUp(folderObjMonth)).then((resultMonth) => {
-                  var folderObjBNamePO = {
-                    name: dataUMF.name,
-                    description: dataUMF.name,
-                    isPO: true,
-                    FolderId: resultMonth.payload.id,
-                    ProductTypeId: 0,
-                    UserId: dataClient.userId,
-                  };
-                  datosProductTypes[0].data.forEach((productTypeElement) => {
-                    if (dataUMF.productType === productTypeElement.name) {
-                      folderObjBNamePO.ProductTypeId = productTypeElement.id;
-                    }
-                  });
-                  //validacion
-                  dispatch(
-                    getFoldersValidateUp({
-                      Name: folderObjBNamePO.name,
-                      FolderId: folderObjBNamePO.FolderId,
-                    })
-                  ).then((resultValidateNamePO) => {
-                    if (resultValidateNamePO.payload.data.data.length === 0) {
-                      dispatch(folderUp(folderObjBNamePO)).then(
-                        (resultNamePO) => {
-                          uploadSubFolders(
-                            dataUMF,
-                            filesGeneralData,
-                            resultNamePO.payload.id,
-                            dataClient.name +
-                              "/" +
-                              datosSS.year +
-                              "/" +
-                              datosSS.productType +
-                              "/" +
-                              datosSS.month +
-                              "/" +
-                              datosSS.name +
-                              "/",
-                            dataUMF
-                          );
-                          // setTimeout(function () {
-                          //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                          //   navigate("/explorer/project/" + dataClient.id);
-                          // }, 5000);
-                        }
-                      );
-                    } else {
-                      setValidateButtonSave(false);
-                      messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
-                    }
-                  });
-                });
-              } else {
-                var folderObjBNamePO = {
-                  name: dataUMF.name,
-                  description: dataUMF.name,
-                  isPO: true,
-                  FolderId: resultValidateMonth.payload.data.data[0].id,
-                  ProductTypeId: 0,
-                  UserId: dataClient.userId,
-                };
-                datosProductTypes[0].data.forEach((productTypeElement) => {
-                  if (dataUMF.productType === productTypeElement.name) {
-                    folderObjBNamePO.ProductTypeId = productTypeElement.id;
-                  }
-                });
-                //validacion NamePO
-                dispatch(
-                  getFoldersValidateUp({
-                    Name: folderObjBNamePO.name,
-                    FolderId: folderObjBNamePO.FolderId,
-                  })
-                ).then((resultValidateNamePO) => {
-                  if (resultValidateNamePO.payload.data.data.length === 0) {
-                    dispatch(folderUp(folderObjBNamePO)).then(
-                      (resultNamePO) => {
-                        uploadSubFolders(
-                          dataUMF,
-                          filesGeneralData,
-                          resultNamePO.payload.id,
-                          dataClient.name +
-                            "/" +
-                            datosSS.year +
-                            "/" +
-                            datosSS.productType +
-                            "/" +
-                            datosSS.month +
-                            "/" +
-                            datosSS.name +
-                            "/",
-                          dataUMF
-                        );
-                        // setTimeout(function () {
-                        //   messageDispatch(t("THE_PO_WAS_SAVE"), "success");
-                        //   navigate("/explorer/project/" + dataClient.id);
-                        // }, 5000);
-                      }
-                    );
-                  } else {
-                    setValidateButtonSave(false);
-                    messageDispatch(t("THE_PO_ALREADY_EXISTS"), "error");
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    });
+    uploadSubFolders(
+      dataUMF,
+      filesGeneralData,
+      dataUMF.id,
+      dataUMF.client.name +
+        "/" +
+        dataUMF.year +
+        "/" +
+        dataUMF.productType +
+        "/" +
+        dataUMF.month +
+        "/" +
+        dataUMF.name +
+        "/",
+      dataUMF
+    );
   };
 
   var lastFile = "";
@@ -1489,8 +1203,20 @@ const EditPOTab = () => {
       if (finalFileProducts.name === "") {
         setContinueValidationSaveByFilesProducts(true);
       }
-      setValidateButtonSave(true);
+      if (finalFolder.name === "") {
+        setContinueValidationSaveByFolders(true);
+      }
+      //setValidateButtonSave(true);
       uploadMainFolders(datosSS, filesGeneral);
+
+      console.log(
+        finalFile,
+        continueValidationSaveByFiles,
+        finalFileProducts,
+        continueValidationSaveByFilesProducts,
+        finalFolder,
+        continueValidationSaveByFolders
+      );
     }
   };
 
@@ -1508,7 +1234,7 @@ const EditPOTab = () => {
           startIcon={<Icon>save</Icon>}
           disabled={validateButtonSave}
         >
-          {t("SAVE")}
+          {t("UPDATE")}
         </Button>
       </div>
 
@@ -1995,7 +1721,7 @@ const EditPOTab = () => {
           startIcon={<Icon>save</Icon>}
           disabled={validateButtonSave}
         >
-          {t("SAVE")}
+          {t("UPDATE")}
         </Button>
       </div>
     </div>

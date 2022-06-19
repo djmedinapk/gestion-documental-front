@@ -219,6 +219,7 @@ function RightSideBarHeader(props) {
           elementFolder.name === elementResultFolder.name &&
           elementResultFolder.stateDbPO === "old"
         ) {
+          elementFolder.id = elementResultFolder.id;
           if (elementFolder.folders.length !== 0) {
             elementFolder = searchInfoEditPO(
               elementFolder,

@@ -36,6 +36,8 @@ const locale = {
   THE_FOLDER_NAME_ALREADY_EXISTS: "The folder name already exists",
   FOLDER_NAME: "Folder Name",
   EDIT_PO: "Edit PO",
+  THE_PO_WAS_UPDATED: "The PO was updated",
+  UPDATE: "Update",
 };
 
 export default locale;

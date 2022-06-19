@@ -135,6 +135,7 @@ const AcordionComponent = (props) => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 0,
           name: "",
@@ -157,6 +158,7 @@ const AcordionComponent = (props) => {
         name: "New File",
         statePO: "new",
         stateRequired: false,
+        foldersRepeated: [],
         documentType: {
           id: 0,
           name: "",
@@ -208,6 +210,7 @@ const AcordionComponent = (props) => {
       name: "New File",
       statePO: "new",
       stateRequired: false,
+      foldersRepeated: [],
       documentType: {
         id: 0,
         name: "",
@@ -330,6 +333,7 @@ const AcordionComponent = (props) => {
         name: "New File",
         statePO: "new",
         documentType: documentSigleTypeImage,
+        foldersRepeated: [],
         contentFile: {
           name: "",
           lastModified: 0,
@@ -770,7 +774,11 @@ const AcordionComponent = (props) => {
                           onClick={(event) => {
                             event.target.value = null;
                           }}
-                          disabled={props.validateButtonSave || productPO.id ? true : false}
+                          disabled={
+                            props.validateButtonSave || productPO.id
+                              ? true
+                              : false
+                          }
                         />
                         <label
                           htmlFor={
@@ -803,7 +811,11 @@ const AcordionComponent = (props) => {
                             size="small"
                             style={{ height: "100%" }}
                             fullWidth
-                            disabled={props.validateButtonSave || productPO.id ? true : false}
+                            disabled={
+                              props.validateButtonSave || productPO.id
+                                ? true
+                                : false
+                            }
                             component="span"
                           >
                             {t("CHOOSE_FILES")}
@@ -1155,6 +1167,11 @@ const AcordionComponent = (props) => {
                             name={iFolderPO + "." + iFilePO}
                             value={filePO.documentType.name}
                             onChange={handleDocumentTypeState}
+                            disabled={
+                              props.validateButtonSave === true || filePO.id
+                                ? true
+                                : false
+                            }
                           >
                             {props.datosDocumentTypes.length !== 0
                               ? props.datosDocumentTypes[0].data.map(
@@ -1242,7 +1259,11 @@ const AcordionComponent = (props) => {
                           }
                           type="file"
                           disabled={
-                            filePO.documentType.name === "" ? true : false
+                            filePO.documentType.name === "" ||
+                            props.validateButtonSave === true ||
+                            filePO.id
+                              ? true
+                              : false
                           }
                           onChange={(event) => {
                             chooseFile(
@@ -1289,7 +1310,8 @@ const AcordionComponent = (props) => {
                             component="span"
                             disabled={
                               filePO.documentType.name === "" ||
-                              props.validateButtonSave === true
+                              props.validateButtonSave === true ||
+                              filePO.id
                                 ? true
                                 : false
                             }
