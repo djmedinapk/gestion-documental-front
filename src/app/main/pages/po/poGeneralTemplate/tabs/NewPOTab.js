@@ -759,7 +759,7 @@ const NewPOTab = () => {
                       fileElement.contentFile.name ===
                     finalFile.route + "/" + finalFile.name
                   ) {
-                    setIdParentFolderCVS(idParentFolder);
+                    
                     setContinueValidationSaveByFiles(true);
                   }
                 });
@@ -952,6 +952,7 @@ const NewPOTab = () => {
                           ) {
                             dispatch(folderUp(folderObjBNamePO)).then(
                               (resultNamePO) => {
+                                setIdParentFolderCVS(resultNamePO.payload.id);
                                 uploadSubFolders(
                                   dataUMF,
                                   filesGeneralData,
@@ -1019,6 +1020,7 @@ const NewPOTab = () => {
                         ) {
                           dispatch(folderUp(folderObjBNamePO)).then(
                             (resultNamePO) => {
+                              setIdParentFolderCVS(resultNamePO.payload.id);
                               uploadSubFolders(
                                 dataUMF,
                                 filesGeneralData,
@@ -1095,6 +1097,7 @@ const NewPOTab = () => {
                       if (resultValidateNamePO.payload.data.data.length === 0) {
                         dispatch(folderUp(folderObjBNamePO)).then(
                           (resultNamePO) => {
+                            setIdParentFolderCVS(resultNamePO.payload.id);
                             uploadSubFolders(
                               dataUMF,
                               filesGeneralData,
@@ -1148,6 +1151,7 @@ const NewPOTab = () => {
                     if (resultValidateNamePO.payload.data.data.length === 0) {
                       dispatch(folderUp(folderObjBNamePO)).then(
                         (resultNamePO) => {
+                          setIdParentFolderCVS(resultNamePO.payload.id);
                           uploadSubFolders(
                             dataUMF,
                             filesGeneralData,
@@ -1246,6 +1250,7 @@ const NewPOTab = () => {
                         ) {
                           dispatch(folderUp(folderObjBNamePO)).then(
                             (resultNamePO) => {
+                              setIdParentFolderCVS(resultNamePO.payload.id);
                               uploadSubFolders(
                                 dataUMF,
                                 filesGeneralData,
@@ -1302,6 +1307,7 @@ const NewPOTab = () => {
                       if (resultValidateNamePO.payload.data.data.length === 0) {
                         dispatch(folderUp(folderObjBNamePO)).then(
                           (resultNamePO) => {
+                            setIdParentFolderCVS(resultNamePO.payload.id);
                             uploadSubFolders(
                               dataUMF,
                               filesGeneralData,
@@ -1375,6 +1381,7 @@ const NewPOTab = () => {
                     if (resultValidateNamePO.payload.data.data.length === 0) {
                       dispatch(folderUp(folderObjBNamePO)).then(
                         (resultNamePO) => {
+                          setIdParentFolderCVS(resultNamePO.payload.id);
                           uploadSubFolders(
                             dataUMF,
                             filesGeneralData,
@@ -1428,6 +1435,7 @@ const NewPOTab = () => {
                   if (resultValidateNamePO.payload.data.data.length === 0) {
                     dispatch(folderUp(folderObjBNamePO)).then(
                       (resultNamePO) => {
+                        setIdParentFolderCVS(resultNamePO.payload.id);
                         uploadSubFolders(
                           dataUMF,
                           filesGeneralData,
