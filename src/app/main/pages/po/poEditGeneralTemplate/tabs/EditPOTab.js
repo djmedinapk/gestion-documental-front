@@ -69,7 +69,7 @@ const EditPOTab = () => {
     )
   );
 
-  var finalFile = { name: "", route: "" };
+  var finalFile = { name: "", route: "", isPO: false };
   var finalFileProducts = { name: "", route: "" };
   var finalFolder = { name: "", route: "" };
   var finalFileRepeated = { name: "", route: "" };
@@ -615,6 +615,7 @@ const EditPOTab = () => {
         } else {
           finalFile.name = element.contentFile.name;
           finalFile.route = route;
+          finalFile.isPO = true;
         }
 
         if (element.foldersRepeated.length !== 0) {
@@ -726,6 +727,13 @@ const EditPOTab = () => {
           ) {
           } else {
             dispatch(fileUp(datosGeneralF));
+            if (
+              finalFile.route === dataGeneral.name &&
+              finalFile.name !== fileElement.name
+            ) {
+              setIdParentFolderCVS(idParentFolder);
+              setContinueValidationSaveByFiles(true);
+            }
           }
         }
       });
@@ -1508,6 +1516,9 @@ const EditPOTab = () => {
                     name={i + ""}
                     value={file.documentType.name}
                     onChange={handleDocumentTypeState}
+                    disabled={
+                      validateButtonSave === true || file.id ? true : false
+                    }
                   >
                     {datosDocumentTypes.length !== 0
                       ? datosDocumentTypes[0].data.map(
@@ -1553,7 +1564,13 @@ const EditPOTab = () => {
                   style={{ display: "none" }}
                   id={file.name + i + "fu"}
                   type="file"
-                  disabled={file.documentType.name === "" ? true : false}
+                  disabled={
+                    file.documentType.name === "" ||
+                    validateButtonSave === true ||
+                    file.id
+                      ? true
+                      : false
+                  }
                   onChange={(event) => {
                     chooseFile(event.target.files[0], i);
                   }}
@@ -1576,7 +1593,8 @@ const EditPOTab = () => {
                     component="span"
                     disabled={
                       file.documentType.name === "" ||
-                      validateButtonSave === true
+                      validateButtonSave === true ||
+                      file.id
                         ? true
                         : false
                     }
