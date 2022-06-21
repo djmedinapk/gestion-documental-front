@@ -60,6 +60,7 @@ const NewFolderDialog = () => {
     } else if (isFolder && routeParams.folder) {
       data.folderId = routeParams.id;
     }
+    data.StateDbPO = "new";
     dispatch(addFolder(data)).then(({ payload }) => {
       if (payload.status === 200) {
         dispatch(

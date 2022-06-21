@@ -76,6 +76,7 @@ const NewFileDialog = () => {
     datos.append("name", data.name);
     datos.append("description", data.description);
     datos.append("documentTypeId", data.documentTypeId);
+    datos.append(`stateDbPO`, "new");
     datos.append("file", fileSelected);
     if (isFolder && routeParams.id) {
       datos.append("folderId", parseInt(routeParams.id, 10));
