@@ -8,8 +8,14 @@ import axios from "./../../../../services/Axios/HttpClient";
 export const getProductTypes = createAsyncThunk(
   "poGeneralTemplateApp/productTypes/getProductTypes",
   async (routeParams, { dispatch, getState }) => {
+    var tempParams = null;
+    if (getState().poGeneralTemplateApp !== undefined) {
+      tempParams = getState().poGeneralTemplateApp.productTypes.paramsData;
+    } else {
+      tempParams = getState().poEditGeneralTemplateApp.productTypes.paramsData;
+    }
     const response = await axios.getWithParams("/api/ProductType/WithParams", {
-      params: getState().poGeneralTemplateApp.productTypes.paramsData,
+      params: tempParams,
     });
     const data = await response.data;
     dispatch(changeParamsDataCount(data.count));
@@ -60,6 +66,11 @@ const productTypesAdminAdapter = createEntityAdapter({});
 export const { selectAll: selectProductTypes } =
   productTypesAdminAdapter.getSelectors(
     (state) => state.poGeneralTemplateApp.productTypes
+  );
+
+export const { selectAll: selectProductTypesEditPO } =
+  productTypesAdminAdapter.getSelectors(
+    (state) => state.poEditGeneralTemplateApp.productTypes
   );
 
 const productTypesAdminSlice = createSlice({

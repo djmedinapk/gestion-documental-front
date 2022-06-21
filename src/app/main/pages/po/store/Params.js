@@ -208,7 +208,7 @@ export const dataPO = {
         {
           name: "Factura Fabricante",
           statePO: "old",
-          stateRequired: true,
+          stateRequired: false,
           foldersRepeated: [],
           documentType: {
             id: 0,
