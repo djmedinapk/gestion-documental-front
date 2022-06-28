@@ -37,6 +37,7 @@ function RightSideBarHeader(props) {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  const [buttonEditPO, setButtonEditPO] = useState(false);
 
   if (!selectedItem) {
     return null;
@@ -76,7 +77,10 @@ function RightSideBarHeader(props) {
             originalData.name
           );
           dispatch(changeDatosPOs(originalDataWithNew));
-          navigate("/apps/po/po-edit-general-template");
+          setButtonEditPO(true);
+          setTimeout(() => {
+            navigate("/apps/po/po-edit-general-template");
+          }, 1200);
         }
       }
     );
@@ -164,7 +168,7 @@ function RightSideBarHeader(props) {
       });
     } else {
       resultPOE.folders.forEach((elementResultFolder) => {
-        var nameProduct = elementResultFolder.name.split('-');
+        var nameProduct = elementResultFolder.name.split("-");
 
         var productPO = {
           id: elementResultFolder.id,
@@ -175,7 +179,7 @@ function RightSideBarHeader(props) {
           files: [],
         };
 
-        elementResultFolder.files.forEach(fileProductElement => {
+        elementResultFolder.files.forEach((fileProductElement) => {
           var dataFileProductPush = {
             id: fileProductElement.id,
             name: fileProductElement.name,
@@ -290,7 +294,11 @@ function RightSideBarHeader(props) {
               arrow
               TransitionComponent={Zoom}
             >
-              <IconButton size="large" onClick={() => handleEditPO()}>
+              <IconButton
+                size="large"
+                disabled={buttonEditPO}
+                onClick={() => handleEditPO()}
+              >
                 <Icon>edit</Icon>
               </IconButton>
             </Tooltip>
