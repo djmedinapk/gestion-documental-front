@@ -16,7 +16,7 @@ import {
   selectFiles,
   getFindFolder,
   getFindProject,
-  handleProjectDataFind
+  handleProjectDataFind,
 } from "./store/explorerSlice";
 import { useParams } from "react-router";
 import Breadcrumb from "./Breadcrumb";
@@ -40,7 +40,10 @@ import DeleteFileDialog from "./DeleteFileDialog";
 import FileList from "./FileList";
 
 import { useNavigate } from "react-router-dom";
-import { changeGeneralParamsNewPOClient } from "./../../../store/globalParamsSlice";
+import {
+  changeGeneralParamsNewPOClient,
+  changeGeneralParamsCurrentFolderExplorer,
+} from "./../../../store/globalParamsSlice";
 import { getDocumentTypes } from "./store/documentTypeSlice";
 
 import { dataPO } from "./../po/store/Params";
@@ -94,6 +97,13 @@ const ExplorerApp = () => {
       useSelector(({ globalParams }) => globalParams.generalParams.newPO.client)
     )
   );
+  const dataCurrentFolder = JSON.parse(
+    JSON.stringify(
+      useSelector(
+        ({ globalParams }) => globalParams.generalParams.currentFolderExplorer
+      )
+    )
+  );
 
   const findMainProject = (params) => {
     if (params.folder === "folder") {
@@ -112,14 +122,31 @@ const ExplorerApp = () => {
   };
 
   useEffect(() => {
-
     if (routeParams && routeParams.folder == "folder") {
       setIsFolder(true);
-      dispatch(getCurrentFolder({ routeParams, isFolder: true }));
+      dispatch(getCurrentFolder({ routeParams, isFolder: true })).then(
+        (folder) => {
+          dispatch(
+            changeGeneralParamsCurrentFolderExplorer({
+              id: folder.payload.data.id,
+              name: folder.payload.data.url + "\\" + folder.payload.data.name,
+            })
+          );
+        }
+      );
       findMainProject(routeParams);
     } else {
       setIsFolder(false);
-      dispatch(getCurrentFolder({ routeParams, isFolder: false }));
+      dispatch(getCurrentFolder({ routeParams, isFolder: false })).then(
+        (folder) => {
+          dispatch(
+            changeGeneralParamsCurrentFolderExplorer({
+              id: folder.payload.data.id,
+              name: folder.payload.data.name,
+            })
+          );
+        }
+      );
     }
     dispatch(getDocumentTypes());
   }, [dispatch, routeParams]);
@@ -247,7 +274,11 @@ const ExplorerApp = () => {
               >
                 {currentUrl && (
                   <Breadcrumb
-                    selected={currentUrl}
+                    selected={
+                      dataCurrentFolder?.name
+                        ? dataCurrentFolder.name
+                        : currentUrl
+                    }
                     className="flex flex-1 ltr:pl-72 rtl:pr-72 pb-12 text-16 sm:text-24 font-semibold"
                   />
                 )}
@@ -269,7 +300,6 @@ const ExplorerApp = () => {
       <EditFolderDialog />
       <EditFileDialog />
       <DeleteFileDialog />
-      
     </>
   );
 };

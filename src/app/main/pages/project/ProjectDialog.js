@@ -49,7 +49,7 @@ const ProjectDialog = () => {
   const { isValid, dirtyFields, errors } = formState;
 
   const  onSubmit = (data) => {
-    console.log("dataForm",data);
+    //console.log("dataForm",data);
     dispatch(addProjectBoard(data));
     dispatch(handleDialog());
   }
