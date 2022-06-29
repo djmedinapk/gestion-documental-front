@@ -71,30 +71,34 @@ const ProjectBoard = () => {
             animate="show"
             className="flex flex-wrap w-full justify-center py-32 px-16"
           >
-            {projects.map((project) => (
-              <motion.div
-                variants={item}
-                className="w-224 h-224 p-16"
-                key={project.id}
-              >
-                <Paper
-                  to={`/explorer/project/${project.id}`}
-                  className="board flex flex-col items-center justify-center w-full h-full rounded-16 py-24 shadow hover:shadow-lg cursor-pointer"
-                  role="button"
-                  component={Link}
+            {projects.map((project) =>
+              project.deletedAt === null ? (
+                <motion.div
+                  variants={item}
+                  className="w-224 h-224 p-16"
+                  key={project.id}
                 >
-                  <Icon className="text-56" color="action">
-                    assessment
-                  </Icon>
-                  <Typography
-                    className="text-16 font-medium text-center pt-16 px-32"
-                    color="inherit"
+                  <Paper
+                    to={`/explorer/project/${project.id}`}
+                    className="board flex flex-col items-center justify-center w-full h-full rounded-16 py-24 shadow hover:shadow-lg cursor-pointer"
+                    role="button"
+                    component={Link}
                   >
-                    {project.name}
-                  </Typography>
-                </Paper>
-              </motion.div>
-            ))}
+                    <Icon className="text-56" color="action">
+                      assessment
+                    </Icon>
+                    <Typography
+                      className="text-16 font-medium text-center pt-16 px-32"
+                      color="inherit"
+                    >
+                      {project.name}
+                    </Typography>
+                  </Paper>
+                </motion.div>
+              ) : (
+                false
+              )
+            )}
             <motion.div variants={item} className="w-224 h-224 p-16">
               <Paper
                 className="flex flex-col items-center justify-center w-full h-full rounded-16 py-24 shadow hover:shadow-lg outline-none cursor-pointer"

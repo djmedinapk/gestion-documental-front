@@ -18,7 +18,7 @@ const ProjectTable = (props) => {
 
   const getProjects = async () => {
     const { data, status } = await getProjectsTransaction();
-    console.log("sdas",data, status)
+    //console.log("sdas",data, status)
     if (status === 200) {
     
       setProject(data);

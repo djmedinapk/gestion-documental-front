@@ -81,6 +81,9 @@ const SearchList = (props) => {
             <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
             <TableCell>{t("NAME")}</TableCell>
             <TableCell className="hidden sm:table-cell">{t("TYPE")}</TableCell>
+            <TableCell className="hidden sm:table-cell">
+              {t("DOCUMENT_TYPE")}
+            </TableCell>
             {/* <TableCell className="hidden sm:table-cell">{t("OWNER")}</TableCell>
             <TableCell className="text-center hidden sm:table-cell">
               {t("SIZE")}
@@ -110,6 +113,7 @@ const SearchList = (props) => {
                 <TableCell className="hidden sm:table-cell">
                   {t("FOLDER")}
                 </TableCell>
+                <TableCell className="hidden sm:table-cell">{""}</TableCell>
                 {/* <TableCell className="hidden sm:table-cell">{i}</TableCell>
                 <TableCell className="text-center hidden sm:table-cell">
                   -{item.size === "" ? "-" : item.size}
@@ -152,6 +156,9 @@ const SearchList = (props) => {
                 <TableCell className="font-medium">{item.name}</TableCell>
                 <TableCell className="hidden sm:table-cell">
                   {t(item.documentType.icon.toUpperCase())}
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {item.documentType?.name ? item.documentType.name : ""}
                 </TableCell>
                 {/* <TableCell className="hidden sm:table-cell">
                   {dataFolders.length + i}

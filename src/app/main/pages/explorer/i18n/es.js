@@ -21,6 +21,7 @@ const locale = {
   "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_?":
     "¿Está seguro(a) de que quiere eliminar esto?",
   CANCEL: "Cancelar",
+  EDIT_PO: "Editar PO",
 };
 
 export default locale;
