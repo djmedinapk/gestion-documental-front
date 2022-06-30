@@ -8,8 +8,14 @@ import axios from "./../../../../services/Axios/HttpClient";
 export const getDocumentTypes = createAsyncThunk(
   "poGeneralTemplateApp/documentTypes/getDocumentTypes",
   async (routeParams, { dispatch, getState }) => {
+    var tempParams = null;
+    if (getState().poGeneralTemplateApp !== undefined) {
+      tempParams = getState().poGeneralTemplateApp.documentTypes.paramsData;
+    } else {
+      tempParams = getState().poEditGeneralTemplateApp.documentTypes.paramsData;
+    }
     const response = await axios.getWithParams("/api/DocumentType/WithParams", {
-      params: getState().poGeneralTemplateApp.documentTypes.paramsData,
+      params: tempParams,
     });
     const data = await response.data;
     dispatch(changeParamsDataCount(data.count));
@@ -64,9 +70,9 @@ export const fileUp = createAsyncThunk(
       description: "description",
     });
 
-    for (var i = 0; i < Object.keys(selectedFile).length+1; i++) {
-      formData.append(i + "", selectedFile[i])
-    } 
+    for (var i = 0; i < Object.keys(selectedFile).length + 1; i++) {
+      formData.append(i + "", selectedFile[i]);
+    }
     formData.append("datos", dataPe);
     const response = await axios.post("/api/DocumentType/file", formData);
     const data = await response.data;
@@ -82,6 +88,11 @@ const documentTypesAdminAdapter = createEntityAdapter({});
 export const { selectAll: selectDocumentTypes } =
   documentTypesAdminAdapter.getSelectors(
     (state) => state.poGeneralTemplateApp.documentTypes
+  );
+
+export const { selectAll: selectDocumentTypesEditPO } =
+  documentTypesAdminAdapter.getSelectors(
+    (state) => state.poEditGeneralTemplateApp.documentTypes
   );
 
 const documentTypesAdminSlice = createSlice({
@@ -166,7 +177,7 @@ const documentTypesAdminSlice = createSlice({
   extraReducers: {
     [getDocumentTypes.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
-      documentTypesAdminAdapter.setAll(state, {data});
+      documentTypesAdminAdapter.setAll(state, { data });
       state.routeParams = routeParams;
     },
   },

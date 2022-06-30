@@ -18,22 +18,29 @@ const globalParamsAdminSlice = createSlice({
     searchText: "",
     routeParams: {},
     generalParams: {
+      currentFolderExplorer: { id: 0, name: "" },
       newPO: { client: { id: 0, name: "" } },
+      editPO: { id: 0, name: "" },
     },
   }),
   reducers: {
-   
+    changeGeneralParamsCurrentFolderExplorer: (state, action) => {
+      state.generalParams.currentFolderExplorer = action.payload;
+    },
     changeGeneralParamsNewPOClient: (state, action) => {
       state.generalParams.newPO.client = action.payload;
     },
+    changeGeneralParamsEditPO: (state, action) => {
+      state.generalParams.editPO = action.payload;
+    },
   },
-  extraReducers: {
-    
-  },
+  extraReducers: {},
 });
 
 export const {
+  changeGeneralParamsCurrentFolderExplorer,
   changeGeneralParamsNewPOClient,
+  changeGeneralParamsEditPO,
 } = globalParamsAdminSlice.actions;
 
 export default globalParamsAdminSlice.reducer;

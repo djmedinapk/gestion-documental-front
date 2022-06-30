@@ -73,14 +73,10 @@ const RightSideBarContent = () => {
             <td>{selectedItem.modified}</td>
           </tr>
 
-          {selectedItem.type !== "folder" ? (
-            <tr className="location h-52 text-left">
-              <th className="font-semibold">{t("LOCATION")}</th>
-              <td>{selectedItem.metadata?.url}</td>
-            </tr>
-          ) : (
-            false
-          )}
+          <tr className="location h-52 text-left">
+            <th className="font-semibold">{t("LOCATION")}</th>
+            <td>{selectedItem.metadata?.url}</td>
+          </tr>
 
           {/* <tr className="owner h-52">
             <th className="font-semibold">{t("OWNER")}</th>
