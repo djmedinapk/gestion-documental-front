@@ -60,6 +60,16 @@ export const getPOById = createAsyncThunk(
   }
 );
 
+export const prueba = createAsyncThunk(
+  "poEditGeneralTemplateApp/prueba/prueba",
+  async (data, { dispatch, getState }) => {
+
+    dispatch(changeDatosPOs(data));
+
+    return { data };
+  }
+);
+
 const extractFiles = (data, mainFolder, route) => {
   var arrayFiles = [];
 
