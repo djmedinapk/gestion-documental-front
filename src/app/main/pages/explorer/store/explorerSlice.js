@@ -100,7 +100,7 @@ export const getCurrentFolder = createAsyncThunk(
 export const removeProject = createAsyncThunk(
   "explorerApp/files/removeProject",
   async (projectId, { dispatch, getState }) => {
-    const { status } = await axios.delete("/api/Project/" + projectId);
+    const { status } = await axios.delete("/api/Project/InCascadeArchived/" + projectId);
     return status;
   }
 );

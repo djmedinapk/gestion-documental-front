@@ -135,7 +135,11 @@ function FileList(props) {
             <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
             <TableCell>{t("NAME")}</TableCell>
             <TableCell className="hidden sm:table-cell">{t("TYPE")}</TableCell>
-            <TableCell className="hidden sm:table-cell">{t("OWNER")}</TableCell>
+            <TableCell className="hidden sm:table-cell">
+              {t("DOCUMENT_TYPE")}
+            </TableCell>
+
+            {/* <TableCell className="hidden sm:table-cell">{t("OWNER")}</TableCell> */}
             {/* <TableCell className="text-center hidden sm:table-cell">Size</TableCell> */}
             <TableCell className="hidden sm:table-cell">
               {t("MODIFIED")}
@@ -165,8 +169,14 @@ function FileList(props) {
                     : item.type.toUpperCase()}
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">
-                  {item.owner}
+                  {item.metadata?.documentType?.name
+                    ? item.metadata.documentType.name
+                    : ""}
                 </TableCell>
+
+                {/* <TableCell className="hidden sm:table-cell">
+                  {item.owner}
+                </TableCell> */}
                 {/* <TableCell className="text-center hidden sm:table-cell">
                   {item.size === '' ? '-' : item.size}
                 </TableCell> */}

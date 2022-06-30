@@ -16,12 +16,28 @@ const locale = {
   MORE_FILES: "More Files",
   NEW_FOLDER_NAME: "New Folder Name",
   FOLDER: "Folder",
-  FILE:"File",
+  FILE: "File",
   NEW_FILE: "New File",
   PRODUCT: "Product",
   PRODUCT_NAME: "Product Name",
   MODEL: "Model",
   EVIDENCES: "Evidences",
+  YOU_MUST_ENTER_A: "You must enter a",
+  YOU_MUST_SELECT_A: "You must select a",
+  YOU_MUST_SELECT_FILE: "You must select file",
+  PRODUCT_TYPE: "Product Type",
+  YOU_MUST_SELECT_THE_DOCUMENT_TYPE_OF_ALL_NEW_FILES:
+    "You must select the document type of all new files",
+  YOU_MUST_SELECT_THE_PRODUCT_FILES: "You must select the Product files",
+  THE_PRODUCT_IN_THE_EVIDENCE_FOLDER_ALREADY_EXISTS:
+    "The product in the Evidencias folder already exists",
+  THE_PO_WAS_SAVE: "The PO was save",
+  THE_PO_ALREADY_EXISTS: "The PO already exists",
+  THE_FOLDER_NAME_ALREADY_EXISTS: "The folder name already exists",
+  FOLDER_NAME: "Folder Name",
+  EDIT_PO: "Edit PO",
+  THE_PO_WAS_UPDATED: "The PO was updated",
+  UPDATE: "Update",
 };
 
 export default locale;
