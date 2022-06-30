@@ -20,6 +20,7 @@ import { dataPO } from "./../po/store/Params";
 import {
   changeDatosPOs,
   getPOById,
+  prueba,
 } from "./../po/store/poEditGeneralTemplateSlice";
 
 import { changeGeneralParamsEditPO } from "./../../../store/globalParamsSlice";
@@ -76,11 +77,11 @@ function RightSideBarHeader(props) {
             originalData.name,
             originalData.name
           );
-          dispatch(changeDatosPOs(originalDataWithNew));
+
+          dispatch(prueba(originalDataWithNew)).then((pp) => {
           setButtonEditPO(true);
-          setTimeout(() => {
             navigate("/apps/po/po-edit-general-template");
-          }, 1200);
+          });
         }
       }
     );
