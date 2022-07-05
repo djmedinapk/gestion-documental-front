@@ -70,6 +70,7 @@ const EditFolderDialog = () => {
   }, [dialog.open, initDialog]);
 
   const onSubmit = (data) => {
+    
     dispatch(updateFolder(data)).then(({ payload }) => {
       if (payload.status === 200) {
         dispatch(

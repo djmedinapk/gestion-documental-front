@@ -20,7 +20,6 @@ import { dataPO } from "./../po/store/Params";
 import {
   changeDatosPOs,
   getPOById,
-  prueba,
 } from "./../po/store/poEditGeneralTemplateSlice";
 
 import { changeGeneralParamsEditPO } from "./../../../store/globalParamsSlice";
@@ -78,14 +77,17 @@ function RightSideBarHeader(props) {
             originalData.name
           );
 
-          dispatch(prueba(originalDataWithNew)).then((pp) => {
+          dispatch(changeDatosPOs(originalDataWithNew));
+
           setButtonEditPO(true);
+          setTimeout(() => {
             navigate("/apps/po/po-edit-general-template");
-          });
+          }, 1200);
         }
       }
     );
   };
+  
 
   const searchInfoEditPONew = (dataUp, resultPOE, route, namePO) => {
     if (route !== namePO + "/UVA/Evidencias") {
@@ -287,25 +289,45 @@ function RightSideBarHeader(props) {
         ) : (
           false
         )}
+
         {selectedItem.type === "folder" ? (
-          selectedItem.metadata?.isPO === true ? (
-            <Tooltip
-              title={t("EDIT_PO")}
-              placement="bottom"
-              arrow
-              TransitionComponent={Zoom}
-            >
-              <IconButton
-                size="large"
-                disabled={buttonEditPO}
-                onClick={() => handleEditPO()}
-              >
-                <Icon>edit</Icon>
-              </IconButton>
-            </Tooltip>
-          ) : (
-            false
-          )
+          <>
+            {selectedItem.name !== ".." ? (
+              <>
+                <Tooltip
+                  title={t("EDIT_FOLDER")}
+                  placement="bottom"
+                  arrow
+                  TransitionComponent={Zoom}
+                >
+                  <IconButton size="large" onClick={() => handleEditFolder()}>
+                    <Icon>edit</Icon>
+                  </IconButton>
+                </Tooltip>
+
+                {selectedItem.metadata?.isPO === true ? (
+                  <Tooltip
+                    title={t("EDIT_PO")}
+                    placement="bottom"
+                    arrow
+                    TransitionComponent={Zoom}
+                  >
+                    <IconButton
+                      size="large"
+                      disabled={buttonEditPO}
+                      onClick={() => handleEditPO()}
+                    >
+                      <Icon>article</Icon>
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  false
+                )}
+              </>
+            ) : (
+              false
+            )}
+          </>
         ) : (
           <IconButton size="large" onClick={() => handleEditFile()}>
             <Icon>edit</Icon>
@@ -318,9 +340,15 @@ function RightSideBarHeader(props) {
           initial={{ scale: 0 }}
           animate={{ scale: 1, transition: { delay: 0.2 } }}
         >
-          <Typography variant="subtitle1" className="mb-8 font-semibold">
-            {selectedItem.name}
-          </Typography>
+          {selectedItem.name !== ".." ? (
+            <Typography variant="subtitle1" className="mb-8 font-semibold">
+              {selectedItem.name}
+            </Typography>
+          ) : (
+            <Typography variant="subtitle1" className="mb-8 font-semibold">
+              {t("RETURN")}
+            </Typography>
+          )}
         </motion.div>
       </div>
     </div>

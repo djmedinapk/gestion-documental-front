@@ -56,27 +56,38 @@ const RightSideBarContent = () => {
           <StyledIcon className="text-48" type={selectedItem.type} />
         </motion.div>
       </div>
-
-      <Typography variant="subtitle1" className="py-16">
-        {t("INFO")}
-      </Typography>
+      {selectedItem.name !== ".." ? (
+        <Typography variant="subtitle1" className="py-16">
+          {t("INFO")}
+        </Typography>
+      ) : (
+        <Typography variant="subtitle1" className="py-16">
+          {t("RETURN")}
+        </Typography>
+      )}
 
       <table className="w-full text-justify">
         <tbody>
-          <tr className="type h-52">
-            <th className="font-semibold">{t("TYPE")}</th>
-            <td>{t(selectedItem.type.toUpperCase())}</td>
-          </tr>
+          {selectedItem.name !== ".." ? (
+            <>
+              <tr className="type h-52">
+                <th className="font-semibold">{t("TYPE")}</th>
+                <td>{t(selectedItem.type.toUpperCase())}</td>
+              </tr>
 
-          <tr className="modified h-52">
-            <th className="font-semibold">{t("MODIFIED")}</th>
-            <td>{selectedItem.modified}</td>
-          </tr>
+              <tr className="modified h-52">
+                <th className="font-semibold">{t("MODIFIED")}</th>
+                <td>{selectedItem.modified}</td>
+              </tr>
 
-          <tr className="location h-52 text-left">
-            <th className="font-semibold">{t("LOCATION")}</th>
-            <td>{selectedItem.metadata?.url}</td>
-          </tr>
+              <tr className="location h-52 text-left">
+                <th className="font-semibold">{t("LOCATION")}</th>
+                <td>{selectedItem.metadata?.url}</td>
+              </tr>
+            </>
+          ) : (
+            false
+          )}
 
           {/* <tr className="owner h-52">
             <th className="font-semibold">{t("OWNER")}</th>

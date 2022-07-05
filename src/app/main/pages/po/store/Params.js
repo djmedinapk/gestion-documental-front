@@ -116,7 +116,7 @@ export const dataPO = {
         {
           name: "Orden de Compra",
           statePO: "old",
-          stateRequired: true,
+          stateRequired: false,
           foldersRepeated: [],
           documentType: {
             id: 0,
@@ -185,7 +185,7 @@ export const dataPO = {
         {
           name: 'Guia Aerea NO Revalidada "unrated"',
           statePO: "old",
-          stateRequired: true,
+          stateRequired: false,
           foldersRepeated: [],
           documentType: {
             id: 0,
@@ -231,7 +231,7 @@ export const dataPO = {
         {
           name: "Packing List Fabricante",
           statePO: "old",
-          stateRequired: true,
+          stateRequired: false,
           foldersRepeated: [{ url: "Aduanas" }],
           documentType: {
             id: 0,
@@ -401,7 +401,7 @@ export const dataPO = {
         {
           name: "Factura de Importación",
           statePO: "old",
-          stateRequired: true,
+          stateRequired: false,
           foldersRepeated: [{ url: "UVA" }],
           documentType: {
             id: 0,
@@ -424,7 +424,7 @@ export const dataPO = {
         {
           name: "Carta UVA",
           statePO: "old",
-          stateRequired: true,
+          stateRequired: false,
           foldersRepeated: [{ url: "UVA" }],
           documentType: {
             id: 0,
@@ -447,7 +447,7 @@ export const dataPO = {
         {
           name: "Folio de UVA",
           statePO: "old",
-          stateRequired: true,
+          stateRequired: false,
           foldersRepeated: [{ url: "UVA" }],
           documentType: {
             id: 0,
