@@ -4,7 +4,7 @@ import Icon from "@mui/material/Icon";
 import Typography from "@mui/material/Typography";
 import withReducer from "app/store/withReducer";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -14,7 +14,18 @@ import {
 } from "./store/projectsSlice";
 import reducer from "./store";
 import ProjectDialog from "./ProjectDialog";
+import DeleteProjectDialog from "./DeleteProjectDialog";
+import {
+  handleDeleteProjectDialog,
+  removeProject,
+} from "./store/projectsSlice";
 import { useTranslation } from "react-i18next";
+
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import Zoom from "@mui/material/Zoom";
+
+import { showMessage } from "app/store/fuse/messageSlice";
 
 const Root = styled("div")(({ theme }) => ({
   "& .board": {
@@ -28,6 +39,8 @@ const ProjectBoard = () => {
   const dispatch = useDispatch();
   const projects = useSelector(selectProjects);
   const { t } = useTranslation("projectPage");
+
+  const [projectDataRemove, setProjectDataRemove] = useState(null);
 
   useEffect(() => {
     dispatch(getProjects());
@@ -47,6 +60,30 @@ const ProjectBoard = () => {
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
+  };
+
+  const handleDeleteProject = (project) => {
+    setProjectDataRemove(project);
+    dispatch(handleDeleteProjectDialog());
+  };
+
+  const handleDeleteProjectFunction = () => {
+    if (projectDataRemove && projectDataRemove.id) {
+      dispatch(removeProject(projectDataRemove.id)).then(() => {
+        dispatch(getProjects());
+        dispatch(
+          showMessage({
+            message: t("PROJECT_DELETED"),
+            autoHideDuration: 6000,
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
+            variant: "success",
+          })
+        );
+      });
+    }
   };
 
   return (
@@ -78,6 +115,20 @@ const ProjectBoard = () => {
                   className="w-224 h-224 p-16"
                   key={project.id}
                 >
+                  <Tooltip
+                    title={t("DELETE_PROJECT")}
+                    placement="top"
+                    arrow
+                    TransitionComponent={Zoom}
+                  >
+                    <IconButton
+                      onClick={() => handleDeleteProject(project)}
+                      color="error"
+                      aria-label="search"
+                    >
+                      <Icon>delete</Icon>
+                    </IconButton>
+                  </Tooltip>
                   <Paper
                     to={`/explorer/project/${project.id}`}
                     className="board flex flex-col items-center justify-center w-full h-full rounded-16 py-24 shadow hover:shadow-lg cursor-pointer"
@@ -100,6 +151,18 @@ const ProjectBoard = () => {
               )
             )}
             <motion.div variants={item} className="w-224 h-224 p-16">
+              <div>
+                <Tooltip
+                  title={t("ADD_NEW_PROJECT")}
+                  placement="top"
+                  arrow
+                  TransitionComponent={Zoom}
+                >
+                  <IconButton color="primary" aria-label="search">
+                    <Icon>info</Icon>
+                  </IconButton>
+                </Tooltip>
+              </div>
               <Paper
                 className="flex flex-col items-center justify-center w-full h-full rounded-16 py-24 shadow hover:shadow-lg outline-none cursor-pointer"
                 onClick={() => dispatch(handleDialog())}
@@ -122,6 +185,9 @@ const ProjectBoard = () => {
         </div>
       </Root>
       <ProjectDialog />
+      <DeleteProjectDialog
+        handleDeleteProjectFunction={handleDeleteProjectFunction}
+      />
     </>
   );
 };

@@ -188,7 +188,7 @@ const ExplorerApp = () => {
         header={
           <div className="flex flex-col flex-1 p-8 sm:p-12 relative">
             <div className="flex items-center justify-between">
-              <IconButton
+              {/* <IconButton
                 onClick={(ev) => {
                   pageLayout.current.toggleLeftSidebar();
                 }}
@@ -196,7 +196,7 @@ const ExplorerApp = () => {
                 size="large"
               >
                 <Icon>menu</Icon>
-              </IconButton>
+              </IconButton> */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1, transition: { delay: 0.2 } }}
@@ -287,9 +287,9 @@ const ExplorerApp = () => {
           </div>
         }
         content={<FileList pageLayout={pageLayout} />}
-        leftSidebarVariant="temporary"
-        leftSidebarHeader={<MainSidebarHeader />}
-        leftSidebarContent={<MainSidebarContent />}
+        //leftSidebarVariant="temporary"
+        // leftSidebarHeader={<MainSidebarHeader />}
+        // leftSidebarContent={<MainSidebarContent />}
         rightSidebarHeader={<RightSideBarHeader />}
         rightSidebarContent={<RightSideBarContent />}
         ref={pageLayout}

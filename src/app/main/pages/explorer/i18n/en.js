@@ -22,6 +22,7 @@ const locale = {
     "Are you sure you want to delete this?",
   CANCEL: "Cancel",
   EDIT_PO: "Edit PO",
+  RETURN: "Return",
 };
 
 export default locale;

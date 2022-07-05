@@ -17,6 +17,7 @@ const locale = {
   DOCUMENT: 'Documento',
   DOCUMENT_TYPE: 'Tipo de Documento',
   VERSIONS: "Versiones",
+  RETURN: "Regresar",
 };
 
 export default locale;
