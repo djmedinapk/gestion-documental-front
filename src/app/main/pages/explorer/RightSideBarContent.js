@@ -42,6 +42,23 @@ const RightSideBarContent = () => {
     return 0;
   }
 
+  const downoaldF = () => {
+    dispatch(
+      downloadFile({
+        id: selectedItem.metadata.id,
+        name: selectedItem.metadata.name,
+        url: selectedItem.metadata.url,
+      })
+    ).then((res) => {
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = res.payload.blobUrl;
+      //a.download = selectedItem.metadata.name;
+      a.click();
+    });
+  };
+
   return (
     <motion.div
       initial={{ y: 50, opacity: 0.8 }}

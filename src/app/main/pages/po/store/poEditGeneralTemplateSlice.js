@@ -24,6 +24,62 @@ export const folderUp = createAsyncThunk(
   }
 );
 
+export const downloadFile = createAsyncThunk(
+  "fileApp/file/downloadFile",
+  async (file, { dispatch, getState }) => {
+    const response = await axios.getWithParams("/api/File/fileDownload", {
+      params: file,
+    });
+
+    var type = response.data.documentType.extensionAllowed;
+    var name = response.data.name.split(".");
+
+    switch (type) {
+      case ".pdf":
+        type = "application/pdf";
+        break;
+      case ".xlsx/.xls":
+        type =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        break;
+      case "image/*":
+        type = "image/" + name[name.length - 1];
+        break;
+      default:
+        type = type;
+        break;
+    }
+
+    const blob = b64toBlob(response.data.file, type);
+    const blobUrl = URL.createObjectURL(blob);
+
+    const { data, status } = await response;
+    data.name = response.data.name;
+    data.urlFile = blobUrl;
+    return { data, status };
+  }
+);
+
+const b64toBlob = (b64Data, contentType = "", sliceSize = 512) => {
+  const byteCharacters = atob(b64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: contentType });
+  return blob;
+};
+
 export const folderCreateSystemUp = createAsyncThunk(
   "poEditGeneralTemplateApp/poEditGeneralTemplateData/folderCreateSystemUp",
   async (route, { dispatch, getState }) => {

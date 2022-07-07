@@ -20,6 +20,7 @@ import { dataPO } from "./../po/store/Params";
 import {
   changeDatosPOs,
   getPOById,
+  downloadFile,
 } from "./../po/store/poEditGeneralTemplateSlice";
 
 import { changeGeneralParamsEditPO } from "./../../../store/globalParamsSlice";
@@ -87,7 +88,6 @@ function RightSideBarHeader(props) {
       }
     );
   };
-  
 
   const searchInfoEditPONew = (dataUp, resultPOE, route, namePO) => {
     if (route !== namePO + "/UVA/Evidencias") {
@@ -264,6 +264,40 @@ function RightSideBarHeader(props) {
 
   const searchFoldersInfoEditPO = (folder) => {};
 
+  const downloadF = () => {
+    dispatch(
+      downloadFile({
+        id: selectedItem.metadata.id,
+        name: selectedItem.metadata.name,
+        url: selectedItem.metadata.url,
+      })
+    ).then((res) => {
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = res.payload.data.urlFile;
+      a.download = res.payload.data.name;
+      a.click();
+    });
+  };
+
+  const watchF = () => {
+    dispatch(
+      downloadFile({
+        id: selectedItem.metadata.id,
+        name: selectedItem.metadata.name,
+        url: selectedItem.metadata.url,
+      })
+    ).then((res) => {
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = res.payload.data.urlFile;
+      a.target = "_blank";
+      a.click();
+    });
+  };
+
   return (
     <div className="flex flex-col justify-between h-full p-4 sm:p-12">
       <div className="toolbar flex align-center justify-end">
@@ -281,9 +315,18 @@ function RightSideBarHeader(props) {
               initial={{ scale: 0 }}
               animate={{ scale: 1, transition: { delay: 0.2 } }}
             >
-              <IconButton size="large">
+              <IconButton size="large" onClick={() => downloadF()}>
                 <Icon>cloud_download</Icon>
               </IconButton>
+              {selectedItem.type === "image" ||
+              selectedItem.type === "pdf" ||
+              selectedItem.type === "xml" ? (
+                <IconButton size="large" onClick={() => watchF()}>
+                  <Icon>find_in_page</Icon>
+                </IconButton>
+              ) : (
+                false
+              )}
             </motion.div>
           </>
         ) : (
