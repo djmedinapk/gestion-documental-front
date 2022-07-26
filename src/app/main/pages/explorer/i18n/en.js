@@ -23,6 +23,7 @@ const locale = {
   CANCEL: "Cancel",
   EDIT_PO: "Edit PO",
   RETURN: "Return",
+  DELETE_FOLDER: "Delete Folder",
 };
 
 export default locale;

@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 import {
   handleEditFolderDialog,
+  handleDeleteFolderDialog,
   handleEditFileDialog,
   handleDeleteFileDialog,
 } from "./store/explorerSlice";
@@ -46,6 +47,11 @@ function RightSideBarHeader(props) {
 
   const handleEditFolder = () => {
     dispatch(handleEditFolderDialog());
+    setOpen(!open);
+  };
+
+  const handleDeleteFolder = () => {
+    dispatch(handleDeleteFolderDialog());
     setOpen(!open);
   };
 
@@ -337,6 +343,16 @@ function RightSideBarHeader(props) {
           <>
             {selectedItem.name !== ".." ? (
               <>
+                <Tooltip
+                  title={t("DELETE_FOLDER")}
+                  placement="bottom"
+                  arrow
+                  TransitionComponent={Zoom}
+                >
+                  <IconButton size="large" onClick={() => handleDeleteFolder()}>
+                    <Icon>delete</Icon>
+                  </IconButton>
+                </Tooltip>
                 <Tooltip
                   title={t("EDIT_FOLDER")}
                   placement="bottom"

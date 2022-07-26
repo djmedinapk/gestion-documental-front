@@ -125,6 +125,9 @@ const explorerSlice = createSlice({
     editFolderDialog: {
       open: false
     },
+    deleteFolderDialog: {
+      open: false
+    },
     newFileDialog: {
       open: false,
       data: null,
@@ -148,6 +151,11 @@ const explorerSlice = createSlice({
     handleEditFolderDialog: (state, action) => {
       state.editFolderDialog = {
         open: !state.editFolderDialog.open
+      }
+    },
+    handleDeleteFolderDialog: (state, action) => {
+      state.deleteFolderDialog = {
+        open: !state.deleteFolderDialog.open
       }
     },
     handleNewFileDialog: (state, action) => {
@@ -195,6 +203,7 @@ const explorerSlice = createSlice({
 export const {
   handleNewFolderDialog,
   handleEditFolderDialog,
+  handleDeleteFolderDialog,
   handleNewFileDialog,
   handleEditFileDialog,
   handleDeleteFileDialog,

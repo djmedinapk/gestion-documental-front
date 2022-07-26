@@ -34,6 +34,7 @@ import {
 } from "@mui/material";
 import NewFolderDialog from "./NewFolderDialog";
 import EditFolderDialog from "./EditFolderDialog";
+import DeleteFolderDialog from "./DeleteFolderDialog";
 import NewFileDialog from "./NewFileDialog";
 import EditFileDialog from "./EditFileDialog";
 import DeleteFileDialog from "./DeleteFileDialog";
@@ -298,6 +299,7 @@ const ExplorerApp = () => {
       <NewFolderDialog />
       <NewFileDialog />
       <EditFolderDialog />
+      <DeleteFolderDialog />
       <EditFileDialog />
       <DeleteFileDialog />
     </>

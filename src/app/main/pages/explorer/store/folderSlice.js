@@ -9,14 +9,14 @@ import axios from "./../../../../services/Axios/HttpClient";
 import { getCurrentFolder } from "./explorerSlice";
 
 export const addFolder = createAsyncThunk(
-  'folderApp/folder/addFolder',
+  "folderApp/folder/addFolder",
   async (folder, { dispatch, getState }) => {
-    const response = await axios.post('/api/Folder',  folder );
-    const {data, status} = await response;
+    const response = await axios.post("/api/Folder", folder);
+    const { data, status } = await response;
     const routeParams = getState().explorerApp.explorer.routeParams;
     const isFolder = getState().explorerApp.explorer.isFolder;
-    dispatch(getCurrentFolder({ routeParams, isFolder }))
-    return {data, status};
+    dispatch(getCurrentFolder({ routeParams, isFolder }));
+    return { data, status };
   }
 );
 
@@ -27,25 +27,37 @@ export const updateFolder = createAsyncThunk(
       "/api/Folder/editFolderExplorer/" + folderData.id,
       folderData
     );
-    const {data, status} = await response;
+    const { data, status } = await response;
 
     const routeParams = getState().explorerApp.explorer.routeParams;
     const isFolder = getState().explorerApp.explorer.isFolder;
-    dispatch(getCurrentFolder({ routeParams, isFolder }))
+    dispatch(getCurrentFolder({ routeParams, isFolder }));
 
-    return {data, status};
+    return { data, status };
+  }
+);
+
+export const removeFolder = createAsyncThunk(
+  "folderApp/folder/removeFolder",
+  async (folderId, { dispatch, getState }) => {
+    const response = await axios.delete(
+      "/api/Folder/deleteUploadFolder/" + folderId
+    );
+    const { data, status } = await response;
+    const routeParams = getState().explorerApp.explorer.routeParams;
+    const isFolder = getState().explorerApp.explorer.isFolder;
+    dispatch(getCurrentFolder({ routeParams, isFolder }));
+    return { data, status };
   }
 );
 
 const folderAdapter = createEntityAdapter({});
 
-
 const folderSlice = createSlice({
   name: "folderApp/folder",
-  initialState: folderAdapter.getInitialState({
-  }),
+  initialState: folderAdapter.getInitialState({}),
   reducers: {},
-  extraReducers: {    
+  extraReducers: {
     [addFolder.fulfilled]: folderAdapter.addOne,
   },
 });
