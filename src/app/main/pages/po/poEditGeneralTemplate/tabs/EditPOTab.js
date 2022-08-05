@@ -1539,7 +1539,7 @@ const EditPOTab = () => {
                 </label>
 
                 <Tooltip
-                  title={file.name}
+                  title={t("SEE")+" "+file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}
@@ -1655,7 +1655,7 @@ const EditPOTab = () => {
                   </Button>
                 </label>
                 <Tooltip
-                  title={file.name}
+                  title={t("SEE")+" "+file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}

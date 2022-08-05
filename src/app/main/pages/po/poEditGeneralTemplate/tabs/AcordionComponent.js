@@ -1065,7 +1065,7 @@ const AcordionComponent = (props) => {
                             iFilePO +
                             "/...AcordionDetailsFolderFileDivTooltip"
                           }
-                          title={filePO.name}
+                          title={t("SEE")+" "+filePO.name}
                           placement="left"
                           arrow
                           TransitionComponent={Zoom}
@@ -1331,7 +1331,7 @@ const AcordionComponent = (props) => {
                             iFilePO +
                             "/...AcordionDetailsFolderFileDivNewTooltip"
                           }
-                          title={filePO.name}
+                          title={t("SEE")+" "+filePO.name}
                           placement="left"
                           arrow
                           TransitionComponent={Zoom}

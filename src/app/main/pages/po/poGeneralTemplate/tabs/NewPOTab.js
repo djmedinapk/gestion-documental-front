@@ -1815,7 +1815,7 @@ const NewPOTab = () => {
                 </label>
 
                 <Tooltip
-                  title={file.name}
+                  title={t("SEE")+" "+file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}
@@ -1921,7 +1921,7 @@ const NewPOTab = () => {
                   </Button>
                 </label>
                 <Tooltip
-                  title={file.name}
+                  title={t("SEE")+" "+file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}

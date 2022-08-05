@@ -38,6 +38,7 @@ const locale = {
   EDIT_PO: "Edit PO",
   THE_PO_WAS_UPDATED: "The PO was updated",
   UPDATE: "Update",
+  SEE: "See",
 };
 
 export default locale;
