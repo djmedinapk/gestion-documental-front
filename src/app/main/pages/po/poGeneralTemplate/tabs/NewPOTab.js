@@ -759,7 +759,6 @@ const NewPOTab = () => {
                       fileElement.contentFile.name ===
                     finalFile.route + "/" + finalFile.name
                   ) {
-                    
                     setContinueValidationSaveByFiles(true);
                   }
                 });
@@ -1520,6 +1519,31 @@ const NewPOTab = () => {
     }
   };
 
+  const watchF = (file) => {
+    var name = file.contentFile.name.split(".");
+    var finalName = "";
+    for (var i = 0; i < name.length - 1; i++) {
+      finalName = finalName + name[i];
+    }
+
+    if (file.contentFile.name !== "") {
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = URL.createObjectURL(file.contentFile);
+      if (
+        file.documentType.icon === "image" ||
+        file.documentType.icon === "pdf" ||
+        file.documentType.icon === "xml"
+      ) {
+        a.target = "_blank";
+      } else {
+        a.download = finalName;
+      }
+      a.click();
+    }
+  };
+
   return (
     <div>
       <div
@@ -1731,6 +1755,7 @@ const NewPOTab = () => {
           messageDispatch={messageDispatch}
           validationFolderName={validationFolderName}
           validateButtonSave={validateButtonSave}
+          watchF={watchF}
         />
       ) : (
         ""
@@ -1800,6 +1825,7 @@ const NewPOTab = () => {
                     color="primary"
                     className="mt-8  mx-4"
                     size="small"
+                    onClick={() => watchF(filesGeneral.files[i])}
                   >
                     <Icon>help</Icon>
                   </Button>
@@ -1904,7 +1930,7 @@ const NewPOTab = () => {
                     variant="contained"
                     color="primary"
                     className="mt-8  mx-4"
-                    //onClick={handleRemoveProduct}
+                    onClick={() => watchF(filesGeneral.files[i])}
                     size="small"
                   >
                     <Icon>help</Icon>

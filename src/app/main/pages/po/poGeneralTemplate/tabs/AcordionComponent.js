@@ -1062,6 +1062,7 @@ const AcordionComponent = (props) => {
                             color="primary"
                             className="mt-8  mx-4"
                             size="small"
+                            onClick={() => props.watchF(props.filesGeneral.folders[iFolderPO].files[iFilePO])}
                           >
                             <Icon>help</Icon>
                           </Button>
@@ -1314,6 +1315,7 @@ const AcordionComponent = (props) => {
                             color="primary"
                             className="mt-8  mx-4"
                             size="small"
+                            onClick={() => props.watchF(props.filesGeneral.folders[iFolderPO].files[iFilePO])}
                           >
                             <Icon>help</Icon>
                           </Button>
@@ -1382,6 +1384,7 @@ const AcordionComponent = (props) => {
                   messageDispatch={props.messageDispatch}
                   validationFolderName={props.validationFolderName}
                   validateButtonSave={props.validateButtonSave}
+                  watchF={props.watchF}
                 />
               ) : (
                 false
