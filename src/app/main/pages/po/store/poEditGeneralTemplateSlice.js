@@ -38,7 +38,7 @@ export const downloadFile = createAsyncThunk(
       case ".pdf":
         type = "application/pdf";
         break;
-      case ".xlsx/.xls":
+      case ".xlsx,.xls":
         type =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         break;

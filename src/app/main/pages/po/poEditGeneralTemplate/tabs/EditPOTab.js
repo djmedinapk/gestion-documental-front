@@ -34,6 +34,7 @@ import {
   folderUp,
   folderCreateSystemUp,
   getFoldersValidateUp,
+  downloadFile,
 } from "./../../store/poEditGeneralTemplateSlice";
 import { selectProductTypesEditPO } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypesEditPO } from "./../../store/documentTypesAdminSlice";
@@ -1218,6 +1219,55 @@ const EditPOTab = () => {
     }
   };
 
+  const watchF = (file) => {
+    var name = file.contentFile.name.split(".");
+    var finalName = "";
+    for (var i = 0; i < name.length - 1; i++) {
+      finalName = finalName + name[i];
+    }
+    if (file.id === undefined) {
+      if (file.contentFile.name !== "") {
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        a.href = URL.createObjectURL(file.contentFile);
+        if (
+          file.documentType.icon === "image" ||
+          file.documentType.icon === "pdf" ||
+          file.documentType.icon === "xml"
+        ) {
+          a.target = "_blank";
+        } else {
+          a.download = finalName;
+        }
+        a.click();
+      }
+    } else {
+      dispatch(
+        downloadFile({
+          id: file.id,
+          name: file.contentFile.name,
+          url: file.contentFile.name,
+        })
+      ).then((res) => {
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        a.href = res.payload.data.urlFile;
+        if (
+          file.documentType.icon === "image" ||
+          file.documentType.icon === "pdf" ||
+          file.documentType.icon === "xml"
+        ) {
+          a.target = "_blank";
+        } else {
+          a.download = finalName;
+        }
+        a.click();
+      });
+    }
+  };
+
   return (
     <div>
       <div
@@ -1429,6 +1479,7 @@ const EditPOTab = () => {
           messageDispatch={messageDispatch}
           validationFolderName={validationFolderName}
           validateButtonSave={validateButtonSave}
+          watchF={watchF}
         />
       ) : (
         ""
@@ -1498,6 +1549,7 @@ const EditPOTab = () => {
                     color="primary"
                     className="mt-8  mx-4"
                     size="small"
+                    onClick={() => watchF(filesGeneral.files[i])}
                   >
                     <Icon>help</Icon>
                   </Button>
@@ -1612,7 +1664,7 @@ const EditPOTab = () => {
                     variant="contained"
                     color="primary"
                     className="mt-8  mx-4"
-                    //onClick={handleRemoveProduct}
+                    onClick={() => watchF(filesGeneral.files[i])}
                     size="small"
                   >
                     <Icon>help</Icon>
