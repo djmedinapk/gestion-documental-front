@@ -24,6 +24,18 @@ export const folderUp = createAsyncThunk(
   }
 );
 
+export const editFolderPO = createAsyncThunk(
+  "poEditGeneralTemplateApp/poEditGeneralTemplateData/editFolderPO",
+  async (folder, { dispatch, getState }) => {
+    const response = await axios.put(
+      "api/Folder/editFolderPO/" + folder.id,
+      folder
+    );
+    const data = await response.data;
+    return data;
+  }
+);
+
 export const downloadFile = createAsyncThunk(
   "fileApp/file/downloadFile",
   async (file, { dispatch, getState }) => {

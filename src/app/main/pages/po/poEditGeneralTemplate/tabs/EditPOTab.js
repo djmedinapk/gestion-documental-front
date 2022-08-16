@@ -34,6 +34,7 @@ import {
   folderUp,
   folderCreateSystemUp,
   getFoldersValidateUp,
+  editFolderPO,
   downloadFile,
 } from "./../../store/poEditGeneralTemplateSlice";
 import { selectProductTypesEditPO } from "./../../store/productTypesAdminSlice";
@@ -1170,6 +1171,8 @@ const EditPOTab = () => {
   var lastFile = "";
 
   const handleSaveDataPO = () => {
+    var oldNamePO = datosSS.name;
+
     datosSS.name = filesGeneral.name;
     datosSS.pediment = filesGeneral.pediment;
     handleUpdate();
@@ -1215,7 +1218,18 @@ const EditPOTab = () => {
         setContinueValidationSaveByFolders(true);
       }
       setValidateButtonSave(true);
-      uploadMainFolders(datosSS, filesGeneral);
+
+      if (filesGeneral.name !== "") {
+        if (filesGeneral.name !== oldNamePO) {
+          dispatch(
+            editFolderPO({ id: datosSS.id, name: filesGeneral.name })
+          ).then((rey) => {
+            uploadMainFolders(datosSS, filesGeneral);
+          });
+        }else{
+          uploadMainFolders(datosSS, filesGeneral);
+        }
+      }
     }
   };
 
@@ -1303,7 +1317,7 @@ const EditPOTab = () => {
               error={!!errors.namePO}
               helperText={errors?.namePO?.message}
               value={filesGeneral ? filesGeneral.name : ""}
-              disabled={true}
+              //disabled={true}
               onChange={(event) => {
                 field.onChange(event);
                 handleNamePOState(event);
@@ -1539,7 +1553,7 @@ const EditPOTab = () => {
                 </label>
 
                 <Tooltip
-                  title={t("SEE")+" "+file.name}
+                  title={t("SEE") + " " + file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}
@@ -1655,7 +1669,7 @@ const EditPOTab = () => {
                   </Button>
                 </label>
                 <Tooltip
-                  title={t("SEE")+" "+file.name}
+                  title={t("SEE") + " " + file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}
