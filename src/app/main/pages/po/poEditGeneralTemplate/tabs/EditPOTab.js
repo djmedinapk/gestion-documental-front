@@ -32,6 +32,7 @@ import {
   changeDatosPOs,
   fileUp,
   folderUp,
+  updateFile,
   folderCreateSystemUp,
   getFoldersValidateUp,
   editFolderPO,
@@ -581,6 +582,28 @@ const EditPOTab = () => {
             fileVI.id !== null &&
             fileVI.id !== 0
           ) {
+            if (fileVI.contentFile.size !== 0) {
+              const datosEditFile = new FormData();
+              datosEditFile.append("id", fileVI.id);
+              datosEditFile.append("name", fileVI.contentFile.name);
+              datosEditFile.append("nameOld", fileVI.name);
+              datosEditFile.append("description", fileVI.contentFile.name);
+              var urlTempp = routeVI.split("/");
+              var urlPass = "";
+              for (let index = 0; index < urlTempp.length; index++) {
+                if (index === 0) {
+                  urlPass = urlTempp[index];
+                } else if (urlTempp[index] !== "") {
+                  urlPass = urlPass + "\\" + urlTempp[index];
+                }
+              }
+              datosEditFile.append("url", urlPass);
+              datosEditFile.append("folderId", folderIdVI);
+              datosEditFile.append("documentTypeId", fileVI.documentType.id);
+              datosEditFile.append("file", fileVI.contentFile);
+
+              dispatch(updateFile(datosEditFile));
+            }
           } else {
             dispatch(fileUp(datosGeneralFVI)).then((resultUPRepeated) => {
               if (
@@ -727,6 +750,31 @@ const EditPOTab = () => {
             fileElement.id !== null &&
             fileElement.id !== 0
           ) {
+            if (fileElement.contentFile.size !== 0) {
+              const datosEditFile = new FormData();
+              datosEditFile.append("id", fileElement.id);
+              datosEditFile.append("name", fileElement.contentFile.name);
+              datosEditFile.append("nameOld", fileElement.name);
+              datosEditFile.append("description", fileElement.contentFile.name);
+              var urlTempp = routeFolder.split("/");
+              var urlPass = "";
+              for (let index = 0; index < urlTempp.length; index++) {
+                if (index === 0) {
+                  urlPass = urlTempp[index];
+                } else if (urlTempp[index] !== "") {
+                  urlPass = urlPass + "\\" + urlTempp[index];
+                }
+              }
+              datosEditFile.append("url", urlPass);
+              datosEditFile.append("folderId", idParentFolder);
+              datosEditFile.append(
+                "documentTypeId",
+                fileElement.documentType.id
+              );
+              datosEditFile.append("file", fileElement.contentFile);
+
+              dispatch(updateFile(datosEditFile));
+            }
           } else {
             dispatch(fileUp(datosGeneralF));
             if (
@@ -803,6 +851,34 @@ const EditPOTab = () => {
                   fileElement.id !== undefined &&
                   fileElement.id !== 0
                 ) {
+                  if (fileElement.contentFile.size !== 0) {
+                    const datosEditFile = new FormData();
+                    datosEditFile.append("id", fileElement.id);
+                    datosEditFile.append("name", fileElement.contentFile.name);
+                    datosEditFile.append("nameOld", fileElement.name);
+                    datosEditFile.append(
+                      "description",
+                      fileElement.contentFile.name
+                    );
+                    var urlTempp = routeFolder.split("/");
+                    var urlPass = "";
+                    for (let index = 0; index < urlTempp.length; index++) {
+                      if (index === 0) {
+                        urlPass = urlTempp[index];
+                      } else if (urlTempp[index] !== "") {
+                        urlPass = urlPass + "\\" + urlTempp[index];
+                      }
+                    }
+                    datosEditFile.append("url", urlPass+"\\"+folderElement.name);
+                    datosEditFile.append("folderId", folderElement.id);
+                    datosEditFile.append(
+                      "documentTypeId",
+                      fileElement.documentType.id
+                    );
+                    datosEditFile.append("file", fileElement.contentFile);
+
+                    dispatch(updateFile(datosEditFile));
+                  }
                 } else {
                   dispatch(fileUp(datos)).then((resultFUNR) => {
                     var desctructRoute = routeFolder.split("/");
@@ -990,6 +1066,37 @@ const EditPOTab = () => {
                     fileElement.id !== undefined &&
                     fileElement.id !== 0
                   ) {
+                    if (fileElement.contentFile.size !== 0) {
+                      const datosEditFile = new FormData();
+                      datosEditFile.append("id", fileElement.id);
+                      datosEditFile.append(
+                        "name",
+                        fileElement.contentFile.name
+                      );
+                      datosEditFile.append("nameOld", fileElement.name);
+                      datosEditFile.append(
+                        "description",
+                        fileElement.contentFile.name
+                      );
+                      var urlTempp = routeFolder.split("/");
+                      var urlPass = "";
+                      for (let index = 0; index < urlTempp.length; index++) {
+                        if (index === 0) {
+                          urlPass = urlTempp[index];
+                        } else if (urlTempp[index] !== "") {
+                          urlPass = urlPass + "\\" + urlTempp[index];
+                        }
+                      }
+                      datosEditFile.append("url", urlPass);
+                      datosEditFile.append("folderId", folderElement.id);
+                      datosEditFile.append(
+                        "documentTypeId",
+                        fileElement.documentType.id
+                      );
+                      datosEditFile.append("file", fileElement.contentFile);
+
+                      dispatch(updateFile(datosEditFile));
+                    }
                   } else {
                     dispatch(fileUp(datos)).then((resultFUNR) => {
                       var desctructRoute = routeFolder.split("/");
@@ -1207,26 +1314,37 @@ const EditPOTab = () => {
     }
 
     if (validationSave === true) {
-      findLastFile(datosSS, datosSS.name, datosSS.name);
-      if (finalFile.name === "") {
-        setContinueValidationSaveByFiles(true);
-      }
-      if (finalFileProducts.name === "") {
-        setContinueValidationSaveByFilesProducts(true);
-      }
-      if (finalFolder.name === "") {
-        setContinueValidationSaveByFolders(true);
-      }
-      setValidateButtonSave(true);
 
       if (filesGeneral.name !== "") {
         if (filesGeneral.name !== oldNamePO) {
           dispatch(
             editFolderPO({ id: datosSS.id, name: filesGeneral.name })
           ).then((rey) => {
+            findLastFile(datosSS, datosSS.name, datosSS.name);
+            if (finalFile.name === "") {
+              setContinueValidationSaveByFiles(true);
+            }
+            if (finalFileProducts.name === "") {
+              setContinueValidationSaveByFilesProducts(true);
+            }
+            if (finalFolder.name === "") {
+              setContinueValidationSaveByFolders(true);
+            }
+            setValidateButtonSave(true);
             uploadMainFolders(datosSS, filesGeneral);
           });
-        }else{
+        } else {
+          findLastFile(datosSS, datosSS.name, datosSS.name);
+          if (finalFile.name === "") {
+            setContinueValidationSaveByFiles(true);
+          }
+          if (finalFileProducts.name === "") {
+            setContinueValidationSaveByFilesProducts(true);
+          }
+          if (finalFolder.name === "") {
+            setContinueValidationSaveByFolders(true);
+          }
+          setValidateButtonSave(true);
           uploadMainFolders(datosSS, filesGeneral);
         }
       }
@@ -1631,9 +1749,7 @@ const EditPOTab = () => {
                   id={file.name + i + "fu"}
                   type="file"
                   disabled={
-                    file.documentType.name === "" ||
-                    validateButtonSave === true ||
-                    file.id
+                    file.documentType.name === "" || validateButtonSave === true
                       ? true
                       : false
                   }
@@ -1659,8 +1775,7 @@ const EditPOTab = () => {
                     component="span"
                     disabled={
                       file.documentType.name === "" ||
-                      validateButtonSave === true ||
-                      file.id
+                      validateButtonSave === true
                         ? true
                         : false
                     }

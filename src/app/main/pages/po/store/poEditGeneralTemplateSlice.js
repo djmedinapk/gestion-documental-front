@@ -15,8 +15,17 @@ export const fileUp = createAsyncThunk(
   }
 );
 
+export const updateFile = createAsyncThunk(
+  "poEditGeneraFilelTemplateApp/poEditGeneralFileTemplateData/updateFile",
+  async (fileData, { dispatch, getState }) => {
+    const response = await axios.put("/api/File/editUploadFile", fileData);
+    const { data, status } = await response;
+    return { data, status };
+  }
+);
+
 export const folderUp = createAsyncThunk(
-  "poEditGeneralTemplateApp/poEditGeneralTemplateData/folderUp",
+  "poEditGeneralTemplateAppFolder/poEditGeneralTemplateDataFolder/folderUp",
   async (folder, { dispatch, getState }) => {
     const response = await axios.post("api/Folder", folder);
     const data = await response.data;
@@ -31,8 +40,9 @@ export const editFolderPO = createAsyncThunk(
       "api/Folder/editFolderPO/" + folder.id,
       folder
     );
-    const data = await response.data;
-    return data;
+    const { data, status } = await response;
+
+    return { data, status };
   }
 );
 

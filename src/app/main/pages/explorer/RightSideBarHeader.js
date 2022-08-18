@@ -253,7 +253,8 @@ function RightSideBarHeader(props) {
                 ) {
                   elementFile.statePO = elementResultFile.stateDbPO;
                 }
-                elementFile.id = elementResultFile.id;
+                elementFile.id = elementResultFile.id
+                elementFile.name = elementResultFile.name
                 elementFile.contentFile.name = elementResultFile.name;
                 elementFile.documentType.id = elementResultFile.documentType.id;
                 elementFile.documentType.name =

@@ -145,7 +145,6 @@ const DeleteFolderDialog = () => {
   };
 
   const handleDeleteFolder = () => {
-    console.log(selectedItem);
     dispatch(removeFolder(selectedItem.id)).then(({ payload }) => {
       if (payload.status === 200) {
         dispatch(

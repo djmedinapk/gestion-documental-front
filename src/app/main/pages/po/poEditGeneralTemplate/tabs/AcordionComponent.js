@@ -459,7 +459,14 @@ const AcordionComponent = (props) => {
                   className="font-semibold"
                   style={{ alignSelf: "center" }}
                 >
-                  {folderPO.name}
+                  {props.parentPOFolder + folderPO.name.split(" ")[0] ===
+                  props.parentPOFolder + "UVA"
+                    ? folderPO.name.split(" ")[1] !== undefined
+                      ? folderPO.name.split(" ")[0] +
+                        " " +
+                        props.filesGeneral.pediment
+                      : folderPO.name.split(" ")[0]
+                    : folderPO.name}
                 </Typography>
               </div>
             </AccordionSummary>
@@ -1005,10 +1012,7 @@ const AcordionComponent = (props) => {
                             event.target.value = null;
                           }}
                           disabled={
-                            props.validateButtonSave === true ||
-                            (filePO.id !== undefined && filePO.id !== 0)
-                              ? true
-                              : false
+                            props.validateButtonSave === true ? true : false
                           }
                         />
                         <label
@@ -1044,10 +1048,7 @@ const AcordionComponent = (props) => {
                             fullWidth
                             component="span"
                             disabled={
-                              props.validateButtonSave === true ||
-                              (filePO.id !== undefined && filePO.id !== 0)
-                                ? true
-                                : false
+                              props.validateButtonSave === true ? true : false
                             }
                           >
                             {t("CHOOSE_FILE")}
@@ -1065,7 +1066,7 @@ const AcordionComponent = (props) => {
                             iFilePO +
                             "/...AcordionDetailsFolderFileDivTooltip"
                           }
-                          title={t("SEE")+" "+filePO.name}
+                          title={t("SEE") + " " + filePO.name}
                           placement="left"
                           arrow
                           TransitionComponent={Zoom}
@@ -1085,7 +1086,13 @@ const AcordionComponent = (props) => {
                             color="primary"
                             className="mt-8  mx-4"
                             size="small"
-                            onClick={() => props.watchF(props.filesGeneral.folders[iFolderPO].files[iFilePO])}
+                            onClick={() =>
+                              props.watchF(
+                                props.filesGeneral.folders[iFolderPO].files[
+                                  iFilePO
+                                ]
+                              )
+                            }
                           >
                             <Icon>help</Icon>
                           </Button>
@@ -1261,8 +1268,7 @@ const AcordionComponent = (props) => {
                           type="file"
                           disabled={
                             filePO.documentType.name === "" ||
-                            props.validateButtonSave === true ||
-                            filePO.id
+                            props.validateButtonSave === true
                               ? true
                               : false
                           }
@@ -1311,8 +1317,7 @@ const AcordionComponent = (props) => {
                             component="span"
                             disabled={
                               filePO.documentType.name === "" ||
-                              props.validateButtonSave === true ||
-                              filePO.id
+                              props.validateButtonSave === true
                                 ? true
                                 : false
                             }
@@ -1331,7 +1336,7 @@ const AcordionComponent = (props) => {
                             iFilePO +
                             "/...AcordionDetailsFolderFileDivNewTooltip"
                           }
-                          title={t("SEE")+" "+filePO.name}
+                          title={t("SEE") + " " + filePO.name}
                           placement="left"
                           arrow
                           TransitionComponent={Zoom}
@@ -1351,7 +1356,13 @@ const AcordionComponent = (props) => {
                             color="primary"
                             className="mt-8  mx-4"
                             size="small"
-                            onClick={() => props.watchF(props.filesGeneral.folders[iFolderPO].files[iFilePO])}
+                            onClick={() =>
+                              props.watchF(
+                                props.filesGeneral.folders[iFolderPO].files[
+                                  iFilePO
+                                ]
+                              )
+                            }
                           >
                             <Icon>help</Icon>
                           </Button>
