@@ -36,6 +36,7 @@ import {
   folderCreateSystemUp,
   getFoldersValidateUp,
   editFolderPO,
+  removeFile,
   downloadFile,
 } from "./../../store/poEditGeneralTemplateSlice";
 import { selectProductTypesEditPO } from "./../../store/productTypesAdminSlice";
@@ -91,6 +92,9 @@ const EditPOTab = () => {
     setContinueValidationSaveByFilesRepeated,
   ] = useState(false);
 
+  const [continueValidationFilesDeleted, setContinueValidationFilesDeleted] =
+    useState(false);
+
   const [idParentFolderCVS, setIdParentFolderCVS] = useState(0);
 
   //const filesGeneral = JSON.parse(JSON.stringify(datosSS));
@@ -139,6 +143,8 @@ const EditPOTab = () => {
 
   const { isValid, dirtyFields, errors } = formState;
 
+  const [idFilesDelete, setIdFilesDelete] = useState([]);
+
   //--------------------------------
 
   useDeepCompareEffect(() => {
@@ -183,12 +189,30 @@ const EditPOTab = () => {
   useEffect(() => {
     if (continueValidationSaveByFilesRepeated === true) {
       setContinueValidationSaveByFilesRepeated(false);
+      var sizeFiles = 0;
+      idFilesDelete.forEach((element) => {
+        sizeFiles = sizeFiles + 1;
+      });
+      deleteFilesDB(0, sizeFiles);
+    }
+    if (continueValidationFilesDeleted === true) {
+      setContinueValidationFilesDeleted(false);
       setTimeout(function () {
         messageDispatch(t("THE_PO_WAS_UPDATED"), "success");
         navigate("/explorer/folder/" + datosSS.id);
       }, 1000);
     }
-  }, [continueValidationSaveByFilesRepeated]);
+  }, [continueValidationSaveByFilesRepeated, continueValidationFilesDeleted]);
+
+  const deleteFilesDB = (index, size) => {
+    if (index < size) {
+      dispatch(removeFile(idFilesDelete[index].id)).then((res) => {
+        deleteFilesDB(index + 1, size);
+      });
+    } else if (index === size) {
+      setContinueValidationFilesDeleted(true);
+    }
+  };
 
   const documentTypesAsingJsonDatosSS = (dataE) => {
     dataE.folders.forEach((folder, iFolder) => {
@@ -869,7 +893,10 @@ const EditPOTab = () => {
                         urlPass = urlPass + "\\" + urlTempp[index];
                       }
                     }
-                    datosEditFile.append("url", urlPass+"\\"+folderElement.name);
+                    datosEditFile.append(
+                      "url",
+                      urlPass + "\\" + folderElement.name
+                    );
                     datosEditFile.append("folderId", folderElement.id);
                     datosEditFile.append(
                       "documentTypeId",
@@ -1314,7 +1341,6 @@ const EditPOTab = () => {
     }
 
     if (validationSave === true) {
-
       if (filesGeneral.name !== "") {
         if (filesGeneral.name !== oldNamePO) {
           dispatch(
@@ -1398,6 +1424,15 @@ const EditPOTab = () => {
         a.click();
       });
     }
+  };
+
+  const addFileUploadDelete = (idFile) => {
+    setIdFilesDelete([
+      ...idFilesDelete,
+      {
+        id: idFile,
+      },
+    ]);
   };
 
   return (
@@ -1612,6 +1647,7 @@ const EditPOTab = () => {
           validationFolderName={validationFolderName}
           validateButtonSave={validateButtonSave}
           watchF={watchF}
+          addFileUploadDelete={addFileUploadDelete}
         />
       ) : (
         ""

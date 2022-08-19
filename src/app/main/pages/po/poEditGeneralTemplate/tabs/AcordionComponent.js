@@ -240,6 +240,12 @@ const AcordionComponent = (props) => {
   };
 
   const handleRemoveFile = (indexFolder, indexFile) => {
+    if (
+      props.dataPO.folders[indexFolder].files[indexFile].id !== undefined &&
+      props.dataPO.folders[indexFolder].files[indexFile].id !== 0
+    ) {
+      props.addFileUploadDelete(props.dataPO.folders[indexFolder].files[indexFile].id);
+    }
     props.dataPO.folders[indexFolder].files.splice(indexFile, 1);
     props.filesGeneral.folders[indexFolder].files.splice(indexFile, 1);
     props.handleUpdate();
@@ -1393,7 +1399,6 @@ const AcordionComponent = (props) => {
                           }
                           onClick={() => handleRemoveFile(iFolderPO, iFilePO)}
                           size="small"
-                          disabled={filePO.id ? true : false}
                         >
                           <Icon>delete</Icon>
                         </Button>
@@ -1433,6 +1438,7 @@ const AcordionComponent = (props) => {
                   validationFolderName={props.validationFolderName}
                   validateButtonSave={props.validateButtonSave}
                   watchF={props.watchF}
+                  addFileUploadDelete={props.addFileUploadDelete}
                 />
               ) : (
                 false

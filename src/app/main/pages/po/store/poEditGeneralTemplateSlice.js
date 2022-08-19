@@ -46,6 +46,15 @@ export const editFolderPO = createAsyncThunk(
   }
 );
 
+export const removeFile = createAsyncThunk(
+  "filesPOEditApp/file/removeFile",
+  async (fileId, { dispatch, getState }) => {
+    const response = await axios.delete("/api/File/deleteUploadFile/" + fileId);
+    const { data, status } = await response;
+    return { data, status };
+  }
+);
+
 export const downloadFile = createAsyncThunk(
   "fileApp/file/downloadFile",
   async (file, { dispatch, getState }) => {
