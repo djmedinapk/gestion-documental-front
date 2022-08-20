@@ -33,6 +33,17 @@ export const folderUp = createAsyncThunk(
   }
 );
 
+export const removeFolder = createAsyncThunk(
+  "foldersPOEditApp/folder/removeFolder",
+  async (folderId, { dispatch, getState }) => {
+    const response = await axios.delete(
+      "/api/Folder/deleteUploadFolder/" + folderId
+    );
+    const { data, status } = await response;
+    return { data, status };
+  }
+);
+
 export const editFolderPO = createAsyncThunk(
   "poEditGeneralTemplateApp/poEditGeneralTemplateData/editFolderPO",
   async (folder, { dispatch, getState }) => {

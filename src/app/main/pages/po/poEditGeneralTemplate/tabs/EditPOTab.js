@@ -32,6 +32,7 @@ import {
   changeDatosPOs,
   fileUp,
   folderUp,
+  removeFolder,
   updateFile,
   folderCreateSystemUp,
   getFoldersValidateUp,
@@ -94,6 +95,10 @@ const EditPOTab = () => {
 
   const [continueValidationFilesDeleted, setContinueValidationFilesDeleted] =
     useState(false);
+  const [
+    continueValidationFoldersDeleted,
+    setContinueValidationFoldersDeleted,
+  ] = useState(false);
 
   const [idParentFolderCVS, setIdParentFolderCVS] = useState(0);
 
@@ -144,6 +149,7 @@ const EditPOTab = () => {
   const { isValid, dirtyFields, errors } = formState;
 
   const [idFilesDelete, setIdFilesDelete] = useState([]);
+  const [idFoldersDelete, setIdFoldersDelete] = useState([]);
 
   //--------------------------------
 
@@ -197,12 +203,24 @@ const EditPOTab = () => {
     }
     if (continueValidationFilesDeleted === true) {
       setContinueValidationFilesDeleted(false);
+      var sizeFolders = 0;
+      idFoldersDelete.forEach((element) => {
+        sizeFolders = sizeFolders + 1;
+      });
+      deleteFoldersDB(0, sizeFolders);
+    }
+    if (continueValidationFoldersDeleted === true) {
+      setContinueValidationFoldersDeleted(false);
       setTimeout(function () {
         messageDispatch(t("THE_PO_WAS_UPDATED"), "success");
         navigate("/explorer/folder/" + datosSS.id);
       }, 1000);
     }
-  }, [continueValidationSaveByFilesRepeated, continueValidationFilesDeleted]);
+  }, [
+    continueValidationSaveByFilesRepeated,
+    continueValidationFilesDeleted,
+    continueValidationFoldersDeleted,
+  ]);
 
   const deleteFilesDB = (index, size) => {
     if (index < size) {
@@ -211,6 +229,16 @@ const EditPOTab = () => {
       });
     } else if (index === size) {
       setContinueValidationFilesDeleted(true);
+    }
+  };
+
+  const deleteFoldersDB = (index, size) => {
+    if (index < size) {
+      dispatch(removeFolder(idFoldersDelete[index].id)).then((res) => {
+        deleteFoldersDB(index + 1, size);
+      });
+    } else if (index === size) {
+      setContinueValidationFoldersDeleted(true);
     }
   };
 
@@ -1435,6 +1463,15 @@ const EditPOTab = () => {
     ]);
   };
 
+  const addFolderUploadDelete = (idFolder) => {
+    setIdFoldersDelete([
+      ...idFoldersDelete,
+      {
+        id: idFolder,
+      },
+    ]);
+  };
+
   return (
     <div>
       <div
@@ -1648,6 +1685,7 @@ const EditPOTab = () => {
           validateButtonSave={validateButtonSave}
           watchF={watchF}
           addFileUploadDelete={addFileUploadDelete}
+          addFolderUploadDelete={addFolderUploadDelete}
         />
       ) : (
         ""
