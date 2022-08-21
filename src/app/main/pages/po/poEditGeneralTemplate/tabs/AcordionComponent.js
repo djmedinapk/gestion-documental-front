@@ -95,6 +95,7 @@ const AcordionComponent = (props) => {
         ) {
           props.dataPO.folders[indexFolder].folders.push({
             name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            nameEdit: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
             statePO: "new",
             accordionState:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,
@@ -105,6 +106,7 @@ const AcordionComponent = (props) => {
 
           props.filesGeneral.folders[indexFolder].folders.push({
             name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            nameEdit: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
             statePO: "new",
             accordionState:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,
@@ -250,7 +252,9 @@ const AcordionComponent = (props) => {
       props.dataPO.folders[indexFolder].files[indexFile].id !== undefined &&
       props.dataPO.folders[indexFolder].files[indexFile].id !== 0
     ) {
-      props.addFileUploadDelete(props.dataPO.folders[indexFolder].files[indexFile].id);
+      props.addFileUploadDelete(
+        props.dataPO.folders[indexFolder].files[indexFile].id
+      );
     }
     props.dataPO.folders[indexFolder].files.splice(indexFile, 1);
     props.filesGeneral.folders[indexFolder].files.splice(indexFile, 1);
@@ -470,13 +474,9 @@ const AcordionComponent = (props) => {
                   className="font-semibold"
                   style={{ alignSelf: "center" }}
                 >
-                  {props.parentPOFolder + folderPO.name.split(" ")[0] ===
+                  {props.parentPOFolder + folderPO.nameEdit.split(" ")[0] ===
                   props.parentPOFolder + "UVA"
-                    ? folderPO.name.split(" ")[1] !== undefined
-                      ? folderPO.name.split(" ")[0] +
-                        " " +
-                        props.filesGeneral.pediment
-                      : folderPO.name.split(" ")[0]
+                    ? "UVA " + props.filesGeneral.pediment
                     : folderPO.name}
                 </Typography>
               </div>

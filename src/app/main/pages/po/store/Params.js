@@ -97,7 +97,9 @@ export const currentYear = new Date().getFullYear();
 
 export const dataPO = {
   name: "",
+  nameEdit: "",
   pediment: "",
+  idUVAPediment: 0,
   year: "",
   month: "",
   productType: "",
@@ -109,6 +111,7 @@ export const dataPO = {
   folders: [
     {
       name: "Documentos Origen",
+      nameEdit: "",
       statePO: "old",
       accordionState: "Documentos Origen",
       addSourceState: { state: "", nameFolder: "" },
@@ -302,6 +305,7 @@ export const dataPO = {
     },
     {
       name: "Aduanas",
+      nameEdit: "",
       statePO: "old",
       accordionState: "Aduanas",
       addSourceState: { state: "", nameFolder: "" },
@@ -588,6 +592,7 @@ export const dataPO = {
 
     {
       name: "UVA",
+      nameEdit: "",
       statePO: "old",
       accordionState: "UVA",
       addSourceState: { state: "", nameFolder: "" },
@@ -619,6 +624,7 @@ export const dataPO = {
       folders: [
         {
           name: "Evidencias",
+          nameEdit: "",
           statePO: "old",
           accordionState: "Evidencias",
           addSourceState: { state: "", nameFolder: "" },
@@ -630,6 +636,7 @@ export const dataPO = {
     },
     {
       name: "VUCEM",
+      nameEdit: "",
       statePO: "old",
       accordionState: "VUCEM",
       addSourceState: { state: "", nameFolder: "" },
@@ -1007,6 +1014,7 @@ export const dataPO = {
     },
     {
       name: "Comprobables",
+      nameEdit: "",
       statePO: "old",
       accordionState: "Comprobables",
       addSourceState: { state: "", nameFolder: "" },
@@ -1315,6 +1323,7 @@ export const dataPO = {
     },
     {
       name: "Previo",
+      nameEdit: "",
       statePO: "old",
       accordionState: "Previo",
       addSourceState: { state: "", nameFolder: "" },

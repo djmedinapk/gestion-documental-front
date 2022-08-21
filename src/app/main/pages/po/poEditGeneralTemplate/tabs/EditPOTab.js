@@ -99,6 +99,8 @@ const EditPOTab = () => {
     continueValidationFoldersDeleted,
     setContinueValidationFoldersDeleted,
   ] = useState(false);
+  const [continueValidationFolderUVAEdit, setContinueValidationFolderUVAEdit] =
+    useState(false);
 
   const [idParentFolderCVS, setIdParentFolderCVS] = useState(0);
 
@@ -150,6 +152,7 @@ const EditPOTab = () => {
 
   const [idFilesDelete, setIdFilesDelete] = useState([]);
   const [idFoldersDelete, setIdFoldersDelete] = useState([]);
+  const [folderUVAEdit, setFolderUVAEdit] = useState({ id: 0, name: "" });
 
   //--------------------------------
 
@@ -211,6 +214,10 @@ const EditPOTab = () => {
     }
     if (continueValidationFoldersDeleted === true) {
       setContinueValidationFoldersDeleted(false);
+      editFolderUVADB();
+    }
+    if (continueValidationFolderUVAEdit === true) {
+      setContinueValidationFolderUVAEdit(false);
       setTimeout(function () {
         messageDispatch(t("THE_PO_WAS_UPDATED"), "success");
         navigate("/explorer/folder/" + datosSS.id);
@@ -220,6 +227,7 @@ const EditPOTab = () => {
     continueValidationSaveByFilesRepeated,
     continueValidationFilesDeleted,
     continueValidationFoldersDeleted,
+    continueValidationFolderUVAEdit,
   ]);
 
   const deleteFilesDB = (index, size) => {
@@ -239,6 +247,21 @@ const EditPOTab = () => {
       });
     } else if (index === size) {
       setContinueValidationFoldersDeleted(true);
+    }
+  };
+  const editFolderUVADB = () => {
+    if (
+      folderUVAEdit.id !== undefined &&
+      folderUVAEdit.id !== null &&
+      folderUVAEdit.id !== 0
+    ) {
+      dispatch(
+        editFolderPO({ id: folderUVAEdit.id, name: folderUVAEdit.name })
+      ).then((res) => {
+        setContinueValidationFolderUVAEdit(true);
+      });
+    } else {
+      setContinueValidationFolderUVAEdit(true);
     }
   };
 
@@ -423,8 +446,16 @@ const EditPOTab = () => {
   const handlePedimentPOState = (ev) => {
     datosSS.pediment = ev.target.value;
     filesGeneral.pediment = ev.target.value;
-
-    //handleUpdate();
+    filesGeneral.folders.forEach((element) => {
+      if (element.name.split(" ")[0] === "UVA") {
+        if (ev.target.value !== "") {
+          setFolderUVAEdit({ id: element.id, name: "UVA " + ev.target.value });
+        } else {
+          setFolderUVAEdit({ id: element.id, name: "UVA" });
+        }
+      }
+    });
+    handleUpdate();
   };
 
   const handleProductTypePOState = (ev) => {
@@ -1528,7 +1559,6 @@ const EditPOTab = () => {
               variant="outlined"
               size="small"
               fullWidth
-              disabled={true}
               //error={!!errors.pediment}
               //helperText={errors?.pediment?.message}
               value={filesGeneral ? filesGeneral.pediment : ""}

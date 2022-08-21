@@ -123,6 +123,7 @@ function RightSideBarHeader(props) {
           var dataFolderPush = {
             id: elementResultFolder.id,
             name: elementResultFolder.name,
+            nameEdit: elementResultFolder.name,
             statePO: elementResultFolder.stateDbPO,
             accordionState: elementResultFolder.name,
             addSourceState: { state: "", nameFolder: "" },
@@ -216,6 +217,8 @@ function RightSideBarHeader(props) {
   const searchInfoEditPO = (dataUp, resultPOE) => {
     dataUp.id = resultPOE.id;
     dataUp.name = resultPOE.name;
+    dataUp.nameEdit = resultPOE.name;
+
     if (resultPOE.stateDbPO !== null && resultPOE.stateDbPO !== "") {
       dataUp.statePO = resultPOE.stateDbPO;
     }
@@ -225,9 +228,50 @@ function RightSideBarHeader(props) {
       dataUp.productType = resultPOE.productType;
       dataUp.client.id = resultPOE.client.id;
       dataUp.client.name = resultPOE.client.name;
+    } else {
+      dataUp.accordionState = resultPOE.name;
     }
     dataUp.folders.forEach((elementFolder) => {
       resultPOE.folders.forEach((elementResultFolder) => {
+        if (
+          elementResultFolder.name.split(" ")[0] === "UVA" &&
+          elementResultFolder.stateDbPO === "old"
+        ) {
+          if (elementResultFolder.name.split(" ").length > 1) {
+            dataUp.pediment = elementResultFolder.name.split(" ")[1];
+          }
+          elementFolder.id = elementResultFolder.id;
+          if (elementFolder.folders.length !== 0) {
+            elementFolder = searchInfoEditPO(
+              elementFolder,
+              elementResultFolder
+            );
+          }
+
+          elementFolder.files.forEach((elementFile) => {
+            elementResultFolder.files.forEach((elementResultFile) => {
+              if (
+                elementFile.documentType.name ===
+                  elementResultFile.documentType.name &&
+                elementResultFile.stateDbPO === "old"
+              ) {
+                if (
+                  elementResultFile.stateDbPO !== null &&
+                  elementResultFile.stateDbPO !== ""
+                ) {
+                  elementFile.statePO = elementResultFile.stateDbPO;
+                }
+                elementFile.id = elementResultFile.id;
+                elementFile.name = elementResultFile.name;
+                elementFile.contentFile.name = elementResultFile.name;
+                elementFile.documentType.id = elementResultFile.documentType.id;
+                elementFile.documentType.name =
+                  elementResultFile.documentType.name;
+              }
+            });
+          });
+        }
+
         if (
           elementFolder.name === elementResultFolder.name &&
           elementResultFolder.stateDbPO === "old"
@@ -253,8 +297,8 @@ function RightSideBarHeader(props) {
                 ) {
                   elementFile.statePO = elementResultFile.stateDbPO;
                 }
-                elementFile.id = elementResultFile.id
-                elementFile.name = elementResultFile.name
+                elementFile.id = elementResultFile.id;
+                elementFile.name = elementResultFile.name;
                 elementFile.contentFile.name = elementResultFile.name;
                 elementFile.documentType.id = elementResultFile.documentType.id;
                 elementFile.documentType.name =
