@@ -96,6 +96,8 @@ const NewPOTab = () => {
 
   const [validateReturn, setValidateReturn] = useState(false);
 
+  const [urlFolderUVAValidation, setUrlFolderUVAValidation] = useState("/UVA/Evidencias");
+
   //validation
 
   const defaultValues = {
@@ -362,8 +364,24 @@ const NewPOTab = () => {
   const handlePedimentPOState = (ev) => {
     datosSS.pediment = ev.target.value;
     filesGeneral.pediment = ev.target.value;
-
-    //handleUpdate();
+    filesGeneral.folders.forEach((element, idElement) => {
+      if (element.name.split(" ")[0] === "UVA") {
+        if (ev.target.value !== "") {
+          datosSS.folders[idElement].name = "UVA " + ev.target.value;
+          datosSS.folders[idElement].accordionState = "UVA " + ev.target.value;
+          element.name = "UVA " + ev.target.value;
+          element.accordionState = "UVA " + ev.target.value;
+          setUrlFolderUVAValidation("/UVA " + ev.target.value + "/Evidencias");
+        } else {
+          datosSS.folders[idElement].name = "UVA";
+          datosSS.folders[idElement].accordionState = "UVA";
+          element.name = "UVA";
+          element.accordionState = "UVA";
+          setUrlFolderUVAValidation("/UVA/Evidencias");
+        }
+      }
+    });
+    handleUpdate();
   };
 
   const handleProductTypePOState = (ev) => {
@@ -602,7 +620,7 @@ const NewPOTab = () => {
       }
     });
 
-    if (route === namePO + "/UVA/Evidencias") {
+    if (route === namePO + urlFolderUVAValidation) {
       data.products.forEach((elementProduct) => {
         elementProduct.files.forEach((elementProductFile) => {
           finalFileProducts.name = elementProductFile.contentFile.name;
@@ -723,7 +741,7 @@ const NewPOTab = () => {
             dataGeneral.month +
             "/" +
             dataGeneral.name +
-            "/UVA/Evidencias"
+            urlFolderUVAValidation
         ) {
           dataUFTemp.folders[iFolderElement].files.forEach(
             (fileElement, iFileElement) => {
@@ -1600,7 +1618,6 @@ const NewPOTab = () => {
               variant="outlined"
               size="small"
               fullWidth
-              disabled={validateButtonSave}
               //error={!!errors.pediment}
               //helperText={errors?.pediment?.message}
               value={filesGeneral ? filesGeneral.pediment : ""}
@@ -1741,7 +1758,7 @@ const NewPOTab = () => {
           chooseFilesDataUpload={chooseFilesDataUpload}
           setChooseFilesDataUpload={setChooseFilesDataUpload}
           datosDocumentTypes={datosDocumentTypes}
-          folderRouteEvidenciasUVA={datosSS.name + "/UVA/Evidencias"}
+          folderRouteEvidenciasUVA={datosSS.name + urlFolderUVAValidation}
           parentPOFolder={datosSS.name + "/"}
           filesGeneral={filesGeneral}
           chooseFilesProductFolder={chooseFilesProductFolder}
@@ -1815,7 +1832,7 @@ const NewPOTab = () => {
                 </label>
 
                 <Tooltip
-                  title={t("SEE")+" "+file.name}
+                  title={t("SEE") + " " + file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}
@@ -1921,7 +1938,7 @@ const NewPOTab = () => {
                   </Button>
                 </label>
                 <Tooltip
-                  title={t("SEE")+" "+file.name}
+                  title={t("SEE") + " " + file.name}
                   placement="left"
                   arrow
                   TransitionComponent={Zoom}
