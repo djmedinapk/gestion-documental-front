@@ -98,6 +98,7 @@ export const currentYear = new Date().getFullYear();
 export const dataPO = {
   name: "",
   nameEdit: "",
+  stateEditFolder: false,
   pediment: "",
   idUVAPediment: 0,
   year: "",
@@ -112,6 +113,7 @@ export const dataPO = {
     {
       name: "Documentos Origen",
       nameEdit: "",
+      stateEditFolder: false,
       statePO: "old",
       accordionState: "Documentos Origen",
       addSourceState: { state: "", nameFolder: "" },
@@ -306,6 +308,7 @@ export const dataPO = {
     {
       name: "Aduanas",
       nameEdit: "",
+      stateEditFolder: false,
       statePO: "old",
       accordionState: "Aduanas",
       addSourceState: { state: "", nameFolder: "" },
@@ -593,6 +596,7 @@ export const dataPO = {
     {
       name: "UVA",
       nameEdit: "",
+      stateEditFolder: false,
       statePO: "old",
       accordionState: "UVA",
       addSourceState: { state: "", nameFolder: "" },
@@ -625,6 +629,7 @@ export const dataPO = {
         {
           name: "Evidencias",
           nameEdit: "",
+          stateEditFolder: false,
           statePO: "old",
           accordionState: "Evidencias",
           addSourceState: { state: "", nameFolder: "" },
@@ -637,6 +642,7 @@ export const dataPO = {
     {
       name: "VUCEM",
       nameEdit: "",
+      stateEditFolder: false,
       statePO: "old",
       accordionState: "VUCEM",
       addSourceState: { state: "", nameFolder: "" },
@@ -1015,6 +1021,7 @@ export const dataPO = {
     {
       name: "Comprobables",
       nameEdit: "",
+      stateEditFolder: false,
       statePO: "old",
       accordionState: "Comprobables",
       addSourceState: { state: "", nameFolder: "" },
@@ -1324,6 +1331,7 @@ export const dataPO = {
     {
       name: "Previo",
       nameEdit: "",
+      stateEditFolder: false,
       statePO: "old",
       accordionState: "Previo",
       addSourceState: { state: "", nameFolder: "" },

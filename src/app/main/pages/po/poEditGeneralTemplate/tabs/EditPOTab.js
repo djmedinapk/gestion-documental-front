@@ -99,7 +99,10 @@ const EditPOTab = () => {
     continueValidationFoldersDeleted,
     setContinueValidationFoldersDeleted,
   ] = useState(false);
+
   const [continueValidationFolderUVAEdit, setContinueValidationFolderUVAEdit] =
+    useState(false);
+  const [continueValidationFoldersEdit, setContinueValidationFoldersEdit] =
     useState(false);
 
   const [idParentFolderCVS, setIdParentFolderCVS] = useState(0);
@@ -153,6 +156,7 @@ const EditPOTab = () => {
   const [idFilesDelete, setIdFilesDelete] = useState([]);
   const [idFoldersDelete, setIdFoldersDelete] = useState([]);
   const [folderUVAEdit, setFolderUVAEdit] = useState({ id: 0, name: "" });
+  const [idFoldersEdit, setIdFoldersEdit] = useState([]);
 
   const [urlValidationUVAEvidencias, setUrlValidationUVAEvidencias] =
     useState("");
@@ -234,6 +238,14 @@ const EditPOTab = () => {
     }
     if (continueValidationFolderUVAEdit === true) {
       setContinueValidationFolderUVAEdit(false);
+      var sizeFoldersEdit = 0;
+      idFoldersEdit.forEach((element) => {
+        sizeFoldersEdit = sizeFoldersEdit + 1;
+      });
+      editFoldersDB(0, sizeFoldersEdit);
+    }
+    if (continueValidationFoldersEdit === true) {
+      setContinueValidationFoldersEdit(false);
       setTimeout(function () {
         messageDispatch(t("THE_PO_WAS_UPDATED"), "success");
         navigate("/explorer/folder/" + datosSS.id);
@@ -244,6 +256,7 @@ const EditPOTab = () => {
     continueValidationFilesDeleted,
     continueValidationFoldersDeleted,
     continueValidationFolderUVAEdit,
+    continueValidationFoldersEdit,
   ]);
 
   const deleteFilesDB = (index, size) => {
@@ -278,6 +291,20 @@ const EditPOTab = () => {
       });
     } else {
       setContinueValidationFolderUVAEdit(true);
+    }
+  };
+  const editFoldersDB = (index, size) => {
+    if (index < size) {
+      dispatch(
+        editFolderPO({
+          id: idFoldersEdit[index].id,
+          name: idFoldersEdit[index].name,
+        })
+      ).then((res) => {
+        editFoldersDB(index + 1, size);
+      });
+    } else if (index === size) {
+      setContinueValidationFoldersEdit(true);
     }
   };
 
@@ -903,8 +930,8 @@ const EditPOTab = () => {
 
     dataUF.folders.forEach((folderElement, iFolderElement) => {
       var folderObj = {
-        name: folderElement.name,
-        description: folderElement.name,
+        name: folderElement.nameEdit,
+        description: folderElement.nameEdit,
         isPO: false,
         FolderId: idParentFolder,
         UserId: dataGeneral.client.id,
@@ -1388,7 +1415,7 @@ const EditPOTab = () => {
         if (folderElement.files.length === 0) {
           dispatch(
             folderCreateSystemUp({
-              FolderRoute: routeFolder + folderElement.name,
+              FolderRoute: routeFolder + folderElement.nameEdit,
               StateDbPO: folderElement.statePO,
             })
           ).then((resultFCSUP) => {
@@ -1560,6 +1587,27 @@ const EditPOTab = () => {
         id: idFolder,
       },
     ]);
+  };
+
+  const addFolderUploadEdit = (idFolder, nameFolder) => {
+    var folderLoaded = false;
+
+    idFoldersDelete.forEach((element) => {
+      if (element.id === idFolder) {
+        folderLoaded = true;
+        element.name = nameFolder;
+      }
+    });
+
+    if (folderLoaded === false) {
+      setIdFoldersEdit([
+        ...idFoldersDelete,
+        {
+          id: idFolder,
+          name: nameFolder,
+        },
+      ]);
+    }
   };
 
   return (
@@ -1775,6 +1823,7 @@ const EditPOTab = () => {
           watchF={watchF}
           addFileUploadDelete={addFileUploadDelete}
           addFolderUploadDelete={addFolderUploadDelete}
+          addFolderUploadEdit={addFolderUploadEdit}
         />
       ) : (
         ""

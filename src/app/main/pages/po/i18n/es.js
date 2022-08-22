@@ -40,6 +40,7 @@ const locale = {
   THE_PO_WAS_UPDATED: "La PO ha sido actualizada",
   UPDATE: "Actualizar",
   SEE: "Ver",
+  END_EDIT: "Finalizar Edición",
 };
 
 export default locale;

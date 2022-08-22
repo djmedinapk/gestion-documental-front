@@ -93,7 +93,6 @@ function RightSideBarHeader(props) {
             originalData.name,
             validationUVAUrlTemp
           );
-
           dispatch(changeDatosPOs(originalDataWithNew));
 
           setButtonEditPO(true);
@@ -233,9 +232,10 @@ function RightSideBarHeader(props) {
   };
 
   const searchInfoEditPO = (dataUp, resultPOE) => {
+    
     dataUp.id = resultPOE.id;
     dataUp.name = resultPOE.name;
-    dataUp.nameEdit = resultPOE.name;
+    dataUp.nameEdit = dataUp.name;
 
     if (resultPOE.stateDbPO !== null && resultPOE.stateDbPO !== "") {
       dataUp.statePO = resultPOE.stateDbPO;
@@ -292,9 +292,11 @@ function RightSideBarHeader(props) {
 
         if (
           elementFolder.name === elementResultFolder.name &&
-          elementResultFolder.stateDbPO === "old"
+          elementResultFolder.stateDbPO === "old" &&
+          elementResultFolder.name.split(" ")[0] !== "UVA"
         ) {
           elementFolder.id = elementResultFolder.id;
+          elementFolder.nameEdit = elementResultFolder.name;
           if (elementFolder.folders.length !== 0) {
             elementFolder = searchInfoEditPO(
               elementFolder,

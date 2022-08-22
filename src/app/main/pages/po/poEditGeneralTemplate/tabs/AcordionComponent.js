@@ -97,6 +97,7 @@ const AcordionComponent = (props) => {
             name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
             nameEdit:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            stateEditFolder: false,
             statePO: "new",
             accordionState:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,
@@ -109,6 +110,7 @@ const AcordionComponent = (props) => {
             name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
             nameEdit:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            stateEditFolder: false,
             statePO: "new",
             accordionState:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,
@@ -246,6 +248,30 @@ const AcordionComponent = (props) => {
     }
     props.dataPO.folders.splice(index, 1);
     props.filesGeneral.folders.splice(index, 1);
+    props.handleUpdate();
+  };
+
+  const handleEditFolder = (folder) => {
+    if (folder.stateEditFolder === true) {
+      folder.stateEditFolder = false;
+    } else {
+      folder.stateEditFolder = true;
+    }
+    props.handleUpdate();
+  };
+
+  const handleNameFolderEditTextFieldPOState = (
+    ev,
+    dataFolder,
+    iDataFolder
+  ) => {
+    props.dataPO.folders[iDataFolder].nameEdit = ev.target.value;
+    props.filesGeneral.folders[iDataFolder].nameEdit = ev.target.value;
+    dataFolder.nameEdit = ev.target.value;
+
+    if (dataFolder.id !== undefined && dataFolder.id !== 0) {
+      props.addFolderUploadEdit(dataFolder.id, dataFolder.nameEdit);
+    } 
     props.handleUpdate();
   };
 
@@ -401,35 +427,142 @@ const AcordionComponent = (props) => {
     <>
       {props.dataPO.folders.map((folderPO, iFolderPO) => (
         <div key={props.parentPOFolder + "/" + folderPO.name + "/...DivMain"}>
-          <div
-            key={
-              props.parentPOFolder +
-              "/" +
-              folderPO.name +
-              "/...DivButtonDeleteFolder"
-            }
-            style={{
-              justifyContent: "end",
-              display: "flex",
-              paddingTop: "2%",
-            }}
-          >
+          <div>
             {folderPO.statePO === "new" ? (
-              <Button
-                key={
-                  props.parentPOFolder +
-                  "/" +
-                  folderPO.name +
-                  "/...ButtonDeleteFolder"
-                }
-                variant="contained"
-                color="error"
-                onClick={() => handleRemoveFolder(iFolderPO)}
-                size="small"
-                style={{ maxWidth: "10%" }}
-              >
-                <Icon>delete</Icon>
-              </Button>
+              <div>
+                {folderPO.stateEditFolder === true ? (
+                  <div
+                    className="flex flex-col md:flex-row -mx-8"
+                    style={{ paddingTop: "30px" }}
+                  >
+                    <Controller
+                      name={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceControllerEditName"
+                      }
+                      key={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceControllerEditName"
+                      }
+                      control={props.control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          key={
+                            props.parentPOFolder +
+                            "/" +
+                            folderPO.name +
+                            "/...AcordionDetailsFolderDivSourceControllerEditNameTextField"
+                          }
+                          className="mt-8  mx-4"
+                          label={t("NEW_FOLDER_NAME")}
+                          name={iFolderPO + ""}
+                          value={folderPO.nameEdit}
+                          onChange={(event) => {
+                            field.onChange(event);
+                            handleNameFolderEditTextFieldPOState(
+                              event,
+                              folderPO,
+                              iFolderPO
+                            );
+                          }}
+                          variant="outlined"
+                          size="small"
+                          style={{ minWidth: "70%" }}
+                          fullWidth
+                        />
+                      )}
+                    />
+                    <Button
+                      id={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceButtonEndEditName"
+                      }
+                      key={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSourceButtonEndEditName"
+                      }
+                      variant="contained"
+                      color="success"
+                      className="mt-8  mx-4"
+                      onClick={() => handleEditFolder(folderPO)}
+                      disabled={props.validateButtonSave}
+                      startIcon={<Icon>edit</Icon>}
+                      size="small"
+                      style={{ minWidth: "20%" }}
+                      fullWidth
+                    >
+                      {t("END_EDIT")}
+                    </Button>
+                  </div>
+                ) : (
+                  <div
+                    key={
+                      props.parentPOFolder +
+                      "/" +
+                      folderPO.name +
+                      "/...DivButtonDeleteFolder"
+                    }
+                    style={{
+                      justifyContent: "end",
+                      display: "flex",
+                      paddingTop: "2%",
+                      paddingRight: "2%",
+                    }}
+                  >
+                    <div
+                      key={
+                        props.parentPOFolder +
+                        "/" +
+                        folderPO.name +
+                        "/...AcordionDetailsFolderDivSource"
+                      }
+                      className="flex flex-col md:flex-row -mx-8"
+                    >
+                      <div style={{ paddingRight: "5px" }}>
+                        <Button
+                          key={
+                            props.parentPOFolder +
+                            "/" +
+                            folderPO.name +
+                            "/...ButtonEditFolder"
+                          }
+                          variant="contained"
+                          color="info"
+                          onClick={() => handleEditFolder(folderPO)}
+                          size="small"
+                          style={{ maxWidth: "10%" }}
+                        >
+                          <Icon>edit</Icon>
+                        </Button>
+                      </div>
+                      <Button
+                        key={
+                          props.parentPOFolder +
+                          "/" +
+                          folderPO.name +
+                          "/...ButtonDeleteFolder"
+                        }
+                        variant="contained"
+                        color="error"
+                        onClick={() => handleRemoveFolder(iFolderPO)}
+                        size="small"
+                        style={{ maxWidth: "10%" }}
+                      >
+                        <Icon>delete</Icon>
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               false
             )}
@@ -479,7 +612,7 @@ const AcordionComponent = (props) => {
                   {props.parentPOFolder + folderPO.nameEdit.split(" ")[0] ===
                   props.parentPOFolder + "UVA"
                     ? "UVA " + props.filesGeneral.pediment
-                    : folderPO.name}
+                    : folderPO.nameEdit}
                 </Typography>
               </div>
             </AccordionSummary>
@@ -1447,6 +1580,7 @@ const AcordionComponent = (props) => {
                   watchF={props.watchF}
                   addFileUploadDelete={props.addFileUploadDelete}
                   addFolderUploadDelete={props.addFolderUploadDelete}
+                  addFolderUploadEdit={props.addFolderUploadEdit}
                 />
               ) : (
                 false
