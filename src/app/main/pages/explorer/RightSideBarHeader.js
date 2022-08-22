@@ -232,7 +232,6 @@ function RightSideBarHeader(props) {
   };
 
   const searchInfoEditPO = (dataUp, resultPOE) => {
-    
     dataUp.id = resultPOE.id;
     dataUp.name = resultPOE.name;
     dataUp.nameEdit = dataUp.name;
@@ -256,12 +255,15 @@ function RightSideBarHeader(props) {
       resultPOE.folders.forEach((elementResultFolder) => {
         if (
           elementResultFolder.name.split(" ")[0] === "UVA" &&
-          elementResultFolder.stateDbPO === "old"
+          elementResultFolder.stateDbPO === "old" &&
+          elementFolder.name.split(" ")[0] ===
+            elementResultFolder.name.split(" ")[0]
         ) {
           if (elementResultFolder.name.split(" ").length > 1) {
             dataUp.pediment = elementResultFolder.name.split(" ")[1];
           }
           elementFolder.id = elementResultFolder.id;
+
           if (elementFolder.folders.length !== 0) {
             elementFolder = searchInfoEditPO(
               elementFolder,
