@@ -95,7 +95,8 @@ const AcordionComponent = (props) => {
         ) {
           props.dataPO.folders[indexFolder].folders.push({
             name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-            nameEdit: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            nameEdit:
+              props.dataPO.folders[indexFolder].addSourceState.nameFolder,
             statePO: "new",
             accordionState:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,
@@ -106,7 +107,8 @@ const AcordionComponent = (props) => {
 
           props.filesGeneral.folders[indexFolder].folders.push({
             name: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
-            nameEdit: props.dataPO.folders[indexFolder].addSourceState.nameFolder,
+            nameEdit:
+              props.dataPO.folders[indexFolder].addSourceState.nameFolder,
             statePO: "new",
             accordionState:
               props.dataPO.folders[indexFolder].addSourceState.nameFolder,

@@ -77,11 +77,21 @@ function RightSideBarHeader(props) {
         let dataUp = JSON.parse(JSON.stringify(dataPO));
         if (dataUp.name === "") {
           let originalData = searchInfoEditPO(dataUp, resultPOE.payload.data);
+          var validationUVAUrlTemp = "/UVA/Evidencias";
+          if (
+            originalData.pediment !== null &&
+            originalData.pediment !== undefined &&
+            originalData.pediment !== ""
+          ) {
+            validationUVAUrlTemp =
+              "/UVA " + originalData.pediment + "/Evidencias";
+          }
           let originalDataWithNew = searchInfoEditPONew(
             originalData,
             resultPOE.payload.data,
             originalData.name,
-            originalData.name
+            originalData.name,
+            validationUVAUrlTemp
           );
 
           dispatch(changeDatosPOs(originalDataWithNew));
@@ -95,8 +105,14 @@ function RightSideBarHeader(props) {
     );
   };
 
-  const searchInfoEditPONew = (dataUp, resultPOE, route, namePO) => {
-    if (route !== namePO + "/UVA/Evidencias") {
+  const searchInfoEditPONew = (
+    dataUp,
+    resultPOE,
+    route,
+    namePO,
+    validationUVA
+  ) => {
+    if (route !== namePO + validationUVA) {
       resultPOE.files.forEach((elementFiles) => {
         if (elementFiles.stateDbPO === "new") {
           var dataFilePush = {
@@ -136,7 +152,8 @@ function RightSideBarHeader(props) {
               dataFolderPush,
               elementResultFolder,
               route + "/" + dataFolderPush.name,
-              namePO
+              namePO,
+              validationUVA
             );
           } else {
             elementResultFolder.files.forEach((elementFilesRes) => {
@@ -170,7 +187,8 @@ function RightSideBarHeader(props) {
                 elementdataUpFolderOld,
                 elementResultFolder,
                 route + "/" + elementdataUpFolderOld.name,
-                namePO
+                namePO,
+                validationUVA
               );
             }
           });

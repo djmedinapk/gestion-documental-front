@@ -154,6 +154,9 @@ const EditPOTab = () => {
   const [idFoldersDelete, setIdFoldersDelete] = useState([]);
   const [folderUVAEdit, setFolderUVAEdit] = useState({ id: 0, name: "" });
 
+  const [urlValidationUVAEvidencias, setUrlValidationUVAEvidencias] =
+    useState("");
+
   //--------------------------------
 
   useDeepCompareEffect(() => {
@@ -172,6 +175,19 @@ const EditPOTab = () => {
         documentTypesAsingJsonDatosSS(JSON.parse(JSON.stringify(datosSS)))
       );
       handleUpdate();
+      if (
+        datosSS.pediment != null &&
+        datosSS.pediment != undefined &&
+        datosSS.pediment != ""
+      ) {
+        datosSS.folders.forEach((element) => {
+          if (element.name.split(" ")[0] === "UVA") {
+            setUrlValidationUVAEvidencias("/" + element.name + "/Evidencias");
+          }
+        });
+      } else {
+        setUrlValidationUVAEvidencias("/UVA/Evidencias");
+      }
     }
   }, [datosDocumentTypes]);
 
@@ -741,8 +757,21 @@ const EditPOTab = () => {
         }
       }
     });
-
-    if (route === namePO + "/UVA/Evidencias") {
+    var validationUVAEvidenciasUrlP = "/UVA/Evidencias";
+    if (
+      datosSS.pediment !== undefined &&
+      datosSS.pediment !== null &&
+      datosSS.pediment !== ""
+    ) {
+      datosSS.folders.forEach((element) => {
+        if (element.name.split(" ")[0] === "UVA") {
+          if (element.name.split(" ").length > 1) {
+            validationUVAEvidenciasUrlP = "/" + element.name + "/Evidencias";
+          }
+        }
+      });
+    }
+    if (route === namePO + validationUVAEvidenciasUrlP) {
       data.products.forEach((elementProduct) => {
         elementProduct.files.forEach((elementProductFile) => {
           if (
@@ -905,6 +934,21 @@ const EditPOTab = () => {
         ) {
           setContinueValidationSaveByFolders(true);
         }
+        var validationUVAEvidenciasUrlF = "/UVA/Evidencias";
+        if (
+          datosSS.pediment !== undefined &&
+          datosSS.pediment !== null &&
+          datosSS.pediment !== ""
+        ) {
+          datosSS.folders.forEach((element) => {
+            if (element.name.split(" ")[0] === "UVA") {
+              if (element.name.split(" ").length > 1) {
+                validationUVAEvidenciasUrlF =
+                  "/" + element.name + "/Evidencias";
+              }
+            }
+          });
+        }
         if (
           routeFolder + folderElement.name !==
           dataGeneral.client.name +
@@ -916,7 +960,7 @@ const EditPOTab = () => {
             dataGeneral.month +
             "/" +
             dataGeneral.name +
-            "/UVA/Evidencias"
+            validationUVAEvidenciasUrlF
         ) {
           dataUFTemp.folders[iFolderElement].files.forEach(
             (fileElement, iFileElement) => {
@@ -1122,6 +1166,21 @@ const EditPOTab = () => {
           ) {
             setContinueValidationSaveByFolders(true);
           }
+          var validationUVAEvidenciasUrlFS = "/UVA/Evidencias";
+          if (
+            datosSS.pediment !== undefined &&
+            datosSS.pediment !== null &&
+            datosSS.pediment !== ""
+          ) {
+            datosSS.folders.forEach((element) => {
+              if (element.name.split(" ")[0] === "UVA") {
+                if (element.name.split(" ").length > 1) {
+                  validationUVAEvidenciasUrlFS =
+                    "/" + element.name + "/Evidencias";
+                }
+              }
+            });
+          }
 
           if (
             routeFolder + folderElement.name !==
@@ -1134,7 +1193,7 @@ const EditPOTab = () => {
               dataGeneral.month +
               "/" +
               dataGeneral.name +
-              "/UVA/Evidencias"
+              validationUVAEvidenciasUrlFS
           ) {
             dataUFTemp.folders[iFolderElement].files.forEach(
               (fileElement, iFileElement) => {
@@ -1699,7 +1758,7 @@ const EditPOTab = () => {
           chooseFilesDataUpload={chooseFilesDataUpload}
           setChooseFilesDataUpload={setChooseFilesDataUpload}
           datosDocumentTypes={datosDocumentTypes}
-          folderRouteEvidenciasUVA={datosSS.name + "/UVA/Evidencias"}
+          folderRouteEvidenciasUVA={datosSS.name + urlValidationUVAEvidencias}
           parentPOFolder={datosSS.name + "/"}
           filesGeneral={filesGeneral}
           chooseFilesProductFolder={chooseFilesProductFolder}
