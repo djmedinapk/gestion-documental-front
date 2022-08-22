@@ -158,6 +158,22 @@ export const getPOById = createAsyncThunk(
   }
 );
 
+export const migratePOExternalFolders = createAsyncThunk(
+  "poEditGeneralTemplateApp/poEditGeneralTemplateData/migratePOExternalFolders",
+  async (folder, { dispatch, getState }) => {
+    const response = await axios.put(
+      "api/Folder/migratePOExternalFolders/" +
+        folder.id +
+        "/" +
+        folder.idParent,
+      folder
+    );
+    const { data, status } = await response;
+
+    return { data, status };
+  }
+);
+
 const extractFiles = (data, mainFolder, route) => {
   var arrayFiles = [];
 

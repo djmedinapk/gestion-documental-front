@@ -39,6 +39,7 @@ import {
   editFolderPO,
   removeFile,
   downloadFile,
+  migratePOExternalFolders,
 } from "./../../store/poEditGeneralTemplateSlice";
 import { selectProductTypesEditPO } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypesEditPO } from "./../../store/documentTypesAdminSlice";
@@ -47,6 +48,7 @@ import { selectDocumentTypesEditPO } from "./../../store/documentTypesAdminSlice
 import { months, currentYear, dataPO } from "./../../store/Params";
 import { Done } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { size } from "lodash";
 
 const EditPOTab = () => {
   const dispatch = useDispatch();
@@ -104,6 +106,10 @@ const EditPOTab = () => {
     useState(false);
   const [continueValidationFoldersEdit, setContinueValidationFoldersEdit] =
     useState(false);
+  const [
+    continueValidationExternalFoldersEdit,
+    setContinueValidationExternalFoldersEdit,
+  ] = useState(false);
 
   const [idParentFolderCVS, setIdParentFolderCVS] = useState(0);
 
@@ -157,6 +163,23 @@ const EditPOTab = () => {
   const [idFoldersDelete, setIdFoldersDelete] = useState([]);
   const [folderUVAEdit, setFolderUVAEdit] = useState({ id: 0, name: "" });
   const [idFoldersEdit, setIdFoldersEdit] = useState([]);
+  const [externalFoldersEdit, setExternalFoldersEdit] = useState([
+    {
+      idParent: datosSS.client.id,
+      nameOld: datosSS.year,
+      nameNew: "",
+    },
+    {
+      idParent: 0,
+      nameOld: datosSS.productType,
+      nameNew: "",
+    },
+    {
+      idParent: 0,
+      nameOld: datosSS.month,
+      nameNew: "",
+    },
+  ]);
 
   const [urlValidationUVAEvidencias, setUrlValidationUVAEvidencias] =
     useState("");
@@ -246,6 +269,22 @@ const EditPOTab = () => {
     }
     if (continueValidationFoldersEdit === true) {
       setContinueValidationFoldersEdit(false);
+
+      var sizeExternalFoldersEdit = 0;
+      var externalFoldersEditModified = externalFoldersEdit;
+      externalFoldersEditModified[0].nameNew = datosSS.yearEdit;
+      externalFoldersEditModified[1].nameNew = datosSS.productTypeEdit;
+      externalFoldersEditModified[2].nameNew = datosSS.monthEdit;
+
+      setExternalFoldersEdit(externalFoldersEditModified);
+
+      externalFoldersEdit.forEach((element) => {
+        sizeExternalFoldersEdit = sizeExternalFoldersEdit + 1;
+      });
+      editExternalFoldersDB(0, sizeExternalFoldersEdit);
+    }
+    if (continueValidationExternalFoldersEdit === true) {
+      setContinueValidationExternalFoldersEdit(false);
       setTimeout(function () {
         messageDispatch(t("THE_PO_WAS_UPDATED"), "success");
         navigate("/explorer/folder/" + datosSS.id);
@@ -257,6 +296,7 @@ const EditPOTab = () => {
     continueValidationFoldersDeleted,
     continueValidationFolderUVAEdit,
     continueValidationFoldersEdit,
+    continueValidationExternalFoldersEdit,
   ]);
 
   const deleteFilesDB = (index, size) => {
@@ -305,6 +345,80 @@ const EditPOTab = () => {
       });
     } else if (index === size) {
       setContinueValidationFoldersEdit(true);
+    }
+  };
+
+  const editExternalFoldersDB = (index, size) => {
+    if (
+      externalFoldersEdit[0].nameOld === externalFoldersEdit[0].nameNew &&
+      externalFoldersEdit[1].nameOld === externalFoldersEdit[1].nameNew &&
+      externalFoldersEdit[2].nameOld === externalFoldersEdit[2].nameNew
+    ) {
+      setContinueValidationExternalFoldersEdit(true);
+    } else {
+      if (index < size) {
+        var objValidateF = {
+          Name: externalFoldersEdit[index].nameNew,
+        };
+        if (index === 0) {
+          objValidateF.ProjectId = externalFoldersEdit[index].idParent;
+        } else {
+          objValidateF.FolderId = externalFoldersEdit[index].idParent;
+        }
+
+        dispatch(getFoldersValidateUp(objValidateF)).then((result) => {
+          if (result.payload.data.count === 0) {
+            var folderObj = {
+              name: externalFoldersEdit[index].nameNew,
+              description: externalFoldersEdit[index].nameNew,
+              isPO: false,
+              UserId: dataClient.userId,
+              StateDbPO: "old",
+            };
+
+            if (index === 0) {
+              folderObj.ProjectId = externalFoldersEdit[index].idParent;
+            } else {
+              folderObj.FolderId = externalFoldersEdit[index].idParent;
+            }
+
+            dispatch(folderUp(folderObj)).then((resultUp) => {
+              externalFoldersEdit[index].id = resultUp.payload.id;
+              if (index < size - 1) {
+                externalFoldersEdit[index + 1].idParent = resultUp.payload.id;
+              }
+              editExternalFoldersDB(index + 1, size);
+            });
+          } else {
+            externalFoldersEdit[index].id = result.payload.data.data[0].id;
+            if (index < size - 1) {
+              externalFoldersEdit[index + 1].idParent =
+                result.payload.data.data[0].id;
+            }
+            editExternalFoldersDB(index + 1, size);
+          }
+        });
+      } else if (index === size) {
+        var objValidatePO = {
+          Name: datosSS.nameEdit.name,
+          FolderId: externalFoldersEdit[2].id,
+        };
+        dispatch(getFoldersValidateUp(objValidatePO)).then((resultPO) => {
+          if (resultPO.payload.data.count === 0) {
+            dispatch(
+              migratePOExternalFolders({
+                id: datosSS.id,
+                idParent: externalFoldersEdit[2].id,
+              })
+            ).then((resultMigrate) => {
+              setContinueValidationExternalFoldersEdit(true);
+            });
+          } else {
+            messageDispatch(t("THE_PO_NO_MIGRATE"), "warning");
+            setContinueValidationExternalFoldersEdit(true);
+          }
+        });
+      }
     }
   };
 
@@ -502,17 +616,17 @@ const EditPOTab = () => {
   };
 
   const handleProductTypePOState = (ev) => {
-    datosSS.productType = ev.target.value;
+    datosSS.productTypeEdit = ev.target.value;
     handleUpdate();
   };
 
   const handleMonthPOState = (ev) => {
-    datosSS.month = ev.target.value;
+    datosSS.monthEdit = ev.target.value;
     handleUpdate();
   };
 
   const handleYearPOState = (ev) => {
-    datosSS.year = ev.target.value;
+    datosSS.yearEdit = ev.target.value;
     handleUpdate();
   };
 
@@ -1691,8 +1805,7 @@ const EditPOTab = () => {
                 labelId="year-select-label"
                 id="year"
                 label="Year"
-                disabled={true}
-                value={datosSS.year}
+                value={datosSS.yearEdit}
                 onChange={(event) => {
                   field.onChange(event);
                   handleYearPOState(event);
@@ -1723,8 +1836,7 @@ const EditPOTab = () => {
                 labelId="month-select-label"
                 id="month"
                 label="Month"
-                disabled={true}
-                value={datosSS.month}
+                value={datosSS.monthEdit}
                 onChange={(event) => {
                   field.onChange(event);
                   handleMonthPOState(event);
@@ -1756,8 +1868,7 @@ const EditPOTab = () => {
                 labelId="type-select-label"
                 id="type"
                 label="Type"
-                disabled={true}
-                value={datosSS.productType}
+                value={datosSS.productTypeEdit}
                 onChange={(event) => {
                   field.onChange(event);
                   handleProductTypePOState(event);

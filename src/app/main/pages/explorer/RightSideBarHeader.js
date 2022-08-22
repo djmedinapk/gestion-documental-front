@@ -244,6 +244,9 @@ function RightSideBarHeader(props) {
       dataUp.year = resultPOE.year;
       dataUp.month = resultPOE.month;
       dataUp.productType = resultPOE.productType;
+      dataUp.yearEdit = resultPOE.year;
+      dataUp.monthEdit = resultPOE.month;
+      dataUp.productTypeEdit = resultPOE.productType;
       dataUp.client.id = resultPOE.client.id;
       dataUp.client.name = resultPOE.client.name;
     } else {
