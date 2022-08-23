@@ -96,7 +96,8 @@ const NewPOTab = () => {
 
   const [validateReturn, setValidateReturn] = useState(false);
 
-  const [urlFolderUVAValidation, setUrlFolderUVAValidation] = useState("/UVA/Evidencias");
+  const [urlFolderUVAValidation, setUrlFolderUVAValidation] =
+    useState("/UVA/Evidencias");
 
   //validation
 
@@ -695,7 +696,28 @@ const NewPOTab = () => {
         datosGeneralF.append(`stateDbPO`, fileElement.statePO);
         datosGeneralF.append(`file`, fileElement.contentFile);
         if (fileElement.contentFile.name !== "") {
-          dispatch(fileUp(datosGeneralF));
+          dispatch(fileUp(datosGeneralF)).then((resFG) => {
+            var desctructRouteGeneral = routeFolder.split("/");
+            var routeVTempFGeneral = "";
+            desctructRouteGeneral.forEach(
+              (elementDesctructRoute, elementDesctructRouteI) => {
+                if (elementDesctructRouteI >= 4) {
+                  if (elementDesctructRouteI === 4) {
+                    routeVTempFGeneral = elementDesctructRoute;
+                  } else {
+                    routeVTempFGeneral =
+                      routeVTempFGeneral + "/" + elementDesctructRoute;
+                  }
+                }
+              }
+            );
+            if (
+              routeVTempFGeneral + fileElement.contentFile.name ===
+              finalFile.route + "/" + finalFile.name
+            ) {
+              setContinueValidationSaveByFiles(true);
+            }
+          });
         }
       });
     }
