@@ -490,6 +490,8 @@ const EditPOTab = () => {
         ) {
           datosSS.folders.push({
             name: datosSS.addSourceState.nameFolder,
+            nameEdit: datosSS.addSourceState.nameFolder,
+            stateEditFolder: false,
             statePO: "new",
             accordionState: datosSS.addSourceState.nameFolder,
             addSourceState: { state: "", nameFolder: "" },
@@ -501,6 +503,8 @@ const EditPOTab = () => {
 
           filesGeneral.folders.push({
             name: datosSS.addSourceState.nameFolder,
+            nameEdit: datosSS.addSourceState.nameFolder,
+            stateEditFolder: false,
             statePO: "new",
             accordionState: datosSS.addSourceState.nameFolder,
             addSourceState: { state: "", nameFolder: "" },
@@ -578,6 +582,12 @@ const EditPOTab = () => {
   };
 
   const handleRemoveFile = (indexFile) => {
+    if (
+      datosSS.files[indexFile].id !== undefined &&
+      datosSS.files[indexFile].id !== 0
+    ) {
+      addFileUploadDelete(datosSS.files[indexFile].id);
+    }
     datosSS.files.splice(indexFile, 1);
     filesGeneral.files.splice(indexFile, 1);
     handleUpdate();
@@ -2130,7 +2140,6 @@ const EditPOTab = () => {
                   key={file.name + i + "deleteFile"}
                   onClick={() => handleRemoveFile(i)}
                   size="small"
-                  disabled={file.id ? true : false}
                 >
                   <Icon>delete</Icon>
                 </Button>
