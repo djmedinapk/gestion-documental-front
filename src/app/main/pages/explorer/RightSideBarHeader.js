@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +15,11 @@ import {
   handleDeleteFolderDialog,
   handleEditFileDialog,
   handleDeleteFileDialog,
+  changeDatosPOs,
 } from "./store/explorerSlice";
 
 import { dataPO } from "./../po/store/Params";
 import {
-  changeDatosPOs,
   getPOById,
   downloadFile,
 } from "./../po/store/poEditGeneralTemplateSlice";
@@ -33,6 +33,9 @@ function RightSideBarHeader(props) {
   const selectedItem = useSelector(
     ({ explorerApp }) => explorerApp.explorer.selectedItem
   );
+  const selectDataEditPO = useSelector(
+    ({ explorerApp }) => explorerApp.explorer.datosPOs
+  );
 
   const { t } = useTranslation("explorerPage");
 
@@ -40,6 +43,28 @@ function RightSideBarHeader(props) {
 
   const [open, setOpen] = useState(false);
   const [buttonEditPO, setButtonEditPO] = useState(false);
+
+  const [continueValidationPOEditData, setContinueValidationPOEditData] =
+    useState(false);
+
+  useEffect(() => {
+    if (continueValidationPOEditData === true) {
+      if (
+        selectDataEditPO.id !== undefined &&
+        selectDataEditPO.id !== null &&
+        selectDataEditPO.id !== 0
+      ) {
+        setContinueValidationPOEditData(false);
+        setButtonEditPO(true);
+        setTimeout(() => {
+          navigate("/apps/po/po-edit-general-template");
+        }, 1200);
+      } else {
+        setContinueValidationPOEditData(true);
+        
+      }
+    }
+  }, [continueValidationPOEditData]);
 
   if (!selectedItem) {
     return null;
@@ -94,11 +119,7 @@ function RightSideBarHeader(props) {
             validationUVAUrlTemp
           );
           dispatch(changeDatosPOs(originalDataWithNew));
-
-          setButtonEditPO(true);
-          setTimeout(() => {
-            navigate("/apps/po/po-edit-general-template");
-          }, 1200);
+          setContinueValidationPOEditData(true);
         }
       }
     );

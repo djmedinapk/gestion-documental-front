@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import { showMessage } from "app/store/fuse/messageSlice";
 import axios from "./../../../../services/Axios/HttpClient";
+import { dataPO } from "../../po/store/Params";
 
 export const getFiles = createAsyncThunk(
   "explorerApp/files/getFiles",
@@ -119,6 +120,7 @@ const explorerSlice = createSlice({
     isFolder: false,
     projectData: null,
     folderData: null,
+    datosPOs: dataPO,
     newFolderDialog: {
       open: false
     },
@@ -179,6 +181,9 @@ const explorerSlice = createSlice({
     handleProjectDataFind: (state, action) => {
       state.projectData = action.payload.data;
     },
+    changeDatosPOs: (state, action) => {
+      state.datosPOs = action.payload;
+    },
   },
   extraReducers: {
     [getFiles.fulfilled]: (state, action) => {
@@ -208,7 +213,8 @@ export const {
   handleEditFileDialog,
   handleDeleteFileDialog,
   setSelectedItem,
-  handleProjectDataFind
+  handleProjectDataFind,
+  changeDatosPOs
 } = explorerSlice.actions;
 
 export default explorerSlice.reducer;

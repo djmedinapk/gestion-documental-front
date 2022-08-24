@@ -29,7 +29,6 @@ import { useDeepCompareEffect } from "@fuse/hooks";
 import { hideMessage, showMessage } from "app/store/fuse/messageSlice";
 
 import {
-  changeDatosPOs,
   fileUp,
   folderUp,
   removeFolder,
@@ -41,6 +40,7 @@ import {
   downloadFile,
   migratePOExternalFolders,
 } from "./../../store/poEditGeneralTemplateSlice";
+import { changeDatosPOs } from "../../../explorer/store/explorerSlice";
 import { selectProductTypesEditPO } from "./../../store/productTypesAdminSlice";
 import { selectDocumentTypesEditPO } from "./../../store/documentTypesAdminSlice";
 //import { selectDataEditPO } from "./../../store/poEditGeneralTemplateSlice";
@@ -57,10 +57,7 @@ const EditPOTab = () => {
 
   var datosSS = JSON.parse(
     JSON.stringify(
-      useSelector(
-        ({ poEditGeneralTemplateApp }) =>
-          poEditGeneralTemplateApp.poEditGeneralTemplate.datosPOs
-      )
+      useSelector(({ explorerApp }) => explorerApp.explorer.datosPOs)
     )
   );
 
